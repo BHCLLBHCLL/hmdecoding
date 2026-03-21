@@ -156,11 +156,24 @@ def parse_text_record(payload: bytes, start: int) -> dict[str, Any] | None:
             ):
                 raw = payload[cursor + 8 : cursor + 8 + length_a]
                 if raw and all(32 <= byte < 127 for byte in raw):
+                    recovered = raw
+                    probe = cursor + 8 + length_a
+                    while (
+                        probe < end
+                        and payload[probe] != 0
+                        and 32 <= payload[probe] < 127
+                        and (probe - (cursor + 8)) < length_a + 64
+                    ):
+                        probe += 1
+                    if probe < end and payload[probe] == 0 and probe > cursor + 8 + length_a:
+                        recovered = payload[cursor + 8 : probe]
+
                     fields.append(
                         {
                             "kind": "ascii_text",
-                            "length": length_a,
-                            "text": raw.decode("ascii"),
+                            "declared_length": length_a,
+                            "recovered_length": len(recovered),
+                            "text": recovered.decode("ascii"),
                         }
                     )
                     cursor += 8 + length_a
