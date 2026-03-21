@@ -158,14 +158,19 @@ def parse_text_record(payload: bytes, start: int) -> dict[str, Any] | None:
                 if raw and all(32 <= byte < 127 for byte in raw):
                     recovered = raw
                     probe = cursor + 8 + length_a
+                    probe_limit = min(len(payload), end + 64)
                     while (
-                        probe < end
+                        probe < probe_limit
                         and payload[probe] != 0
                         and 32 <= payload[probe] < 127
                         and (probe - (cursor + 8)) < length_a + 64
                     ):
                         probe += 1
-                    if probe < end and payload[probe] == 0 and probe > cursor + 8 + length_a:
+                    if (
+                        probe < probe_limit
+                        and payload[probe] == 0
+                        and probe > cursor + 8 + length_a
+                    ):
                         recovered = payload[cursor + 8 : probe]
 
                     fields.append(
