@@ -1,0 +1,203 @@
+HyperMesh (.hm) File Format - Technical Documentation
+=====================================================
+
+1. FILE INFORMATION
+-------------------
+Source File: WS_3.2_3d_tetra_finish.hm
+File Size (Compressed): 744,448 bytes (727 KB)
+File Size (Decompressed): 1,976,207 bytes (1.9 MB)
+Compression: GZIP
+Format: Altair HyperMesh Binary Database (.hm)
+
+2. FORMAT DESCRIPTION
+---------------------
+The .hm file format is a proprietary binary database format developed by
+Altair Engineering for use in HyperMesh, a finite element pre-processing
+software. The format stores complete FE model data including:
+
+- Geometry (points, lines, surfaces, solids)
+- Mesh (nodes, elements, element types)
+- Components and groups
+- Materials and properties
+- Boundary conditions and loads
+- Assembly hierarchy
+
+3. BINARY STRUCTURE
+-------------------
+The file consists of:
+
+3.1 Header Section
+- Identification string
+- Version information (major.minor)
+- Entity counts (nodes, elements, components, etc.)
+- Data precision indicators
+
+3.2 Entity Blocks
+- Nodes: 3D coordinates (x, y, z) with IDs
+- Elements: Type codes + node connectivity
+- Components: Organizational containers
+- Materials: Physical property definitions
+- Properties: Element property assignments
+
+3.3 Metadata
+- Names and labels
+- Colors and display attributes
+- Assembly hierarchy
+- Group memberships
+
+4. ELEMENT TYPES
+----------------
+Common HyperMesh element type codes:
+- 1: TRIA3 (3-node triangle)
+- 2: QUAD4 (4-node quadrilateral)
+- 3: TRIA6 (6-node triangle)
+- 4: QUAD8 (8-node quadrilateral)
+- 5: TETRA4 (4-node tetrahedron)
+- 6: PENTA6 (6-node pentahedron/wedge)
+- 7: HEXA8 (8-node hexahedron)
+- 8: TETRA10 (10-node tetrahedron)
+- 9: PENTA15 (15-node pentahedron)
+- 10: HEXA20 (20-node hexahedron)
+- 11: ROD (2-node rod)
+- 12: BAR (2-node bar)
+
+5. FILE CHARACTERISTICS
+-----------------------
+File Name: WS_3.2_3d_tetra_finish.hm
+Name Analysis:
+- "WS" - likely workspace or project identifier
+- "3.2" - version or configuration number
+- "3d" - indicates 3D model
+- "tetra" - indicates tetrahedral mesh elements
+- "finish" - indicates final/completed state
+
+6. PARSING APPROACH
+-------------------
+Since the .hm format is proprietary and undocumented, parsing requires:
+
+6.1 Binary Analysis
+- File is GZIP compressed (header at byte offset ~12)
+- Decompressed data contains binary arrays
+- Mixed integer and floating-point data
+- Section markers identified (0x0000007e pattern)
+
+6.2 Pattern Recognition
+- Node data: Stored as coordinate triples
+- Element data: Stored with connectivity information
+- Component data: Organizational hierarchy
+
+6.3 Limitations
+Without official documentation:
+- Cannot guarantee complete data extraction
+- May miss specialized entity types
+- Version-specific format variations unknown
+- Custom attributes may not be preserved
+
+7. RECOMMENDED TOOLS
+--------------------
+For accurate .hm file processing:
+
+7.1 Official Software
+- Altair HyperMesh (primary tool)
+- HyperMesh Python API (requires HyperMesh installation)
+- HyperMesh Tcl scripting interface
+
+7.2 Export Capabilities
+- Nastran (.bdf/.nas)
+- Abaqus (.inp)
+- ANSYS (.cdb)
+- LS-DYNA (.k)
+- IGES (.iges)
+- STEP (.step)
+- STL (.stl)
+
+7.3 Third-Party Tools
+- meshio (Python, supports many formats)
+- pyNastran (Python, Nastran-focused)
+- Gmsh (open-source meshing)
+
+8. DATA EXTRACTION RESULTS
+--------------------------
+From this file, the following was extracted:
+
+8.1 Nodes
+- Count: Variable (depends on parsing method)
+- Format: 3D coordinates (x, y, z)
+- Units: Unknown (requires HyperMesh to verify)
+
+8.2 Elements
+- Types Found: TETRA4, HEXA8 (based on pattern matching)
+- Count: Variable
+- Connectivity: Node ID lists per element
+
+8.3 Components
+- Count: Not reliably extracted
+- Information: Organizational structure
+
+9. OUTPUT FILES
+---------------
+Generated output includes:
+
+9.1 geometry.step
+- STEP AP214 format
+- Contains node points as Cartesian points
+- Limited geometry extraction due to format complexity
+
+9.2 mesh.inp
+- Abaqus INP format
+- Contains node definitions
+- Contains element definitions with connectivity
+- Element type mapping to Abaqus conventions
+
+9.3 technical_doc.txt
+- This documentation file
+- Format analysis
+- Parsing methodology
+- Recommendations
+
+10. RECOMMENDATIONS
+-------------------
+For production use:
+
+10.1 Best Practice
+- Use Altair HyperMesh to open .hm files
+- Export to standard formats (Nastran, Abaqus, STEP)
+- Use exported files for downstream processing
+
+10.2 Alternative Approaches
+- Request model in neutral format from original creator
+- Use HyperMesh Viewer (free) for read-only access
+- Convert using HyperMesh batch mode
+
+10.3 Development
+- Consider contributing to open-source .hm parsers
+- Document format variations across HyperMesh versions
+- Develop robust pattern recognition for common structures
+
+11. TECHNICAL NOTES
+-------------------
+11.1 Compression
+- Files use GZIP compression
+- Leading null bytes before GZIP header
+- Compression ratio: ~37-38%
+
+11.2 Data Organization
+- Binary arrays for efficient storage
+- Mixed data types (int, float, double)
+- Hierarchical entity relationships
+
+11.3 Version Compatibility
+- Format may change between versions
+- Newer files may not open in older HyperMesh
+- Always verify version compatibility
+
+12. CONTACT
+-----------
+For questions about this analysis:
+- Review Altair HyperMesh documentation
+- Consult Altair support for format details
+- Check HyperMesh community forums
+
+Document Version: 1.0
+Date: 2026-03-22
+Generated by: hm_parser.py

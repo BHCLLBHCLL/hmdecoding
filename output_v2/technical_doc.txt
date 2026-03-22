@@ -1,0 +1,119 @@
+========================================================================
+HyperMesh (.hm) File Technical Documentation
+========================================================================
+
+1. FILE INFORMATION
+----------------------------------------
+Source file: D:/training/caedecoder/hmdecoding/WS_3.2_3d_tetra_finish.hm
+Compressed size: 744448 bytes
+Decompressed size: 1976207 bytes
+Compression ratio: 37.67%
+
+2. MODEL STATISTICS
+----------------------------------------
+Total nodes: 2487
+Total elements: 918
+Components: 0
+
+3. ELEMENT TYPE SUMMARY
+----------------------------------------
+  hexa8: 171
+  tetra4: 747
+
+4. BOUNDING BOX
+----------------------------------------
+  Min: (-4151808.000002, -4151935.749976, -4151935.749976)
+  Max: (30062.520508, 131073.389160, 8590452736.000120)
+  Size: (4181870.520510, 4283009.139136, 8594604671.750095)
+
+5. SAMPLE NODES (first 30)
+----------------------------------------
+        ID               X               Y               Z
+         1     1794.050650     -121.231694     -895.000000
+         2     -121.231694     -895.000000     1776.500000
+         3     -895.000000     1776.500000     -102.259049
+         4     1776.500000     -102.259049     -895.000000
+         5     -102.259049     -895.000000     1776.500000
+         6     -895.000000     1776.500000      -76.413612
+         7     1776.500000      -76.413612     -895.000000
+         8      -76.413612     -895.000000     1794.050650
+         9     -895.000000     1794.050650     -121.231694
+        10     1794.050650     -121.231694     -900.000000
+        11     -121.231694     -900.000000     1776.500000
+        12     -900.000000     1776.500000     -102.259049
+        13     1776.500000     -102.259049     -900.000000
+        14     -102.259049     -900.000000     1776.500000
+        15     -900.000000     1776.500000      -76.413612
+        16     1776.500000      -76.413612     -900.000000
+        17        1.000000        0.931150        1.000000
+        18        0.931150        1.000000        1.000000
+        19        1.000000        1.000000        0.931150
+        20        1.000000        0.931150        1.000000
+        21        0.200000        0.400000        0.600000
+        22        0.400000        0.600000        0.800000
+        23        0.600000        0.800000        1.000000
+        24        0.800000        1.000000        1.000000
+        25        3.141593     -137.750000        3.888077
+        26     -137.750000        3.888077     -137.750000
+        27     1776.500000      -76.413612     -757.250000
+        28      -76.413612     -757.250000        1.000000
+        29        1.000000       -5.203889     -163.953889
+        30       -5.203889     -163.953889      259.413612
+
+6. SAMPLE ELEMENTS (first 30)
+----------------------------------------
+  Element 1: type=tetra4, nodes=[1280, 4864, 7424, 9728]
+  Element 2: type=tetra4, nodes=[288, 4, 71, 104]
+  Element 3: type=tetra4, nodes=[4, 71, 104, 94]
+  Element 4: type=tetra4, nodes=[71, 104, 94, 12]
+  Element 5: type=tetra4, nodes=[104, 94, 12, 111]
+  Element 6: type=tetra4, nodes=[111, 2, 105, 87]
+  Element 7: type=tetra4, nodes=[2, 105, 87, 3]
+  Element 8: type=tetra4, nodes=[2, 86, 104, 3]
+  Element 9: type=tetra4, nodes=[113, 2, 23, 99]
+  Element 10: type=tetra4, nodes=[2, 23, 99, 3]
+  Element 11: type=tetra4, nodes=[2, 94, 19, 3]
+  Element 12: type=tetra4, nodes=[2, 80, 52, 3]
+  Element 13: type=tetra4, nodes=[2, 47, 76, 3]
+  Element 14: type=tetra4, nodes=[117, 2, 42, 32]
+  Element 15: type=tetra4, nodes=[2, 42, 32, 3]
+  Element 16: type=tetra4, nodes=[2, 29, 38, 3]
+  Element 17: type=tetra4, nodes=[384, 9, 186, 196]
+  Element 18: type=tetra4, nodes=[9, 186, 196, 126]
+  Element 19: type=tetra4, nodes=[186, 196, 126, 136]
+  Element 20: type=tetra4, nodes=[196, 126, 136, 146]
+  Element 21: type=tetra4, nodes=[126, 136, 146, 157]
+  Element 22: type=tetra4, nodes=[136, 146, 157, 160]
+  Element 23: type=tetra4, nodes=[146, 157, 160, 169]
+  Element 24: type=tetra4, nodes=[157, 160, 169, 179]
+  Element 25: type=tetra4, nodes=[160, 169, 179, 202]
+  Element 26: type=tetra4, nodes=[2, 164, 151, 3]
+  Element 27: type=tetra4, nodes=[2, 146, 160, 3]
+  Element 28: type=tetra4, nodes=[210, 2, 130, 197]
+  Element 29: type=tetra4, nodes=[2, 130, 197, 3]
+  Element 30: type=tetra4, nodes=[2, 196, 126, 3]
+
+7. BINARY FORMAT ANALYSIS
+----------------------------------------
+The .hm format is a proprietary binary format developed by Altair
+Engineering. Key observations:
+
+  - File uses gzip compression
+  - Binary data contains mixed integer and floating-point arrays
+  - No public specification or open-source parser available
+  - Format may vary between HyperMesh versions
+
+8. PARSING LIMITATIONS
+----------------------------------------
+This parser uses heuristic pattern matching which may:
+  - Miss nodes/elements that don't match expected patterns
+  - Extract false positives from binary data
+  - Not preserve original element IDs or component assignments
+  - Not extract all geometry information
+
+For accurate parsing, use Altair HyperMesh or export to
+standard formats (Nastran, Abaqus, IGES, STEP).
+
+========================================================================
+End of Technical Documentation
+========================================================================

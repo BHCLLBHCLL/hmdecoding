@@ -1,0 +1,134 @@
+========================================================================
+HyperMesh (.hm) File Technical Documentation
+========================================================================
+
+1. FILE INFORMATION
+----------------------------------------
+Source file: D:/training/caedecoder/hmdecoding/WS_3.2_3d_tetra_finish.hm
+Compressed size: 744448 bytes
+Decompressed size: 1976207 bytes
+
+2. MODEL STATISTICS
+----------------------------------------
+Total nodes: 40
+Total elements: 62
+Components: 0
+Geometry points: 0
+Geometry lines: 0
+Geometry surfaces: 0
+
+3. ELEMENT TYPE SUMMARY
+----------------------------------------
+  bar: 1
+  hexa8: 5
+  penta15: 1
+  penta6: 14
+  quad8: 22
+  tetra10: 4
+  tetra4: 10
+  tria6: 5
+
+4. BOUNDING BOX
+----------------------------------------
+  Min: (-916.000000, -900.000000, -0.000000)
+  Max: (76.500000, 327.000000, 389.000000)
+  Size: (992.500000, 1227.000000, 389.000000)
+
+5. SAMPLE NODES (first 20)
+----------------------------------------
+        ID               X               Y               Z
+         1        0.931150        1.000000        1.000000
+         2        0.000000        0.000000        0.000000
+         5      -28.400850        0.000000        0.000000
+         6        0.000000        0.000000       -0.000000
+         8        0.000000        0.000000        0.000000
+        14        0.000000        0.000000       -0.000000
+        16        0.000000        0.000000        0.000000
+        32        0.000000        0.000000        0.000000
+        33     -835.000000        3.063059        0.000000
+        51        0.000000        0.000031        0.007813
+        60        0.000000        0.000031        0.007813
+        70       16.000000        0.000000        0.000000
+       113     -916.000000        3.063059        0.000000
+       118        0.000000       38.449285       92.500000
+       121     -916.000000        0.000000        0.000000
+       162     -851.000000        0.000000        0.000000
+       167     -851.000000        0.000000        0.000000
+       169        0.000000      -16.000000       92.500000
+       183     -851.000000        3.063059        0.000000
+       239        0.000000       42.485791       43.488201
+
+6. SAMPLE ELEMENTS (first 20)
+----------------------------------------
+  Element 288: type=quad8, nodes=[71, 104, 94, 12]
+  Element 384: type=penta15, nodes=[186, 196, 126, 136]
+  Element 1: type=hexa8, nodes=[424, 426, 428, 430]
+  Element 1: type=quad8, nodes=[465, 469, 429, 467]
+  Element 384: type=penta6, nodes=[473, 255, 482, 491]
+  Element 1: type=quad8, nodes=[298, 349, 546, 544]
+  Element 384: type=quad8, nodes=[550, 564, 575, 584]
+  Element 1: type=quad8, nodes=[591, 623, 621, 625]
+  Element 384: type=tetra10, nodes=[651, 660, 670, 631]
+  Element 256: type=hexa8, nodes=[686, 151, 689, 335]
+  Element 1: type=tetra4, nodes=[825, 827, 829, 831]
+  Element 1: type=tetra4, nodes=[826, 877, 875, 873]
+  Element 1: type=quad8, nodes=[924, 928, 832, 926]
+  Element 384: type=bar, nodes=[998, 1007, 190, 932]
+  Element 1: type=hexa8, nodes=[203, 1030, 1050, 1052]
+  Element 256: type=quad8, nodes=[1072, 341, 690, 140]
+  Element 256: type=penta6, nodes=[945, 983, 1063, 664]
+  Element 384: type=hexa8, nodes=[1153, 1162, 1135, 1110]
+  Element 256: type=penta6, nodes=[1220, 1270, 1261, 1252]
+  Element 384: type=tria6, nodes=[1295, 1447, 1437, 114]
+
+7. BINARY FORMAT NOTES
+----------------------------------------
+The .hm format is a proprietary binary format developed by Altair
+Engineering. Key observations from this file:
+
+  - File is gzip compressed (header at byte offset ~12)
+  - Decompressed data contains binary arrays
+  - Section markers identified (0x0000007e pattern)
+  - Node data stored as coordinate triples
+  - Element data stored with connectivity information
+  - No public specification available
+
+8. PARSING STRATEGY
+----------------------------------------
+The parser uses pattern recognition to extract data:
+  1. Decompress gzip data
+  2. Scan for coordinate patterns (id,x,y,z as doubles)
+  3. Scan for element connectivity patterns
+  4. Identify component boundaries
+
+9. RECOMMENDED TOOLS
+----------------------------------------
+For complete .hm file parsing, use:
+  - Altair HyperMesh (official software)
+  - HyperMesh Python API (requires HyperMesh installation)
+  - Export to neutral formats: Nastran (.bdf), Abaqus (.inp),
+    IGES (.iges), STEP (.step)
+
+10. POTENTIAL HEADER COUNTS
+----------------------------------------
+  Offset 20: 126
+  Offset 28: 262144
+  Offset 60: 397
+  Offset 72: 266339
+  Offset 80: 35116
+  Offset 92: 131072
+  Offset 96: 131072
+  Offset 116: 93
+  Offset 124: 33063
+  Offset 136: 459008
+  Offset 140: 262144
+  Offset 160: 12
+  Offset 244: 216806
+  Offset 296: 250030
+  Offset 352: 251153
+  Offset 416: 216800
+  Offset 468: 216380
+
+========================================================================
+End of Technical Documentation
+========================================================================
