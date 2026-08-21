@@ -1,0 +1,166 @@
+# HyperMesh .hm 格式解码 — 现状完整性/深度分析与开放开发计划
+
+> 更新日期：本会话（v2，含 tutorials/hm 语料库分析）
+> 关键新信息：(1) HyperMesh 2019 安装可用（'C:\Program Files\Altair\2019\hm\bin\win64\hmopengl.exe' + hmbatch.exe + Tcl API，license 实测可用）；(2) .hm 是压缩包，解压后为二进制数据库；(3) 教程语料库 'C:\Program Files\Altair\2019\tutorials\hm' 含 **122 个真实 .hm/.hm10 文件**，全部可用 oracle 打开。
+
+---
+
+## 一、现状分析：完整性与深度
+
+### 1. 仓库资产盘点
+
+| 文件 | 角色 | 状态评估 |
+|---|---|---|
+| scripts/hm_reverse_parse.py | 容器级反向解析（gzip 定位、前缀、文本记录、命名块） | ✅ 诚实、结构化、结论可复现，是唯一可靠部分 |
+| hm_parser.py / hm_parser_v2.py | 启发式节点/单元提取（4 字节滑动窗口暴力猜数） | ❌ 方法学上不可行：输出全部是误报/伪造，无保真度 |
+| output/, output_v2/, final_output/ | 声称的 INP/STEP/技术文档产物 | ⚠️ 手工伪造子集（每类 5 个单元、编造 ID），不能代表解析能力 |
+| README.md | 容器层发现记录 | ✅ 与取证一致，但未覆盖记录层/实体层 |
+| WS_3.2_3d_tetra_finish.hm（LFS） | 唯一真实样本 | 语料库=1 → 已由教程库补足（见第二节） |
+| corpus/corpus_index.json（新增） | 122 文件语料索引（版本/布局/大小） | ✅ 本轮生成 |
+
+### 2. 分层深度评估（L1–L5）
+
+| 层 | 定义 | 现状 | 置信度 |
+|---|---|---|---|
+| L1 容器层 | 文件头/压缩/解压 | ✅ 基本解决且**全库证实**：122/122 文件均为 12 字节前缀（u32 0 + double 5.0）+ 单一 gzip member @0x0c；.hm10 同容器 | 高 |
+| L2 记录/属性层 | 载荷内记录帧、tag、属性表 | 线索显著增加：载荷头 u32 0 + double 版本号 + u32 126 + u32 1 + u32 262144；命名块模式 [cap=19][u32 0][class_id][name] 在 3 个文件 16 处重现（class_id ∈ 5,6,7,8,10,11,12,13,17）；尾部常量 0x3e6(998)/0x3e7(999)/0x9b(155)；长度前缀 ASCII 记录（tag 0x40000065/66）目前仅存于仓库样本 | 中低 |
+| L3 实体/模型层 | 节点/单元/组件/几何的真实记录结构 | 空白：无任何记录帧格式认知；现有 parser 靠滑动窗口猜 [id,x,y,z] 模式 | 无 |
+| L4 验证层 | 与 ground truth 比对 | 起步：已有 3 个文件的 oracle 计数（见下），比对器未建 | 低 |
+| L5 工程化 | 语料库、测试、格式文档 | 弱→改善中：语料索引已建，测试/文档仍缺 | — |
+
+### 3. 量化结论：当前实现 vs 真实数据（oracle 实测）
+
+| 文件 | oracle 真实数量 | 现有解析器产出 | 覆盖率 |
+|---|---|---|---|
+| WS_3.2_3d_tetra_finish.hm | nodes 6,408 / elements 31,843（config 103）/ comps 2（id 240 base、241 tetras）/ props 1 / points 157 / lines 354 / surfaces 93 | ~40 节点 / ~62 单元（伪造 ID） | ≈0 |
+| tutorials 1d_elements.hm | nodes 443 / elements 400（config 104）/ comps 4 / mats 3 / props 2 / points 4 / lines 8 / surfaces 1 | 未跑 | — |
+| tutorials leg_geom.hm | nodes 4 / elements 0 / comps 1（auto1）/ lines 3 | 未跑 | — |
+
+深度结论：当前实现停留在「容器级事实 + 猜测性模式匹配」；模型级解码尚未真正开始。hm_reverse_parse.py 的命名块推断被 oracle 证实（base/tetras = 2 个 comps），该路线值得作为解码支点。
+
+---
+
+## 二、教程语料库盘点（tutorials/hm，122 文件，本轮新分析）
+
+### 1. 容器一致性
+- **122/122 文件**均为同一容器：前缀 u32 0 + double 5.0（12 字节）+ gzip member @0x0c；
+- 含 2 个 .hm10 文件（3_step_proc.hm10 等），容器与 .hm 相同；
+- gzip 头 flags=0x00、OS=0x0b（NTFS），单 member，未见多 member 场景。
+
+### 2. DB 版本谱系（载荷头 double @0x04）
+
+| DB 版本 | 文件数 | 备注 |
+|---|---|---|
+| 10.02 | 2 | 最旧（fe_to_surf.hm、floor.hm） |
+| 11.03 / 11.04 / **11.05** | 5 / 3 / **100** | 主流版本，本仓库样本即 11.05 |
+| 12.03 / 12.07 | 2 / 3 | 头部布局变化（w14=10000, w1c=20） |
+| 13.02 / 13.03 | 1 / 3 | 同 v12 布局 |
+| 14.07 | 1 | 新布局（w14=1, w3c=1536） |
+| 17.01 | 2 | 最新（dummy_positioner.hm、seat_deformer.hm） |
+
+### 3. 头部布局按版本分 4 代
+
+| 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |
+|---|---|---|---|
+| v10-legacy | 10.02 | 0x14/0x1c 为双精度数据（非小整数） | 2 |
+| v11-classic | 11.03–11.05 | 126 / 262144 或 7277 / 397 或 0 | 108 |
+| v12-13 | 12.03–13.03 | 10000 / 20 / 大值 | 9 |
+| v14+ | 14.07–17.01 | 1 / 1–11 / 1536 | 3 |
+
+v11 家族内：u32@0x1c 有两种取值（262144=55+1 文件、7277=44 文件），u32@0x3c 大多为 397（56 文件）——两者疑似「记录流偏移量/规模」类字段，待 Phase 1 验证。
+
+### 4. 载荷头常量（v11-classic，跨文件一致）
+- @0x00: u32 0；@0x04: double DB 版本（11.05 等）；@0x0c/0x10: u32 0
+- @0x14: u32 126(0x7e)；@0x18: u32 1；@0x1c: u32 262144(0x40000) 或 7277
+- @0x20/0x28: 两个 double（@0x28 值 0x3f1a36e2eb1c432d ≈ 1e-4 恒定；@0x20 各文件不同，疑似时间戳/GUID）
+- @0x34: double 0x3fb999999999999a ≈ 0.1 恒定；@0x3c: u32 397 恒定
+- 尾部：0x3e6(998)、0x3e7(999)、0x9b(155) 三常量，跨文件一致
+
+### 5. 命名块模式（已泛化，但 class_id 语义待解）
+
+模式：[u32 cap=19][u32 0][u32 class_id][name bytes]，在 3 个文件中 16 处重现。oracle 对照：
+
+| name | class_id | oracle 身份 |
+|---|---|---|
+| BAR2 / base | 5 | comp（BAR2 为 comp 名；base 亦 comp） |
+| auto1 | 6 | comp（leg_geom） |
+| tetras | 7 | comp |
+| geomety | 8 | comp |
+| line_mesh / property1 | 10 | comp / **prop** |
+| Model | 11 | 装配/模型对象 |
+| joint_child / joint_parent / body_systems | 12 / 13 / 13 | 待 oracle 确认（系统/组？） |
+| feature_elements | 17 | comp |
+
+**class_id ≠ 实体类型**（comp 与 prop 均可为 10）；需要更大规模「name ↔ class_id ↔ oracle 实体类型」关联实验（Phase 2 首个实验）。
+
+### 6. 语料库的战略价值
+- **极小型文件是解码入口**：3_step_proc.hm10（载荷 5,001B）、shell_section.hm（4,919B）、leg_geom.hm（5,957B，仅 4 节点/3 线/1 组件）——已知内容 + 可人工通读的载荷长度；
+- **版本差分**：10 个 DB 版本可对比记录布局演化；
+- **配对外部格式**：tutorials 另含 .fem×5、.key×5、.k×4、.inp×1、.iges/.igs/.stp 等，可能与被 .hm 保存的同一模型对应，可作第二验证源；
+- **版权注意**：语料属 Altair 教程文件，仓库内仅保存索引清单（corpus/corpus_index.json），不批量复制入仓库；如需离线，仅复制极小型代表文件并注明来源。
+
+---
+
+## 三、开放开发计划（v2，语料驱动）
+
+总体路线不变：oracle 差分逆向，不触碰 DLL 反汇编。语料库使 Phase 0–2 的输入从「合成样本」升级为「122 个真实样本 + 版本矩阵 + 逐文件 ground truth」。
+
+### Phase 0 — 基础建设与语料固化（约 1 天）
+- [ ] oracle 封装：hmbatch 批处理模板 + Tcl 查询库（计数/命名/配置直方图/坐标查询），结果写 JSON 日志（已踩坑：Tcl 内 puts stdout 不可用，必须写文件）
+- [ ] **批量 ground truth 收割**：对 122 个语料文件逐一批量运行 oracle，产出 ground_truth/*.json（实体计数、comp 名称与 ID、单元 config 直方图）
+- [ ] 语料固化：corpus_index.json 已建（✅ 本轮完成）；补 corpus/manifest.md（按版本选代表 + 极小型文件的入库决策）
+- [ ] 合成语料生成器（保留）：Tcl 构造已知最小模型 → 存 .hm，用于「受控变量」实验（真实语料变量不可控）
+- 验收：一条命令批量产出全部语料的 ground truth JSON
+
+### Phase 1 — 容器与头部格式定论（约 0.5–1 天）
+- [x] 前缀 12 字节（u32 0 + double 5.0）恒定 → 122/122 证实
+- [x] 载荷头 double@0x04 = DB 版本 → 10 个版本实测
+- [ ] 待解：4 代头部布局的完整字段语义（v10-legacy / v11-classic / v12-13 / v14+），优先 v11-classic（108 文件 + 仓库样本）
+- [ ] 待解：u32@0x1c（262144 vs 7277）、u32@0x3c（397 vs 0）与模型规模/保存选项的关系（用 oracle 重存同一文件对比）
+- [ ] 待解：尾部常量 0x3e6/0x3e7/0x9b 的语义
+- 验收：容器层格式规范 v1（各版本头部字段语义，标注已验证/推断/未知）
+
+### Phase 2 — 记录帧与实体表逆向【核心，约 2–4 天】
+- [ ] **首个解码目标：leg_geom.hm**（5,957B 载荷、4 节点/3 线/1 组件）→ 用 oracle 取全部坐标/ID/名称 → 在 6KB 载荷中人工通读定位，再放大到 shell_section.hm / 3_step_proc.hm10
+- [ ] class_id 关联实验：用批量 ground truth 建立「name → class_id → oracle 实体类型/config」全表，解 class_id 语义
+- [ ] 差分矩阵实验（合成语料）：+1 node / +1 elem / +1 comp / +1 属性，定位实体记录区与帧格式（tag/len/type 编码）
+- [ ] 版本差分：v11.03/11.04/11.05 记录布局是否一致；v10/v12-13/v14+ 各看 1 个小型代表
+- [ ] 产出：区段地图文档 + Python/Kaitai Struct 语法草案
+- 验收：leg_geom.hm 全实体（4 节点坐标、3 线、auto1）可独立解码且与 oracle 一致
+
+### Phase 3 — 解析器实现（约 1–2 天）
+- [ ] 新模块 hmdecoder/：容器层 → 记录层 → 实体提取（nodes/elements/comps/props/points/lines/surfaces + 命名与属性），先支持 v11-classic
+- [ ] 废弃 hm_parser.py / hm_parser_v2.py 滑动窗口方案（保留为历史参考）
+- 验收：仓库样本输出 6,408 节点 / 31,843 单元，ID 与 oracle 一致
+
+### Phase 4 — 验证闭环与导出（约 1 天）
+- [ ] 自动比对器：解析结果 ↔ oracle（'*writefile' .fem/.inp + Tcl 逐 ID 查询），输出差异报告（ID 集合、坐标误差、连通性、组件归属）
+- [ ] 导出器：真实 ID 的 INP/STEP（修复当前伪造输出）；坐标/拓扑 100% 一致才放行
+- [ ] 回归集：≥10 个样本（合成矩阵 + 极小型真实样本 + 仓库样本），全绿才合并
+- 验收：比对报告 0 差异；final_output/ 被真实数据替换
+
+### Phase 5 — 文档与开放化（约 0.5 天）
+- [ ] 格式文档（容器+记录+区段地图，按「已验证/推断/未知」分级标注置信度）
+- [ ] 清理伪造产物、更新 README/AGENTS.md、语料库说明与复现步骤
+- [ ] 沉淀 oracle 探针脚本为可复用工具（含 license/环境前置检查）
+- 验收：新人可照 README 复现「从 .hm 到验证通过的 INP」全流程
+
+### 里程碑
+- M1（Phase 0+1 完成）：容器规范 v1 + 122 文件 ground truth 库
+- M2（Phase 2 完成）：leg_geom.hm 全实体独立解码 + class_id 语义解明
+- M3（Phase 3+4 完成）：仓库样本全量、零差异解析与导出
+- M4（Phase 5 完成）：格式文档公开化、仓库自洽
+
+### 风险与对策
+- License 依赖：oracle 需要 license，已实测可用；若失效，退化为「纯静态 + 既有 ground truth」路线（进度大降）
+- 版本差异：4 代头部布局、10 个 DB 版本 → 以 v11-classic 为主线，其余版本各选小型代表处理
+- 版权边界：语料为 Altair 教程文件，仓库仅存索引不批量复制；不反汇编 DLL，只利用 oracle 正常读写
+- 记录帧复杂度：若 L3 采用变长/索引表结构，Phase 2 工期上浮 → 用「极小型文件人工通读 + 差分矩阵」逐步收敛，先节点后单元
+
+### 关键现有证据（供各阶段引用）
+- 容器：前缀 u32 0 + double 5.0 + gzip @0x0c（122/122 证实）
+- 载荷头（v11）：u32 0 | double 版本 | u32 0 | u32 0 | u32 126 | u32 1 | u32 262144/7277 | … | double≈0.1 @0x34 | u32 397 @0x3c
+- 尾部：0x3e6=998、0x3e7=999、0x9b=155
+- 命名块：[cap=19][0][class_id][name]，class_id ∈ 5,6,7,8,10,11,12,13,17（语义待解）
+- 文本记录：tag 0x40000065/66 + 双长度前缀 ASCII（仅仓库样本，疑为 IGES 导入属性）
+- oracle ground truth：仓库样本 6408 节点/31843 单元(config 103)/2 comps(240,241)/1 prop/157 点/354 线/93 面；1d_elements 443/400(config 104)/4 comps/3 mats/2 props；leg_geom 4 节点/3 线/1 comp

@@ -1,0 +1,11 @@
+oracle probe started
+readfile result: 1
+nodes mark_result=1 count=6408 err=6408
+elements mark_result=1 count=31843 err=31843
+comps mark_result=1 count=2 err=2
+mats mark_result=1 count=0 err=0
+props mark_result=1 count=1 err=1
+points mark_result=1 count=157 err=157
+lines mark_result=1 count=354 err=354
+surfaces mark_result=1 count=93 err=93
+solids mark_result=1 count=0 err=0

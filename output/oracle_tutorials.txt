@@ -1,0 +1,42 @@
+===== REPO D:/training/caedecoder/hmdecoding/WS_3.2_3d_tetra_finish.hm
+  readfile: 1
+  nodes: 6408
+  elements: 31843
+  comps: 2
+  mats: 0
+  props: 1
+  points: 157
+  lines: 354
+  surfaces: 93
+  solids: 0
+  comp id=240 name=base
+  comp id=241 name=tetras
+  config 103: 5000 elements
+===== TUT-1D C:/Program Files/Altair/2019/tutorials/hm/1d_elements.hm
+  readfile: 1
+  nodes: 443
+  elements: 400
+  comps: 4
+  mats: 3
+  props: 2
+  points: 4
+  lines: 8
+  surfaces: 1
+  solids: 0
+  comp id=1 name=BAR2
+  comp id=2 name=line_mesh
+  comp id=3 name=feature_elements
+  comp id=13 name=geomety
+  config 104: 400 elements
+===== TUT-LEG C:/Program Files/Altair/2019/tutorials/hm/interfaces/madymo/leg_geom.hm
+  readfile: 1
+  nodes: 4
+  elements: 0
+  comps: 1
+  mats: 0
+  props: 0
+  points: 0
+  lines: 3
+  surfaces: 0
+  solids: 0
+  comp id=1 name=auto1
