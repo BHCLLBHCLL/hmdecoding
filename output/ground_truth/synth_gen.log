@@ -1,0 +1,12 @@
+saved v1913_00_empty write=1
+saved v1913_01_n1 write=1
+saved v1913_02_n4a write=1
+saved v1913_02_n4b write=1
+elem1 err=1
+saved v1913_03_t1 write=1
+elem2 err=1
+saved v1913_04_t2 write=1
+collector err=invalid command name "*createcollector"
+saved v1913_05_c2 write=1
+collector2 err=invalid command name "*createcollector"
+saved v1913_06_c3 write=1

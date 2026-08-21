@@ -1,0 +1,5 @@
+mk cfg=103 err=1 eid=1 config_back=103
+mk cfg=204 err=1 eid=2 config_back=204
+mk cfg=301 err=0 eid=2 config_back=204
+mk cfg=304 err=0 eid=2 config_back=204
+hm_info elementtypes err=hm_info: 'elementtypes' unsupported option result=

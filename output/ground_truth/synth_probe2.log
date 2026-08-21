@@ -1,0 +1,9 @@
+e1=1 err=1 cfg=103
+e2=2 err=1 cfg=204
+e3=2 err=0 cfg=204
+hm_info configs err=hm_info: 'configs' unsupported option val=
+hm_info elemconfigs err=hm_info: 'elemconfigs' unsupported option val=
+hm_info elemtypes err=hm_info: 'elemtypes' unsupported option val=
+hm_info elementtype err=hm_info: 'elementtype' unsupported option val=
+hm_info types err=hm_info: 'types' unsupported option val=
+writefile fem: 1
