@@ -1,3 +1,6 @@
-feat(P0): oracle 批量 ground truth 收割工具链与 123 文件语料 ground truth 库
+feat(P1+P2-工具): 容器格式规范 v1 与差分逆向工具链，节点记录双版本解码
 
-scripts/oracle_harvest.tcl 通过 hmbatch 批量读取 122 教程语料+仓库样本，收割实体计数/组件/材料/属性命名与单元 config 直方图；scripts/oracle_harvest.py 解析为 corpus_gt.json。P1 预处理：scripts/head_families.py 证实头部布局分 4 代（v10/v11/v12-13/v14+），v14+ 头部含 HyperMesh 字符串与内部表尺寸字段
+- docs/format_spec_v1.md: 容器层(前缀 u32 0 + double 5.0 + gzip，122/122 验证)、4 代头部布局、v14+ 字符串表、节点记录 v19.02(72B)/v11.05(52B) 布局
+- 合成语料生成器: HM2019 *writefile 直接产出 v19.02 .hm，差分链 8 样本
+- 发现: v11.05 节点记录 52 字节 [x,y,z] doubles + 下一节点链表指针；单元类型配置表 101..107；0x1c=保存计数；时间戳噪声定位
+- 新增脚本: gen_synthetic.tcl, diff_synthetic.py, find_node_layout.py, decode_node_records.py, locate_leg_nodes.py, probe_element_sections.py 等
