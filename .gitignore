@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
 command.tcl
-output/ground_truth/
+output/ground_truth/harvest.log
+output/ground_truth/command.tcl
 corpus/synthetic/
