@@ -49,20 +49,23 @@ def find_node_section(p):
     for hdr, count in cands[:8]:
         for shift, idoff, coordoff in ((20, 0, 0xC), (24, 0, 0xC), (20, 4, 0x10), (16, 0, 0xC)):
             base = hdr + shift
-            ok = 0; bad = 0
-            for k in range(min(count, 200)):
+            ok = 0; bad = 0; total = 0
+            probe = min(count, 200)
+            for k in range(probe):
                 rec = base + k * 52
                 if rec + 0x30 > len(p):
                     break
                 nid = u32(p, rec + idoff)
                 x = d64(p, rec + coordoff); y = d64(p, rec + coordoff + 8); z = d64(p, rec + coordoff + 16)
+                total += 1
                 if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9:
                     ok += 1
                 else:
                     bad += 1
-                    if bad > 40:
+                    if bad > 40 and count > 100:
                         break
-            if ok >= 150 and ok > bad * 4:
+            need = max(3, min(count // 4, 150))
+            if total >= need and ok >= need and ok > bad * 4:
                 cfg = (ok, hdr, count, shift, idoff, coordoff)
                 if best is None or ok > best[0]:
                     best = cfg
