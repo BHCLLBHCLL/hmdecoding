@@ -1,0 +1,5 @@
+elem 300000 config=103 node1=70049 node2=70048 node3=68506 node4=0
+elem 305000 config=204 node1=67758 node2=67764 node3=67599 node4=70945
+elem 310000 config=204 node1=66282 node2=70857 node3=70874 node4=70845
+elem 315000 config=204 node1=71666 node2=70388 node3=69276 node4=70385
+elem 320000 config=204 node1=71808 node2=66845 node3=66838 node4=71807

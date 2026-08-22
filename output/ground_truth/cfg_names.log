@@ -1,0 +1,7 @@
+elem 291462 config=103 node1=65532 node2=65536 node3=65531 node4=0
+elem 291463 config=103 node1=65531 node2=65538 node3=65530 node4=0
+elem 291464 config=103 node1=65530 node2=65539 node3=65519 node4=0
+elem 295000 config=103 node1=67418 node2=67457 node3=67455 node4=0
+elem 302867 config=103 node1=70395 node2=70393 node3=70394 node4=0
+template nastran: invalid command name "*template"
+writefile fem: 1
