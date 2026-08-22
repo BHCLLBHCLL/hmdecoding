@@ -1,5 +1,6 @@
-docs(P2): leg_geom/1d_elements 几何区进一步定位（线 id 引用与端点坐标副本），points 查询 API 确认
+feat(P2): v19.02 点记录解码（合成差分），*createpoint 几何创建链路打通
 
-- leg_geom 几何区: 线 id u32 引用(1@0x4dc,4@0x584,2@0x5f8) 与端点坐标副本(-0.85@0x48e,-1.0@0x4a6...)
-- 1d_elements 线 id 18,19,20,21,36,37,38,39（两组矩形框）；hm_getvalue points 可用、lines 仅 collector 可用
-- 新增探针与扫描脚本
+- *createpoint 有效，点记录 = [u32 id][u32 0][..][d64 x][d64 y][d64 z]（坐标+0xB 非对齐）
+- 合成样本 v1913_geom0x: 点 2=(4,5,6)@0x587、点 1=(1,2,3)@0x5b6，oracle 复核一致
+- points mark 查询 API 确认（id/x/y/z/collector）
+- 新增几何探针脚本与差分分析
