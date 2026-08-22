@@ -1,0 +1,7 @@
+saved v1913_geom00_empty write=1
+createpoint 1 2 3: 1
+saved v1913_geom01_p1 write=1
+createpoint 4 5 6: 1
+saved v1913_geom02_p2 write=1
+createline 1 2: invalid command name "*createline"
+saved v1913_geom03_l1 write=1
