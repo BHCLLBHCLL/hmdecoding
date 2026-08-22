@@ -1,6 +1,1 @@
-feat(P4): 几何导出器 IGES 5.3（点 116 + 线 110）
-
-- hmdecoder/export_iges.py: 变体A 4点+8线、变体B 137 点导出
-- output/real_inp/1d_elements_geom.iges（4点8线）、ws_geom.iges（137点）
-- 结构自检通过（S/G/D/P/T 段完整，T 行计数正确）
-- 线端点基于矩形拓扑推断（18=(p1,p2) 等），后续用实体记录验证
+docs(P5): 最终文档更新（IGES 导出、变体B几何点 85%、leg_geom 线记录最新发现）
