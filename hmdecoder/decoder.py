@@ -54,7 +54,12 @@ def u32(p, o): return struct.unpack_from("<I", p, o)[0]
 def u16(p, o): return struct.unpack_from("<H", p, o)[0]
 def d64(p, o): return struct.unpack_from("<d", p, o)[0]
 CONST = 0x70241FF5
+CONST_12 = 0x70501FF5  # v12-13 元素段常量
 MARK_GEOM = 0x40008126
+
+def is_const(v):
+    """元素段常量家族: 0x70??1FF5 (v11: 0x70241FF5, v12-13: 0x70501FF5)."""
+    return (v & 0xFFFF) == 0x1FF5 and ((v >> 24) & 0xFF) == 0x70
 
 NODE_LAYOUTS = ((52, 0, 12, False), (52, 4, 12, False), (52, 8, 20, False),
                 (92, 0, 12, False), (92, 4, 12, False), (92, 8, 20, False),
@@ -120,6 +125,8 @@ def parse_nodes(p, cfg):
         else:
             nid = u32(p, rec + idoff)
             x, y, z = d64(p, rec + 12), d64(p, rec + 20), d64(p, rec + 28)
+        if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9):
+            break  # 记录流结束 (count 字段可能含虚值)
         nodes[nid] = Node(nid, x, y, z)
     return nodes, base
 
@@ -150,34 +157,35 @@ def find_elem_segments(p):
 
 def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
     for s in range(sh + 16, sh + 64):
-        if u32(p, s) != CONST:
+        if not is_const(u32(p, s)):
             continue
         elems = {}
         rec = s
         ok = True
         for k in range(min(cnt, max_rec if max_rec else cnt)):
-            if u32(p, rec) != CONST:
+            if not is_const(u32(p, rec)):
                 # 断点重连: 记录流可能被其他数据块打断
                 nxt = None
                 for j in range(rec + 4, min(rec + 200, len(p) - 4)):
-                    if u32(p, j) == CONST:
+                    if is_const(u32(p, j)):
                         nxt = j
                         break
                 if nxt is None:
                     ok = False; break
                 rec = nxt
-                if u32(p, rec) != CONST:
+                if not is_const(u32(p, rec)):
                     ok = False; break
             eid = u32(p, rec + 4)
             if not (0 < eid < 10_000_000):
                 ok = False; break
             nxt = None
             for j in range(rec + 24, min(rec + 200, len(p) - 4)):
-                if u32(p, j) == CONST:
+                if is_const(u32(p, j)):
                     nxt = j
                     break
             d = (nxt - rec) if nxt else None
             got = None
+            # ---- v11 路径: flag<<16 u32 + u32 节点 ----
             prelens = [0, 4, 8, 12, 16, 20, 24, 28, 32] if d else [0]
             for prelen in prelens:
                 rec_len = (d - prelen) if d else None
@@ -207,9 +215,25 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                         break
                 if got:
                     break
+            # ---- v12 路径: u16 flag + u16 槽位节点 (58B 记录等) ----
+            if got is None:
+                for fp in range(16, 56, 2):
+                    f = u16(p, rec + fp)
+                    if not (300 <= f <= 500):
+                        continue
+                    nodes_off = rec + fp + 2
+                    n = 0
+                    while n < 12 and u16(p, nodes_off + 4 * n) != 0 and u16(p, nodes_off + 4 * n + 2) == 0:
+                        n += 1
+                    if n < 1:
+                        continue
+                    nds = [u16(p, nodes_off + 4 * j) for j in range(n)]
+                    if all(1 <= r <= row_count for r in nds):
+                        got = (fp, n, nds, f - 256)
+                        break
             if got is None:
                 ok = False; break
-            prelen, n, nds, config = got
+            fp, n, nds, config = got
             elems[eid] = (config, [row_map.get(r, r) for r in nds])
             if nxt is None:
                 break
