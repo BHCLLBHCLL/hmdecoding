@@ -10,7 +10,8 @@ HyperMesh `.hm` 文件格式解码（差分逆向，以本机 HyperMesh 2019 为
   - 变体 A 单元记录（48B）：`[0][0x01680000][行号×4][0][1][0x70241FF5][eid+1][...]`（1d_elements.hm: 400/400 连通性一致）；
   - 变体 B 单元记录（30B）：`[eid][0][0][config+256 u16][行号 u16 交错]`（仓库样本 WS_3.2_3d_tetra_finish.hm: 6408 节点/31843 单元与 oracle 完全一致）；
   - 单元引用 = 节点表行号（行号→id 经节点区映射）；
-- **真实 INP/STEP 导出**（`hmdecoder/export.py` + `export_step.py`）：`output/real_inp/`（真实 ID/拓扑/坐标；STEP 为 AP203 面片网格几何）；
+- **真实 INP/STEP/IGES 导出**（`hmdecoder/export.py` + `export_step.py` + `export_iges.py`）：`output/real_inp/`（真实 ID/拓扑/坐标；STEP 为 AP203 面片网格；IGES 5.3 点/线几何）；
+- **几何点解码**：变体 A 点记录 `[u32 0][d64 xyz]`（4/4 oracle 验证）；变体 B 点块 `[id][1]` + 5 类偏移候选 + 评分（z 整数/52B 家族）——133/157 真点、0 纯误报；
 - **语料与 ground truth**：122 教程文件索引（`corpus/corpus_index.json`）+ 123 文件 oracle 批量收割（`output/ground_truth/corpus_gt.json`）；
 - **合成差分工具链**：HM2019 可写出 v19.02 .hm，`scripts/gen_synthetic.tcl` 生成受控样本链。
 
@@ -39,7 +40,7 @@ python -c "import sys; sys.path.insert(0,'.'); from hmdecoder import decode; fro
 
 ## 回归状态（P4 快照）
 
-- 节点解码：56/98 语料文件与 oracle 计数一致；单元解码：6/98（含仓库样本与 1d_elements 全量）；
+- 节点解码：56/98 语料文件与 oracle 计数一致；单元解码：6/98（含仓库样本与 1d_elements 全量）；几何点：变体 B 85% 覆盖；
 - 其余为 v11 子变体/其他 DB 版本（v10/v12-13/v14+），见 `docs/PLAN.md` 后续计划；
 - class_id 关联结论与 leg_geom 几何区初步定位见 `docs/format_spec_v1.md` §9–10。
 
