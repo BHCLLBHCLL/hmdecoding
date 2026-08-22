@@ -1,6 +1,5 @@
-feat(decoder): B 型 u16 槽位布局 + 元素分块存储断链重连 — crash_tubes 4898/4902
+feat(decoder): 全语料 oracle 对照 node-ok 101/123, elem-ok 83/123 (原 66/98, 6/98)
 
-- B 型 u16 槽位记录: [0][0][X u16][n1][0][n2][0][n3][0][n4][0][0][0][next][0x5] (crash_tubes/abaqus3_0)
-- 元素分块存储: 块间有非元素数据 (seg2 359 条断链), 长窗口 (50KB) 重扫 + next 链验证
-- eid 线性推导 first_eid+k, 块内 next 字段验证 (t_ne == first_eid+k+2)
-- crash_tubes 4898/4902, abaqus3_0 268/270, abaqus_contactManager_2D 490/537
+- crash_tubes 4898/4902, abaqus3_0 268/270, contact2D 490/537 (B 型 u16 槽位 + 分块重连)
+- 确认 2_holes 等为纯几何文件 (oracle 0 节点, 解码正确)
+- 剩余缺口: v17 文件 (dummy_positioner/seat_deformer 586202 元素), truck 7727, car_section 657, chapter2_2 (13.03)
