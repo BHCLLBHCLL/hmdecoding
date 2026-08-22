@@ -1,0 +1,16 @@
+hm_entityinfo maxid lines -> '39' err=39
+hm_entityinfo count lines -> '' err=hm_entityinfo: invalid option specified
+hm_entityinfo exist lines -> '1' err=1
+hm_entityinfo name lines 18 -> '1' err=hm_entityinfo:  This entity type does not have a name
+hm_entityinfo exist lines 18 -> '1' err=1
+lines dn=points -> ?
+lines dn=point1 -> ?
+lines dn=point2 -> ?
+lines dn=p1x -> ?
+lines dn=p1y -> ?
+lines dn=p1z -> ?
+lines dn=p2x -> ?
+lines dn=p2y -> ?
+lines dn=p2z -> ?
+lines dn=length -> ?
+lines dn=area -> ?
