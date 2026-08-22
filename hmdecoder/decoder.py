@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""hmdecoder — HyperMesh .hm v11.05 容器/节点/单元解码器（差分逆向成果）。"""
+"""hmdecoder — HyperMesh .hm v11.05 容器/节点/单元/显示网格解码器。"""
 import gzip, struct
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -16,9 +16,15 @@ class Elem:
     config: int = 0
 
 @dataclass
+class DisplayPoint:
+    id: int
+    x: float; y: float; z: float
+
+@dataclass
 class HMModel:
     nodes: dict = field(default_factory=dict)
     elements: dict = field(default_factory=dict)
+    display_points: dict = field(default_factory=dict)
     db_version: float = 0.0
     node_count: int = 0
     elem_count: int = 0
@@ -37,6 +43,7 @@ def u32(p, o): return struct.unpack_from("<I", p, o)[0]
 def u16(p, o): return struct.unpack_from("<H", p, o)[0]
 def d64(p, o): return struct.unpack_from("<d", p, o)[0]
 CONST = 0x70241FF5
+MARK_GEOM = 0x40008126
 
 def find_node_section(p):
     cands = []
@@ -130,6 +137,46 @@ def parse_elements_variant_b(p, row_map, row_count):
                 elems[eid] = Elem(eid, nodes, flag - 256)
     return elems
 
+def parse_display_points(p):
+    """显示网格记录: 0x40008126 标记块 → 偏移 → 52 字节记录流。
+    记录 = [d64 x][d64 y][d64 z][d64 0][d64 0][u32 id][u32 0][u32 0]。"""
+    points = {}
+    marks = [i for i in range(len(p) - 8) if u32(p, i) == MARK_GEOM]
+    for m in marks:
+        off = u32(p, m + 4)
+        if off >= len(p):
+            continue
+        best = None
+        for start in range(off, min(off + 0x40, len(p) - 52)):
+            ok = True
+            for k in range(10):
+                rec = start + k * 52
+                if rec + 52 > len(p):
+                    ok = False; break
+                x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
+                if not (abs(x) < 1e6 and abs(y) < 1e6 and abs(z) < 1e6):
+                    ok = False; break
+            if not ok:
+                continue
+            score = sum(1 for k in range(10)
+                        if 0 < u32(p, start + k * 52 + 40) < 1e6)
+            if best is None or score > best[0]:
+                best = (score, start)
+        if not best or best[0] < 3:
+            continue
+        base = best[1]
+        k = 0
+        while base + 52 <= len(p) and k < 200000:
+            rec = base + k * 52
+            x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
+            rid = u32(p, rec + 40)
+            if not (abs(x) < 1e6 and abs(y) < 1e6 and abs(z) < 1e6):
+                break
+            if 0 < rid < 1e6:
+                points[rid] = DisplayPoint(rid, x, y, z)
+            k += 1
+    return points
+
 def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
@@ -155,10 +202,11 @@ def decode(path):
         model.element_variant = "B"
         model.elements = parse_elements_variant_b(p, row_map, ncount)
         model.elem_count = len(model.elements)
+    model.display_points = parse_display_points(p)
     return model
 
 if __name__ == "__main__":
     import sys
     for path in sys.argv[1:]:
         m = decode(path)
-        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} elems={len(m.elements)}/{m.elem_count} var={m.element_variant}")
+        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} elems={len(m.elements)}/{m.elem_count} display={len(m.display_points)} var={m.element_variant}")

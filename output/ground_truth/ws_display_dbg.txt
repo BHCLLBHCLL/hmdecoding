@@ -1,0 +1,7 @@
+WS MARK_GEOM 数量: 361
+  mark@0x24a4 off=0x34ee110 best=None
+  mark@0x28d7 off=0x34ee310 best=None
+  mark@0x3071 off=0x3d0bc00 best=None
+  mark@0x34c3 off=0x3d09b10 best=None
+  mark@0x4484 off=0x3d0a000 best=None
+  mark@0x4c00 off=0x3d50e00 best=None
