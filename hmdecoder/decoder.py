@@ -105,11 +105,13 @@ def find_node_section(p):
                         if bad > 3:
                             break
                 # 假候选 id 大量重复 (如 molding1 base=142 全 3) -> 淘汰
-                if len(seen) < max(5, ok // 2):
+                if len(seen) < max(2, ok // 2):
                     continue
-                if ok > 30 and (best is None or ok > best[0]):
+                # 小 count 文件 (极小型模型) 阈值按 count 缩放
+                need = max(3, int(min(count, 60) * 0.8))
+                if ok >= need and (best is None or ok > best[0]):
                     best = (ok, (hi, count, base, stride, idoff, chain))
-    if best and best[0] >= 45:
+    if best and best[0] >= max(3, int(min(best[1][1], 60) * 0.8)):
         return best[1]
     return find_node_section_struct(p)
 
@@ -362,7 +364,8 @@ def row_map_from_nodes(p, cfg, base):
 # ---------------------------------------------------------------------------
 CONFIG_NODES = {103: 3, 104: 4, 204: 4, 220: 8, 205: 4, 206: 6, 208: 8,
                 100: 2, 101: 2, 102: 2, 105: 2, 106: 2, 108: 2, 112: 2, 114: 2,
-                201: 3, 202: 3, 203: 3, 301: 6, 302: 8, 303: 6, 304: 8, 305: 10, 306: 12}
+                201: 3, 202: 3, 203: 3, 301: 6, 302: 8, 303: 6, 304: 8, 305: 10, 306: 12,
+                60: 3}
 
 def find_elem_segments(p):
     segs = []
@@ -459,6 +462,22 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                     if all(1 <= r <= row_count for r in nds):
                         got = (fp, n, nds, f - 256)
                         break
+            # ---- 低 config (plotel/1 节点等): [CONST][eid][1|k<<16][0][0][(cfg+256)<<16][row...][tail] ----
+            if got is None:
+                cfg = u16(p, rec + 22) - 256
+                if (1 <= cfg <= 100 and u32(p, rec + 20) == (cfg + 256) << 16):
+                    if cfg == 1:
+                        ncfg = 1
+                    elif cfg == 2:
+                        ncfg = 2
+                    else:
+                        ncfg = 0
+                        while ncfg < 8 and 1 <= u32(p, rec + 24 + 4 * ncfg) <= row_count:
+                            ncfg += 1
+                    if ncfg >= 1:
+                        nds = [u32(p, rec + 24 + 4 * j) for j in range(ncfg)]
+                        if all(1 <= r <= row_count for r in nds):
+                            got = (24, ncfg, nds, cfg)
             if got is None:
                 ok = False; break
             fp, n, nds, config = got
@@ -580,6 +599,85 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         rec = nxt
     return elems
 
+def _parse_b_u16rows(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
+    """B 型 u16 行号记录 (config 60 等): [0][0][flag u16][(row,0) u16 对 ...].
+
+    与 crash_tubes 槽位不同: 行号 u16 与 0 交错, 无下一条 eid 字段;
+    下一条记录以 [0][0][flag] 定位.
+    """
+    s = sh + 24
+    if u32(p, s) != 0 or u32(p, s + 4) != 0:
+        return None
+    elems = {}
+    rec = s
+    eid = first_eid
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        flag = u16(p, rec + 8)
+        cfg = flag - 256
+        if not (1 <= cfg <= 100):
+            break
+        nds = []
+        j = 0
+        while j < 12:
+            r = u16(p, rec + 10 + 4 * j)
+            z = u16(p, rec + 12 + 4 * j)
+            if r == 0 or z != 0 or not (1 <= r <= row_count):
+                break
+            nds.append(r)
+            j += 1
+        if not nds:
+            break
+        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        eid += 1
+        # 找下一条记录: [0][0][flag 300-500]
+        nxt = None
+        for q in range(rec + 10 + 4 * len(nds), min(rec + 400, len(p) - 10)):
+            if u32(p, q) == 0 and u32(p, q + 4) == 0 and 300 <= u16(p, q + 8) <= 500:
+                nxt = q
+                break
+        if nxt is None:
+            break
+        rec = nxt
+    return elems
+
+def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
+    """A 型几何复合记录 (Y=3, config 104 等): 无 CONST 锚, 含显示坐标.
+
+    记录布局 (间距 71-74B, 0x1a040be4 头):
+      [+0] 0x1a040be4  [+4] 8  [+8] ASCII 名  [+16] 0x0a040be6  [+20] 2
+      [+24] 0x12040084 [+28..35] 坐标 [+36] eid  [+40][+44] 0
+      [+48+4i] (u16 属性, u16 节点行号)  i=0..n-1
+    0x1a040be4 在坐标数据中大量误匹配, 用 记录间距(68-80) + eid 合法 +
+    节点行号合法 三重验证过滤.
+    """
+    MARK = b"\xe4\x0b\x04\x1a"
+    elems = {}
+    prev = None
+    j = sh + 24
+    n_parsed = 0
+    while j < hi:
+        j = p.find(MARK, j, hi)
+        if j < 0:
+            break
+        if prev is not None and not (68 <= j - prev <= 80):
+            j += 1
+            continue  # 间距异常 -> 误匹配
+        eid = u32(p, j + 36)
+        nds = []
+        for i in range(8):
+            r = u32(p, j + 48 + 4 * i) >> 16
+            if not (1 <= r <= row_count):
+                break
+            nds.append(r)
+        if nds and 0 < eid < 10_000_000:
+            elems[eid] = (104, [row_map.get(r, r) for r in nds])
+            prev = j
+            n_parsed += 1
+            if max_rec and n_parsed >= max_rec:
+                break
+        j += 1
+    return elems
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -589,11 +687,23 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            nxt_sh = None
+            for (sh2, *_rest) in segs:
+                if sh2 > sh:
+                    nxt_sh = sh2
+                    break
+            hi = nxt_sh if nxt_sh else len(p)
+            got2 = _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=max_rec)
+            if got2 and (got is None or len(got2) > len(got)):
+                got = got2
         else:
             got = _parse_b_type(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
             got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
+            got3 = _parse_b_u16rows(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
             if got2 and (got is None or len(got2) > len(got)):
                 got = got2
+            if got3 and (got is None or len(got3) > len(got)):
+                got = got3
         if got:
             elems.update(got)
     return elems or None
@@ -829,16 +939,21 @@ def decode(path):
                             break
                         row += 1
                         row_map[row] = nid
-            elems = _scan_family1_cores(p, row_map, len(nodes))
-            if elems:
-                # 特殊元素段 (Y≠2 段) 补扫: 节点段之后的区域
-                scan_from = max((s[2] + s[1] * s[3]) for s in ns_list) if ns_list else 0
-                elems_spec = _parse_special_elems(p, row_map, len(nodes), scan_from=scan_from)
-                if elems_spec:
-                    elems.update(elems_spec)
-                # 行号 -> 节点 ID
-                elems = {eid: (cfg, [row_map.get(r, r) for r in rows])
-                         for eid, (cfg, rows) in elems.items()}
+            if d64(p, 4) >= 14:
+                # v14+ (v17): family-1 核心记录 + 特殊元素段
+                elems = _scan_family1_cores(p, row_map, len(nodes))
+                if elems:
+                    # 特殊元素段 (Y≠2 段) 补扫: 节点段之后的区域
+                    scan_from = max((s[2] + s[1] * s[3]) for s in ns_list) if ns_list else 0
+                    elems_spec = _parse_special_elems(p, row_map, len(nodes), scan_from=scan_from)
+                    if elems_spec:
+                        elems.update(elems_spec)
+                    # 行号 -> 节点 ID
+                    elems = {eid: (cfg, [row_map.get(r, r) for r in rows])
+                             for eid, (cfg, rows) in elems.items()}
+            else:
+                # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式)
+                elems = decode_elements(p, row_map, len(nodes))
             elems_b = _parse_ws_variant_b(p, row_map, ns[1])
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b

@@ -95,6 +95,17 @@
   小段记录 k=0 被流扫描拒绝 → mod-4=3 网格 + 零4 定位补扫
 - 一致性: 元素节点引用 0 无效, 节点 0 重复; 特殊元素 359 个节点+config 全匹配 oracle
 
+### 5. 语料全量比对（Phase 4 自动比对器，2026-08 本轮完成）
+- **auto_compare.py**: decode 全语料 vs corpus_gt.json 逐文件计数比对, 输出覆盖率报告;
+- **全量结果 (122 文件, 0 崩溃)**: node exact 108/122, elem exact 91/122 (原 101/123, 83/123);
+- **本轮修复**:
+  - find_node_section 阈值按 count 缩放 → 极小型 v11 文件 (count<45) 节点解码修复;
+  - A 型低 config 段 (config 1/2 plotel): [CONST][eid][1|k<<16][0][0][(cfg+256)<<16][行号...];
+  - B 型 u16 行号段 (config 60): [0][0][flag][(row,0) u16 对], 新增 _parse_b_u16rows;
+  - Y=3 几何复合记录 (config 104): 0x1a040be4 头 + eid@+36 + 节点行号 u32@+48+4i 高16位, 新增 _parse_a_geom (wing_section 1→149);
+  - decode() 版本分流: v14+ 走 family-1+special, v11-13 走分段解析 (修复 v11 元素全丢 bug);
+- **剩余主要缺口**: molding1 (elems 344/14558, 节点 7191/7279), truck (204762/212489, face 段), wing_section_complete (149/1001, 复合记录变体), frame_assembly_3/4 (miss 1365/848), car_section (miss 626), chapter2_2 (v13 节点布局), geometry.hm (0/4116), icw_ex1/2 (节点少 12/23).
+
 ### 3. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |
