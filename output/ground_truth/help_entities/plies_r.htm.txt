@@ -1,0 +1,397 @@
+Plies
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical
+ply.
+Physical plies manufacture laminates which make up composite structures. A physical ply has
+attributes of material, shape (area), thickness, and fiber orientation; where its shape is
+any complex flat pattern that can be cut from a roll of material. Similarly, a FEA ply is
+composed of the same data attributes as a physical ply (material, shape/area, thickness, and
+fiber orientation). The shape of a FEA ply can either be defined by closed lines or
+approximated from the elements which most closely represent its actual complex shape. In the
+case where plies are defined on lines, perform a realization to convert this information
+into a definition by elements. Ply data defined on lines is imported from Catia Composites
+Parts Design (CPD) data.
+Plies defined by elements
+The shape (area) of an FEA ply is defined by selecting elements which most closely
+represent the complex shape of a physical ply. In Figure 1 , an
+elliptical physical ply shape is defined by the brown line. The corresponding FEA ply
+shape is defined by the gray shaded elements of the associated FEA mesh. Typically, if
+an element's centroid exists within the bounds of the physical ply shape, that element
+is considered part of the FEA ply shape.
+Figure 1.
+Plies defined by lines
+Plies can be defined by selecting lines which build a closed area. If CPD data is
+imported from Catia files, plies are defined on lines.
+Once a mesh is available, plies defined by lines can be converted into plies defined
+by elements by performing a realization. Realization/conversion methods include:
+Project normal to target mesh
+If the element centroid projected along its normal lies within the geometrical
+ply definition, it is associated with this ply.
+Normal by ply contour
+Projection along a normal on a surface derived from the lines of a ply
+contour.
+Specified direction
+Manually define a projection direction.
+The ply thickness is typically defined as the final cured thickness of a single ply of
+material. In addition, the ply can be made of any material: isotropic, orthotropic,
+anisotropic, or any other material law.
+Figure 2.
+The fiber orientation of a ply defines the direction fibers lay within that ply. The ply
+fiber orientation is typically an integer value between -90 and 90. The fiber orientation of
+a ply is always defined relative to each elements material direction using right hand rule
+around the elements normal, or thru-thickness direction, to define positive angles. Even
+though a ply's fiber orientation is a constant integer, element material directions can vary
+from element to element, and this allows varying fiber directions within a ply to be
+modeled. Element material directions are defined differently from solver interface to solver
+interface.
+Figure 3.
+Once all of the plies which make up a composite structure are defined, just as in the
+actual hand-layup manufacturing process, plies are stacked in a specific given order within
+the laminate entity to define a laminate of the structure. It is possible to stack plies,
+whether they are defined based on geometry or elements.
+Turn the display of plies on/off or change the way plies appear in the modeling window with the Ply layers display setting, which can be accessed
+from the Mesh Display settings on the View Controls toolbar.
+Supported Solver Cards
+Solver cards supported for plies.
+Abaqus Cards
+The Abaqus solver has no direct match for a ply,
+therefore the ply entity does not have a card image in the Abaqus solver interface. Ply entity names will end up in the
+ply name of the composite properties SHELL SECTION and SHELL GENERAL SECTION, if
+used in a laminate entity and realized into a zone based model.
+Nastran Cards
+The Nastran solver has no direct match for a ply,
+therefore the ply entity does not have a card image in the Nastran solver interface. Ply entity IDs will end up as
+global ply ID in the PPOMG property card, if used in a laminate entity and realized
+into a zone based model.
+OptiStruct Cards
+The OptiStruct PLY card is represented as a ply entity.
+Plies can be created from the selection of individual elements or from predefined
+element sets which define the ply shape.
+Card
+Description
+PLY
+Defines the properties of a ply used in ply-based composite
+definition. Note: Can only be created and edited in the Ply
+Editor from the Model Browser .
+Radioss Cards
+The property card /PROP/PLY (TYPE19) and keyword /PLY are represented as a ply
+entity.
+Samcef Cards
+The Samcef .PLI card is represented as a ply entity.
+Create and Realize Plies
+Overview of how to create and realize plies.
+Radioss
+Create Plies
+In the Model Browser , right-click and select Create > Ply from the context menu .
+In the Create Ply dialog, define attributes
+accordingly.
+Option
+Description
+Name
+Ply name. This will define the prop_title attribute of
+/PROP/TYPE19.
+Same as
+Duplicate an existing ply.
+Card Image
+Keyword used for the ply creation. /PROP/PLY if P19_PLY card image is used, or /PLY if PLY card image is used.
+Color
+Color of ply.
+Dummy ply
+Create simple ply without a card image .
+Material Type
+Type of material assigned to ply.
+Material
+Material assigned to ply. This will define the mat_ID attribute in
+/PROP/TYPE19.
+Thickness
+Ply thickness. This will define the t attribute in
+/PROP/TYPE19
+System
+Reference system used for the angle calculation of the ply. The
+system is not linked to an attribute of the /PROP/TYPE19, but can be
+defined by importing external composite data like FiberSim
+information. This information will be taken into account during the
+realization of the ply.
+Orientation
+Fiber angle on the ply. This will define the delta_phi attribute
+in /PROP/TYPE19.
+Integration points
+Number of integration point through the ply thickness. This will
+define the Npt_ply attribute in /PROP/TYPE19.
+Drape table
+Drape table to link to the ply. The drape table will not linked
+to an attribute of the /PROP/TYPE19, but can be defined by importing
+external composite data like FiberSim information. If specified, a
+realization of the ply is needed to obtain the initial fiber angle
+defined with the Radioss cards
+/INISHE/ORTH_LOC and /INSH3N/ORTH_LOC.
+Shape
+Shape of the ply. The attributes grsh4n_ID and grsh3n_ID of
+/PROP/TYPE19 are automatically generated.
+If the shape is
+defined by a line or surface, which may be the case when importing
+CAD/CPD data, a realization of the ply is needed to generate the FE
+element sets defining the FE shape.
+Base Surfaces
+Base surfaces to be used during ply realization. This is useful
+when the projection of the shape is not found on a unique
+surface.
+Click Create .
+You can edit a ply by right-clicking
+on it in the Model Browser and selecting Edit
+from the context menu .
+Realize Plies
+Realize plies when ply definitions need to be imported from external composite data,
+such as FiberSim or CAD/CPD.
+Before you realize plies, make sure the Radioss composite property card /PROP/TYPE17 or /PROP/TYPE51 is
+assigned to the composite components on which the realization should be
+performed.
+During the realization process, the shape of the ply will be projected on the
+selected FE mesh and, if drape information is available, the corresponding Radioss cards /INISHE/ORTH_LOC, /INSH3N/ORTH_LOC, or /DRAPE
+will be generated.
+In the Model Browser , right-click on the Plies folder and
+select Realize from the context menu .
+In the Ply Realization dialog, define realization settings
+accordingly.
+Note: For each case (FiberSim or CAD/CPD), a dedicated projection method is
+proposed in the Projection options field.
+Click Realize .
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

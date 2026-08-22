@@ -1,0 +1,186 @@
+3D Elements
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Volume Meshing
+Volume mesh or "solid meshing" uses three-dimensional elements to represent fully 3D objects, such as solid parts
+or sheets of material that have enough thickness and surface variety that solid meshing makes more sense than 2D shell
+meshing.
+3D Elements
+Supported 3D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Elements
+Elements are FE idealizations for a portion of a physical part.
+Criteria and Parameter Settings
+Configure criteria and parameter settings.
+SPH Meshing
+Smooth Particle Hydrodynamics (SPH), Finite Point Method (FPM) is a technique used to analyze bodies that do not have
+high cohesive forces among themselves and undergo large deformation, such as liquids and gases.
+Line Meshing
+1D mesh that allows accurate testing of connectors, such as bolts, and similar rod-like or bar-like objects that can
+be modeled as a simple line for FEA purposes.
+Surface Meshing
+A surface mesh or "shell mesh" represents model parts that are relatively two-dimensional, such as sheet metal or
+a hollow plastic cowl or case.
+Volume Meshing
+Volume mesh or "solid meshing" uses three-dimensional elements to represent fully 3D objects, such as solid parts
+or sheets of material that have enough thickness and surface variety that solid meshing makes more sense than 2D shell
+meshing.
+3D Elements
+Supported 3D elements.
+Solid Map Meshing
+Solid Map meshing is a method that creates a mesh of solid elements in a solid geometric volume.
+Tetra Meshing
+Tetra meshing fills an enclosed volume with first order or second order tetrahedral elements.
+Volume Shrink Wrap Meshing
+Produce an all-hexa or all-tetra mesh based on the selected elements or geometry, then use the shrink wrap functionality
+as a quick mechanism to generate solid meshes.
+Acoustic Cavity Meshing
+Acoustic Cavity meshing generates a fluid volume mesh used to calculate the acoustic modes (or standing waves) inside
+the air spaces of a vehicle or similarly enclosed structural model.
+Voxel Meshing
+Voxel meshing fills an enclosed volume with voxels (hexas) of a predefined size.
+Gasket Meshing
+Gasket elements are used to model components with a very thin thickness, with their main purpose being to act as a
+sealing between structural components.
+Mesh Controls
+Mesh controls are used to automate and streamline the meshing process.
+Check Mesh Quality
+Evaluate the overall quality of a mesh, and resolve criteria violations.
+Edit Mesh
+Modify your mesh by detect holes, locating edges or features, refining mesh pattern, and so on.
+Batchmesher
+Batchmesher is a tool that performs geometry feature recognition, cleanup and automatic meshing in batch mode for given CAD files.
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Volume Meshing
+Volume mesh or "solid meshing" uses three-dimensional elements to represent fully 3D objects, such as solid parts
+or sheets of material that have enough thickness and surface variety that solid meshing makes more sense than 2D shell
+meshing.
+3D Elements
+Supported 3D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+3D Elements
+Supported 3D elements.
+Tetra Elements
+3D tetrahedra elements.
+Tetra4
+Configuration 204 - 3D (1st order) tetrahedra elements with 4 nodes
+ordered in HyperMesh .
+Figure 1. Element Configuration 204, 4-Noded Tetra
+Tetra10
+Configuration 210 - 3D (2nd order) tetrahedra elements with 10 nodes
+ordered in HyperMesh .
+Figure 2. Element Configuration 210, 10-Noded Tetra
+Penta Elements
+3D triangular prism pentahedra elements.
+Penta6
+Configuration 206 - 3D (1st order) triangular prism pentahedra elements
+with 6 nodes ordered in HyperMesh .
+Figure 3. Element Configuration 206, 6-Noded Penta
+Penta15
+Configuration 215 - 3D (2nd order) triangular prism pentahedra elements
+with 15 nodes ordered in HyperMesh .
+Figure 4. Element Configuration 215, 15-Noded Penta
+Hex Elements
+3D hexahedra elements.
+Hex8
+Configuration 208 - 3D (1st order) hexahedra elements with 8 nodes
+ordered HyperMesh .
+Figure 5.
+Hex20
+Configuration 220 - 3D (2nd order) hexahedra elements with 20 nodes
+ordered in HyperMesh .
+Figure 6. Element Configuration 220, 20-Noded Hexa
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

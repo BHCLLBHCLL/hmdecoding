@@ -1,0 +1,181 @@
+Undefined Entities
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Undefined Entities
+Undefined entities are entities that will not be written to the solver
+deck.
+The import and export of undefined entities is fully supported for:
+Components
+Properties
+Materials
+Curves
+Sets
+Rigid Walls
+Cross Sections
+Accelerometers
+Boxes
+Undefined entities imported from new include files will be organized in the master
+model.
+If an entity is referenced in a solver deck, but is not defined, an undefined entity
+will be created and assigned the ID of the referenced entity on import. A default
+card image and a default name will also be assigned to
+the newly created undefined entity.
+Referenced components are created as an undefined entity.
+The defined state of an entity is indicated in the Model Browser ,
+Defined column (Property and Material entity views), or in the Property Editor , Defined Entity field. An active checkbox indicates
+an entity is defined, whereas an inactive checkbox indicates an entity is
+undefined.
+Figure 1.
+Undefined entities exhibit the same behaviors as defined entities; they are visible
+in all relevant browser s and in the Property Editor . The defined state simply controls the export of the
+entity.
+If Defined is inactive, the entity not will be written to the solver
+deck.
+If Defined is active, the entity will be written to the solver deck.
+The export status of undefined entities cannot be changed. If Defined is inactive,
+the export status will also be inactive in the Entity State Browser .
+Resolve Undefined Entities
+Undefined entities can be defined interactively in the session or via the import of a
+model that contains the referenced entities. This ensures the entity will be written to the
+solver deck.
+Define an entity interactively in the session by activating the
+Defined checkbox in the browser or Property Editor .
+Figure 2.
+Define an entity via the import of a model containing the referenced entities.
+If additional entities residing in the solver deck do not exist, they will be
+imported as is.
+From the menu bar , click File > Import > HyperMesh Model .
+In the Import File dialog, open the model
+containing the referenced entities.
+In the File Options dialog, set the relevant
+option(s) to Keep Incoming Attributes and click
+OK .
+Figure 3.
+Renumber Undefined Entities
+The renumbering of undefined entities is restricted to ensure references to entities
+that reside in external Include files will not be invalidated.
+In the Property Editor , ID field, enter a new number for
+the undefined entity.
+In the dialog that appears, click Yes to execute the
+renumbering operation.
+Figure 4.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

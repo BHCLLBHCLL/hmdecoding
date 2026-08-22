@@ -1,0 +1,190 @@
+SolverSubmodels
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+SolverSubmodels
+SolverSubmodels allow you to manage ID offsets as well as define transformations on solver entities or Include files.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Include Files
+Include files enable solver decks to be split into separate files for organizational purposes, and provide a mechanism
+to include these files in a master solver beck, typically using an include statement.
+SolverSubmodels
+SolverSubmodels allow you to manage ID offsets as well as define transformations on solver entities or Include files.
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+SolverSubmodels
+SolverSubmodels allow you to manage ID offsets as well as define transformations on solver entities or Include files.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+SolverSubmodels
+SolverSubmodels allow you to manage ID offsets as well as define transformations on
+solver entities or Include files.
+SolverSubmodels are generally used to position a sub-assembly of a model by defining
+transformations on it, and, manage the entities IDs in the sub-assembly by defining
+IDs offsets.
+The SolverSubmodel is differentiated from a solver Include files by its entity icon
+( ).
+In the Radioss solver profile, the //SUBMODEL keyword is
+mapped to the SolverSubmodels.
+The definition of a Position entity and Transformations on a SolverSubmodel allows
+you to position the content of a SolverSubmodel in the space.
+Create SolverSubmodels
+Manage ID offsets as well as define transformations on solver entities or Include
+files using the SolverSubmodel entity.
+Use the Model or Solver browser to create a SolverSubmodel.
+In the Model browser, right-click and select Create > Solversubmodel from the context menu.
+In the Solver browser, right-click and select Create > Submodel from the context menu.
+In the Create SUBMODEL dialog, define the
+SolverSubmodel.
+In the Name field, enter a name.
+Under Offsets , define all entity ID
+offsets.
+Click Create .
+Modify ID offsets in the Entity Editor, or by dragging-and-dropping entities or
+Include Files into the SolverSubmodel in the browser.
+ID offsets will be automatically assigned on affected entities during a move
+operation (drag-and-drop) of those entities (or Include files) into the
+Submodel.
+Changing the ID offsets in the SolverSubmodel Entity Editor will not renumber
+the entity IDs already defined in the SolverSubmodel. You can manage ID
+offsets of entities defined in a SolverSubmodel in the ID
+Manager using the Edit ID Offsets
+option accessed from the contextual menu. Tip:
+Moving entities or Include files into SolverSubmodel when ID offsets
+are defined, may result in ID conflicts during ID offset operation.
+In that case, you will receive a message to inform you about such
+IDs have conflicts, and you can choose to perform an automatic
+renumbering of conflicting entities or stop the move operation.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

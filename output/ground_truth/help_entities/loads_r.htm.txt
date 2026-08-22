@@ -1,0 +1,1037 @@
+Loads
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Loads
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Loads
+Equations
+Equation entities contain mathematical equations that define more complex loads. They are used to define linear constraints
+in local and global coordinate systems.
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Loads
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Loads
+Every load and constraint must be organized into one load collector, and therefore are
+mutually exclusive to a load collector.
+Load Configurations
+Load entities have an associated load configuration. A load configuration determines how to
+draw, store, and work with a load.
+Accelerations
+Configuration 9 - Acceleration loads allow for an
+acceleration (length/time 2 ) to be defined on the model.
+Accelerations are displayed as a vector with the
+letter A at the tail end in the modeling window .
+Constraints
+Configuration 3 - Constraints allow for constrained degrees of freedom to be
+defined on the model.
+Constraints are displayed with a triangle that connects to the node, with the dof
+numbers that apply to the node beside the triangle in the modeling window .
+Fluxes
+Configuration 6 - Flux loads are defined as an amount that flows through a unit
+area per unit time (amount/length 2 /time). Fluxes are typically used in
+modeling transport phenomena such as heat transfer, mass transfer, fluid dynamics,
+and electromagnetism.
+Fluxes are displayed as a thick arrow labeled with the word "flux" in the modeling window .
+Forces
+Configuration 1 - Force loads allow for a concentrated force
+(mass*length/time 2 ) to be applied to the model.
+Forces are displayed as a vector with the letter F at the tail end in the modeling window .
+Moments
+Configuration 2 - Moment loads allow for a concentrated moment (length*force) to be
+applied to the model.
+Moments are displayed with a double-headed vector with the letter M at the tail end
+in the modeling window .
+Pressures
+Configuration 4 - Pressure loads allow for a pressure (force*length 2 ) to
+be applied to the model.
+For most solvers, the pressure load is considered as force/area, therefore the
+magnitude of the pressure is multiplied by the calculated area of the elements to
+which it is applied and resolved as concentrated force loads at the associated
+nodes.
+Pressures are displayed as a vector with the letter P at the tail end in the
+modeling window .
+Temperatures
+Configuration 5 - Temperature loads allow for a concentrated temperature to be
+applied to the model.
+Temperatures are displayed as a vertical line with the letter T at the top in the
+modeling window .
+Velocities
+Configuration 8 - Velocity loads allow for a velocity (length/time) to be applied
+to the model.
+Velocities are displayed as a vector with the letter V at the tail end in the
+modeling window .
+Abaqus Cards
+Loads or constraints that are to be used as history data
+(under *STEP) should be collected into load collectors with the HISTORY card image. These
+load collectors also need to be added to the corresponding load steps (*STEP). In contrast,
+loads or constraints for model data should be collected into load collectors with
+INITIAL_CONDITION card image. They will automatically be written out in the model portion of
+the Abaqus input deck. Note: All loads and boundary conditions on
+sets can be expanded to individual nodes and elements by selecting the Expand
+load on sets option in the File Options dialog, which
+is invoked upon importing a solver deck. If a **HMLOAD_SETS_EXPAND comment is found in the
+input file, all loads and boundary conditions on sets are expanded to individual nodes and
+elements.
+Card
+Supported Load Types
+Description
+*BOUNDARY (electric potential, dof 9)
+Flux
+Specifies flux boundary conditions for piezoelectric analysis.
+*BOUNDARY (structural)
+Constraint
+Creates structural boundary conditions.
+*BOUNDARY
+(temperature, dof 11)
+Temperatures
+Specifies temperature boundary conditions.
+*CECHARGE
+Flux
+Specifies concentrated electric charges for piezoelectric analysis.
+*CECURRENT
+Flux
+Specifies concentrated current in electric conduction.
+*CFLUX
+Flux
+Specify concentrated fluxes in heat transfer or mass diffusion
+analyses.
+*CLOAD
+Force
+Creates concentrated forces.
+*CLOAD
+Moment
+Creates concentrated moments.
+*COUPLING
+Constraint
+Define a surface-based coupling constraint
+*DECHARGE
+Pressure
+Distributes electric charges for piezoelectric analysis.
+*DFLUX
+Pressure
+Specify distributed fluxes in heat transfer or mass diffusion
+analyses.
+*DISTRIBUTING
+Constraint
+Define a distributing coupling constraint
+*DISTRIBUTING COUPLING
+Elements
+Specify nodes and weighting for distributing coupling elements
+*DLOAD
+Pressure
+Specifies distributed loads
+*FILM
+Pressure
+Define film coefficients and associated sink temperatures.
+*KINEMATIC
+Multi-point Constraints
+Define a kinematic coupling constraint
+*KINEMATIC COUPLING
+Multi-point Constraints
+Constrain all or specific degrees of freedom of a set of nodes to the rigid
+body motion of a reference node
+*MPC
+Multi-point Constraints
+Define multi-point constraints
+*RADIATE
+Pressure
+Specify radiation conditions in heat transfer analyses
+*TEMPERATURE
+Temperature
+Specifies predefined temperature field.
+ANSYS Cards
+Card
+Supported Load Types
+Description
+BF
+Flux
+Defines a nodal body force load.
+BF_FLUE
+Flux
+BF_HGEN
+Flux
+BF_TEMP
+Temperatures
+BFE_FLUE
+Flux
+Defines an element body force load.
+BFE_HGEN
+Flux
+BFE_TEMP
+Flux
+CE_STRUCT
+Equation
+CE_THERM
+Equation
+CE_MAG
+Equation
+CE_ELEC
+Equation
+ConvBulkTe
+Pressure
+ConvFilmCo
+Pressure
+D_A
+Constraint
+Vector magnetic potential.
+D_CONSTRNT
+Constraint
+Defines DOF constraints at nodes.
+D_MAG
+Constraint
+Scalar magnetic potential.
+D_PRES
+Constraint
+D_TEMP
+Temperature
+D_VOLT
+Constraint
+F_FLOW
+Flux
+Specifies force loads at nodes.
+F_HEAT
+Flux
+FLOTRAN
+Pressure
+Specifies "FLOTRAN data settings" as the subsequent status
+topic. Note: FLOTRAN surface load label “FSI [fluid-structure interaction flag]”
+is available under pressure load. You must use DOF1 to add value for this
+label.
+FORCE
+Force
+Selects the element nodal force type for output.
+FORCE2
+Moment
+FSI
+Pressure
+HFLUX
+Pressure
+IC_A
+Constraint
+IC_CONSTRN
+Constraint
+Specifies initial conditions at nodes.
+IC_MAG
+Constraint
+IC_PRES
+Constraint
+IC_TEMP
+Temperature
+IC_VOLT
+Constraint
+PRESSURE
+Pressure
+RDSF_EMI
+Pressure
+RDSF_ENCL
+Pressure
+SFE
+Pressure
+Convection
+Heatflux
+Defines elemental surface load. Note: Structural, thermal and Fluid labels are
+covered.
+SFE
+Structural
+Thermal
+Fluid
+Surface load
+Structural label: PRES
+Thermal label: CONV, HLFUX
+Fluid label: FSI
+LS-DYNA Cards
+Several load types cause
+three cards to be output for x, y, and z components. During input, these are grouped into
+one load. Loads cannot be applied to sets, components, or boxes. Load curves are input and
+output. Use the Card Editor to select load curves. Unless mentioned in the Notes column,
+load cards cannot be edited.
+Card
+Supported Load Types
+Description
+*BOUNDARY_PRESCRIBED_MOTION_NODE
+Constraints
+Type 2; Card 26, VAD = 2
+DEATH
+BIRTH
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes. DOF 4, -4, 8, -8, 9, -9, 10, -10, 11, -11 are not
+supported.
+*BOUNDARY_PRESCRIBED_MOTION_NODE
+Velocity
+Type 1; Card 26;
+VAD = 0
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes. DOF 4, -4, 8, -8, 9, -9, 10, -10, 11, -11 are not
+supported
+*BOUNDARY_PRESCRIBED_MOTION_NODE
+Acceleration
+Type 1
+Card 26
+VAD = 1
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes. DOF 4, -4, 8, -8, 9, -9, 10, -10, 11, -11 are not
+supported
+*BOUNDARY_PRESCRIBED_MOTION_NODE_(ID)
+Velocity
+*BOUNDARY_PRESCRIBED_MOTION_NODE_(ID)
+Constraints
+Type 2; Card 26, VAD = 2
+dynaName
+DEATH
+BIRTH
+*BOUNDARY_PRESCRIBED_MOTION_RIGID
+PID
+DOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes. RIGID_LOCAL and _SET options are supported.
+*BOUNDARY_PRESCRIBED_MOTION_RIGID_ID
+Dyna_Name
+PID
+DOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes.
+*BOUNDARY_PRESCRIBED_MOTION_RIGID_LOCAL
+PID
+DOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+Title
+*BOUNDARY_PRESCRIBED_MOTION_RIGID_LOCAL_ID
+Dyna_Name
+PID
+DOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+*BOUNDARY_PRESCRIBED_MOTION_SET
+NSIDDOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+TITLE
+Define an imposed nodal motion (velocity, acceleration, or displacement) on a
+node or a set of nodes.
+*BOUNDARY_PRESCRIBED_MOTION_SET_ID
+Dyna_Name
+NSID
+DOF
+VAD
+LCID
+SF
+VID
+DEATH
+BIRTH
+*BOUNDARY_SPC_NODE
+Constraints
+Type 1; Card 13 SPC
+CID
+Define nodal single point constraint
+*BOUNDARY_SPC_NODE_(ID)
+Constraints
+dynaName
+CID
+*BOUNDARY_TEMPERATURE_NODE
+Temperature
+LCID
+LOC
+Define temperature boundary conditions for a thermal or coupled
+thermal/structural analysis.
+*CONSTRAINED_GLOBAL
+Constraints
+Define a global boundary constraint plane.
+*INITIAL_TEMPERATURE_NODE
+Temperatures LOC
+Define initial nodal point temperatures using nodal set IDs or node
+number.s
+*INITIAL_VELOCITY
+Type 2
+Card 30
+INITV = 3
+Define initial nodal point translational velocities using nodal set
+IDs. For structured output, global velocity is set to 0.0. For structured
+input, non-zero values for INITV = 1 or INITV = 5 create velocities. INITV
+values of 2, 4, 6, and 7 are ignored.
+*INITIAL_VELOCITY_NODE
+Rotation
+Define initial nodal point velocities for a node.
+*LOAD_BEAM_ELEMENT
+Pressure
+Defines load on beam elements
+*LOAD_MASK
+N/A
+Apply a distributed pressure load over a three-dimensional shell part
+*LOAD_NODE_POINT
+Force
+Type 1
+Card 23
+Point Loads
+FollowerForce
+Apply a concentrated nodal force to a node or a set of nodes. LS-DYNA Load
+Configs 1, 2, 3 and 4
+A load curve can be selected for these
+loads.
+*LOAD_NODE_POINT
+Moment
+Type 1
+Card 23
+Point Loads
+Apply a concentrated nodal force to a node or a set of nodes. LS-DYNA Load
+Configs 5, 6 7 and 8.
+*LOAD_SEGMENT
+Pressure
+LCID
+AT
+Apply the distributed pressure load over one triangular or quadrilateral
+segment defined by four, six or eight nodes.
+*LOAD_SEGMENT_ID
+Pressure
+LCID
+AT
+Apply the distributed pressure load over one triangular or quadrilateral
+segment defined by four, six or eight nodes.
+*LOAD_SHELL_ELEMENT
+Pressure
+AT
+LCIDoption
+Apply the distributed pressure load over one shell element or shell element
+set.
+*LOAD_SHELL_ELEMENT_ID
+Pressure
+LCID
+AT
+Apply the distributed pressure load over one shell element or shell element
+set.
+*LOAD_SHELL_PRESSURE
+Pressure
+Type 2
+Card 24
+Pressure BC
+Apply the distributed pressure load over one shell element or shell element
+set.
+*LOAD_THERMAL_CONSTANT_NODE
+Temperature N/A
+Define nodal sets giving the temperature that remains constant for the
+duration of the calculation.
+*LOAD_THERMAL_VARIABLE_NODE
+Temperature
+TS
+LCID
+Define nodal temperature that is variable during the calculation.
+Nastran Cards
+Note: Other loads such as
+SPCADD, MPCADD, FREQ, FREQ1, EIGR, EIGRL, EIGC, EIGP, EIGB, GRAV, and RFORCE are supported
+as load collectors.
+Card
+Supported Load Types
+Description
+ASET
+Constraints
+Defines degrees-of-freedom in the analysis set (a-set)
+ASET1
+Constraints
+Defines degrees-of-freedom in the analysis set (a-set)
+BNDFIX1
+Constraints
+Defines analysis set (a-set) degrees-of-freedom to be fixed (b-set) during
+generalized dynamic reduction or component mode synthesis calculations.
+BOLTFOR
+Flux
+BSET1
+Constraints
+Defines analysis set (a-set) degrees-of-freedom to be fixed (b-set) during
+generalized dynamic reduction or component mode synthesis calculations.
+CSET1
+Constraints
+Defines analysis set (a-set) degrees-of-freedom to be free (c-set) during
+generalized dynamic reduction or component modes calculations.
+DAREA
+Constraints
+Defines scale (area) factors for static and dynamic loads. In dynamic
+analysis, DAREA is used in conjunction with RLOADi and TLOADi entries.
+DEFORM
+Flux
+Defines enforced axial deformation for one-dimensional elements for use in
+statics problems.
+FORCE
+Force
+Requests the form and type of element force output or particle velocity
+output in coupled fluid-structural analysis.
+MOMENT
+Moment
+Defines a static concentrated moment at a grid point by specifying a scale
+factor and a vector that determines the direction.
+OMIT1
+Constraints
+Defines degrees-of-freedom to be excluded (o-set) from the analysis set
+(a-set).
+PLOAD
+Pressure
+Defines a uniform static pressure load on a triangular or quadrilateral
+surface comprised of surface elements and/or the faces of solid elements.
+PLOAD1
+Pressure
+Defines concentrated, uniformly distributed, or linearly distributed applied
+loads to the CBAR or CBEAM elements at user-chosen points along the axis.
+PLOAD2
+Pressure
+Defines a uniform static pressure load applied to CQUAD4, CSHEAR, or CTRIA3
+two-dimensional elements. The THRU field is supported for feinput only. On
+export, additional pressure cards for the range specified are
+written.
+PLOAD4
+Pressure
+Defines a pressure load on a face of a CHEXA, CPENTA, CTETRA, CTRIA3, CTRIA6,
+CTRIAR, CQUAD4, CQUAD8, or CQUADR element. The THRU field is supported for
+feinput only. On export, additional pressure cards for the range specified are
+written.
+Unequal nodal pressures are now supported. The average pressure
+value is used as the magnitude of the pressure for visualization only. The
+individual field values, P1-P4, can be viewed or edited using the card editor.
+Updating the magnitude of pressure from the Pressures panel will have no
+effect on PLOAD4 cards defined using unequal nodal pressures.
+QBDY1
+Flux
+Defines a uniform heat flux into CHBDYj elements.
+QSET1
+Constraints
+Defines generalized degrees-of-freedom (q-set) to be used for generalized
+dynamic reduction or component mode synthesis.
+QVOL
+Flux
+Volume Heat Addition - Defines a rate of volumetric heat addition in a
+conduction element.
+SPC
+Constraints
+Defines a set of single-point constraints and enforced motion (enforced
+displacements in static analysis and enforced displacements, velocities or
+acceleration in dynamic analysis). Constraints on nodes are supported through
+SPC cards. PS field in GRID card is not supported. Upon import, any PS entry on
+the GRID card will be converted into an SPC card.
+SPC1
+Constraints
+Defines a set of single-point constraints. Supported for feinput only. On
+export, equivalent SPC cards are written. Alternate format with THRU in the
+fifth field is supported.
+SPCD
+Constraints
+Defines an enforced displacement value for static analysis and an enforced
+motion value (displacement, velocity or acceleration) in dynamic analysis.
+SUPORT
+Constraints
+Defines determinate reaction degrees-of-freedom in a free body.
+SUPORT1
+Constraints
+Defines determinate reaction degrees-of-freedom (r-set) in a free
+body-analysis. SUPORT1 must be requested by the SUPORT1 Case Control
+command.
+TIC(D)
+Constraints
+Transient Initial Condition - Defines values for the initial conditions of
+variables used in structural transient analysis.
+TIC(V)
+Constraints
+Transient Initial Condition - Defines values for the initial conditions of
+variables used in structural transient analysis.
+TEMP
+Temperatures
+Defines temperature at grid points for determination of thermal loading,
+temperature-dependent material properties, or stress recovery.
+TEMPBC
+Temperatures
+Defines the temperature boundary conditions for heat transfer
+analysis.
+USET
+Constraints
+Defines a degree-of-freedom set.
+USET1
+Constraints
+Defines a degrees-of-freedom set.
+OptiStruct Cards
+General boundary conditions,
+such as loads and constraints, should not be collected into specific load collectors.
+Organizing loads and constraints into a specific load collector may result in an error
+termination.
+Card
+Supported Load Types
+Description
+ASET
+Constraints
+Defines the boundary degrees-of-freedom of a superelement
+assembly for matrix reduction.
+ASET1
+Constraints
+Defines the boundary degrees-of-freedom of a superelement
+assembly for matrix reduction.
+DAREA
+Constraints
+Defines scale (area) factors for dynamic loads.
+DAREA is used in conjunction with RLOAD1 ,
+RLOAD2 , TLOAD1 , and
+TLOAD2 entries.
+DELAY
+Constraints
+Defines the time delay term τ in the equations of the
+dynamic loading function. DELAY is used in conjunction with
+RLOAD1 , RLOAD2 , TLOAD1 ,
+and TLOAD2 entries.
+DEFORM
+Flux
+Defines enforced axial deformation for one-dimensional
+elements for use in statics problems.
+DPHASE
+Constraints
+Defines the phase lead term
+θ
+in the equation of the dynamic loading function.
+DPHASE is used in conjunction with RLOAD1
+and RLOAD2 entries.
+FORCE
+Force
+Defines a static force at a grid point or a
+SET of grid points by specifying a vector.
+FORCE1
+Force
+Used to define a static force by specification of a value
+and two grid points that determine the direction. It can also be used to define the
+EXCITEID field (Amplitude "A") of dynamic loads in
+RLOAD1 , RLOAD2 , TLOAD1
+and TLOAD2 Bulk Data Entries. Additionally, the
+FORCE1 entry can be defined as Follower Loads in Large
+Displacement Nonlinear Analysis.
+MBFRC
+Force
+Defines a constant force at a grid point by specifying a
+vector.
+MBFRCC
+Force
+Defines a curve force at a grid point by specifying a
+vector.
+MBMNT
+Moment
+Defines a constant moment at a grid point by specifying a
+vector.
+MBMNTC
+Moment
+Defines a curve moment at a grid point by specifying a
+vector.
+MOMENT
+Moment
+Defines a static moment at a grid point or a
+SET of grid points by specifying a vector.
+MOMENT1
+Moment
+Defines a static moment by specification of a value and
+two grid points, which determine the direction. It can also be used to define the
+EXCITEID field (Amplitude A ) of dynamic
+loads in RLOAD1 , RLOAD2 ,
+TLOAD1 and TLOAD2 Bulk Data
+Entries.
+MOTNG
+Constraint
+Defines a constant grid point motion.
+MOTNGC
+Constraint
+Defines a grid point motion vs. time by specifying a
+curve.
+PLOAD
+Pressure
+Defines a static pressure load on a triangular or
+quadrilateral element. It can also be used to define the EXCITEID
+field (Amplitude " A ") of dynamic loads in
+RLOAD1 , RLOAD2 , TLOAD1
+and TLOAD2 Bulk Data Entries.
+PLOAD1
+Pressure
+Defines concentrated, uniformly distributed, or linearly
+distributed applied loads to the CBAR or CBEAM
+elements or a SET of such elements at user-chosen points along
+the axis. It can also be used to define the EXCITEID field
+(Amplitude " A ") of dynamic loads in RLOAD1 ,
+RLOAD2 , TLOAD1 and TLOAD2
+Bulk Data Entries.
+PLOAD2
+Pressure
+Defines a uniform static pressure load applied to
+two-dimensional elements, or a SET of such elements.
+PLOAD4
+Pressure
+Defines a load on a face of a HEXA ,
+PENTA , TETRA , PYRA ,
+TRIA3 , TRIA6 , QUAD4 , or
+QUAD8 element. It can also be used to define the
+EXCITEID field (Amplitude " A ") of dynamic
+loads in RLOAD1 , RLOAD2 ,
+TLOAD1 and TLOAD2 Bulk Data Entries.
+Additionally, the PLOAD4 entry can be defined as Follower Loads
+in Large Displacement Nonlinear Analysis.
+QBDY1
+Flux
+Defines a uniform heat flux for CHBDYE
+elements.
+QVOL
+Flux
+Defines a rate of volumetric heat addition in a conduction
+element.
+SPC
+Constraint
+Defines sets of single-point constraints, enforced
+displacements for static analysis, and thermal boundary conditions for heat transfer
+analysis.
+SPCD
+Constraint
+Defines an enforced displacement value for static analysis,
+an enforced displacement, velocity or acceleration for dynamic analysis and a
+thermal boundary condition for heat transfer (or transient heat transfer) analysis.
+It can also be used to define the EXCITEID field (Amplitude "A")
+of dynamic loads in RLOAD1 , RLOAD2 ,
+TLOAD1 and TLOAD2 Bulk Data
+Entries.
+SUPORT
+Constraint
+Defines determinate reaction degrees-of-freedom in a free
+body.
+SUPORT1
+Constraint
+Defines determinate reaction degrees-of-freedom in a free
+body.
+TEMP
+Temperature
+Defines temperature at grid points or a
+SET of grid points for determination of Thermal Loading and
+Stress recovery.
+TIC(D) or (V)
+Constraint
+Defines values for the initial conditions of variables used
+in structural transient analysis and explicit analysis. Both displacement and
+velocity values may be specified at independent degrees-of-freedom.
+USET
+Constraint
+Defines a set of degrees-of-freedom.
+USET1
+Constraint
+Defines a set of degrees-of-freedom.
+PAM-CRASH Cards
+Card
+Supported Load Types
+Description
+ACC3D /
+Acceleration
+Imposed accelerations
+BOUNC /
+Constraints
+Define boundary condition
+CONLO /
+Force(1)
+Concentrated nodal load
+DIS3D /
+Constraints
+Imposed displacement
+DIS3DM /
+Constraints
+Imposed minimum displacement
+DIS3DX /
+Constraints
+Imposed maximum displacement
+INVEL /
+Velocity
+Define initial velocity
+PREFA /
+Pressure(1)
+Pressure on shells
+RAC3D /
+Acceleration
+Imposed rotational acceleration
+RAN3D /
+Constraints
+Imposed angular rotations
+RDA3D /
+Acceleration
+Radial 3D boundary conditions
+RDD3D /
+Constraints
+RDV3D /
+Velocity
+Radial 3D boundary conditions
+RVE3D /
+Velocity
+Imposed rotational velocities
+RWALL /
+Rigid wall definition
+SECFO_PLANE /
+VEL3D /
+Velocity
+Imposed velocities
+Permas Cards
+Card
+Supported Load Types
+Description
+$ADDMODES
+Constraints
+Definition of static mode shapes to be added to the set of eigenmodes used
+for transformation to modal space. If static mode shapes will be added directly
+to nodes or nodesets (SOURCE=INPUT), the $ADDMODES can be created through the
+Constraints panel.
+Click sysid to specify the system regarding to which
+the modes shall be applied.
+Use the DOFTYPE button to select an option:
+DISP, TEMP, PRES, POTE and MATH.
+$ADDMODES
+Pressure
+Definition of static mode shapes to be added to the set of eigenmodes used
+for transformation to modal space. If mode shapes will be applied based on the
+natural deformation of elements (SOURCE=INPUT) the $ADDMODES keyword needs to be
+created here.
+$CONLOAD
+Force
+Definition of concentrated loads at nodal point degrees of freedom.
+$CONLOAD
+Moment
+Definition of concentrated loads at nodal point degrees of freedom.
+$DISLOAD PRESS
+Pressure
+Definition of pressure loads for elements, where loads are given for elements
+or element sets. Applicable to shells and solids, but also axisymmetric solid
+elements. Therefore please apply a pressure on an HM shell element. Face
+identifiers are written in this case. On import IDS ELNODES or NODES will be
+resolved into ELGEO (face identifiers).
+$DISLOAD TEMP
+Pressure
+Nodal temperatures defined on elements or element sets.
+$DISLOAD TEMPFILM
+Pressure
+Surrounding temperatures for convective heat transfer applied on elements or
+element sets.
+$DISLOADN TEMP
+Temperature
+Nodal temperatures definition applied on nodes or node sets
+$DISLOADN TEMPFILM
+Temperature
+Surrounding temperatures for convective heat transfer applied on nodes or
+node sets.
+$INIVAL
+Constraints
+Definition of initial values for nodal point degrees of freedom. For
+$INIVAL source parameter INPUT is currently supported to specify the initial
+values based on nodal points.
+$INERTIA
+Pressure
+Definition of inertia forces acting on entire component or element sets.
+Available are force distributions due to linear acceleration, constant or
+accelerated rotation and coriolis acceleration. Only ACCELERATION and GRAVITY
+are supported. This card is created in the Pressure panel. Assign to a set of
+elements, and the set statement displays in the card image. To create the card
+without a set, create a pressure on a 'dummy' element; the card will be created
+without a set and can be applied to the whole model.
+$INERTIAX
+Pressure
+Definition of inertia forces acting on entire axisymmetric component or
+element sets. Available are force distributions due to linear acceleration and
+constant rotation. Only ACCELERATION and GRAVITY are supported. This card is
+created in the Pressure panel. Assign to a set of elements, and the set
+statement displays in the card image. To create the card without a set, create a
+pressure on a 'dummy' element; the card will be created without a set and can be
+applied to the whole model.
+$MPC GENERAL/$MPCVAL
+Equation
+Multipoint constraint definition. Both cards are created simultaneously in
+the Equation panel.
+The equation needs to be placed into a load collector
+with card image SUPRESS.
+By attaching the load collector to a load step
+with ‘CONSTRAINTS’ attribute set, the $MPCVAL card gets written in the desired
+$CONSTRAINTS variant.
+$PRESCRIBE/ PREVAL
+Constraints
+Prescribed degrees of freedom/Nodal point values (implemented as HyperMesh
+constraints)
+$SUPPRESS
+Constraints
+Suppressed degrees of freedom
+Samcef Cards
+Card
+Supported Load Types
+Description
+.CLM FIX
+Constraint
+Defines a set of single-point constraints
+.CLM DEP
+Constraint
+Defines sets of enforced displacements
+.CLM CHA COMP 123
+Force
+Defines a static force at a grid point by specifying a vector and a
+value.
+.CLM FOL COMP 123
+Force
+Defines a follower force at a grid point by specifying a vector and a
+value
+.CLM CHA COMP 456
+Moment
+Defines a static moment at a grid point by specifying a vector and a
+value.
+.CLM FOL COMP 456
+Moment
+Defines a follower moment by specifying a vector and a value
+.CLM PRESSURE
+Pressure
+Defines a static pressure load on any elements type
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

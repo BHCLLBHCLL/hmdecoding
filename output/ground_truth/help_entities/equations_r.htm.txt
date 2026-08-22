@@ -1,0 +1,225 @@
+Equations
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Equations
+Equation entities contain mathematical equations that define more complex loads. They are used to define linear constraints
+in local and global coordinate systems.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Loads
+Equations
+Equation entities contain mathematical equations that define more complex loads. They are used to define linear constraints
+in local and global coordinate systems.
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Equations
+Equation entities contain mathematical equations that define more complex loads. They are used to define linear constraints
+in local and global coordinate systems.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Equations
+Equation entities contain mathematical equations that define more complex loads. They
+are used to define linear constraints in local and global coordinate systems.
+Every equation must be organized into one load collector, and therefore are mutually
+exclusive to a load collector.
+Equations are displayed as lines between the dependent node and the independent node(s)
+with EQ displayed at the dependent node of the equation in the modeling window .
+Equations are used in Nastran as MPC (Multipoint Constraint
+Equation) or in Abaqus as *equation.
+Equations are organized into load collectors.
+Abaqus Cards
+Loads or constraints that are to be used as history data
+(under *STEP) should be collected into load collectors with the HISTORY card image. These
+load collectors also need to be added to the corresponding load steps (*STEP). In contrast,
+loads or constraints for model data should be collected into load collectors with
+INITIAL_CONDITION card image. They will automatically be written out in the model portion of
+the Abaqus input deck. Note: All loads and boundary conditions on
+sets can be expanded to individual nodes and elements by selecting the Expand
+load on sets option in the File Options dialog, which
+is invoked upon importing a solver deck. If a **HMLOAD_SETS_EXPAND comment is found in the
+input file, all loads and boundary conditions on sets are expanded to individual nodes and
+elements.
+Card
+Description
+*EQUATION
+Define linear multi-point constraints. Note: Explicit node IDs are supported.
+Node sets are not supported. Equations are considered as loads and therefore,
+they are collected in load collectors. Upon export, they write to the bulk
+data portion of the Abaqus
+deck.
+ANSYS Cards
+Card
+Description
+CE
+Defines a constraint equation relating to degrees of freedom.
+LS-DYNA Cards
+Several load types cause
+three cards to be output for x, y, and z components. During input, these are grouped into
+one load. Loads cannot be applied to sets, components, or boxes. Load curves are input and
+output. Use the Card Editor to select load curves. Unless mentioned in the Notes column,
+load cards cannot be edited.
+Card
+Description
+*CONSTRAINED_LINEAR
+Define linear constraint equations between displacements and rotations, which
+can be defined in a local coordinate system.
+*CONSTRAINED_LINEAR_GLOBAL
+Define linear constraint equations between displacements and rotations, which
+can be defined in global coordinate systems.
+Nastran Cards
+Note: Other loads such as
+SPCADD, MPCADD, FREQ, FREQ1, EIGR, EIGRL, EIGC, EIGP, EIGB, GRAV, and RFORCE are supported
+as load collectors.
+Card
+Description
+MPC
+Defines a multipoint constraint equation of the form. Note: Individual weight
+factors can be created on the nodes of an MPC equation using the update
+functionality in the Equations panel.
+OptiStruct Cards
+Card
+Description
+MPC
+Defines a multipoint constraint equation of the
+form. Note: Bulk Data
+Entry
+Permas Cards
+Card
+Description
+$MPC GENERAL
+General linear constraint equation.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

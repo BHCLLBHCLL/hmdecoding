@@ -1,0 +1,238 @@
+Solids
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Geometry Settings
+Overview of settings used when creating and editing geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Points
+A point is a zero-dimensional geometric entity.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity. It has a separate underlying
+mathematical definition, specified when it was created.
+Dimensioning
+Change the dimensions of existing geometry, thus changing the basic shape of solids and other enclosed volumes.
+Extract and Edit Midsurfaces
+Extract the midsurface of thin solids, and review and edit midsurface plates.
+Match Topology
+Fix gaps between stitched edges and vertices to make the actual geometry of the surfaces consistent with the model
+topology.
+Find Intersections and Penetrations
+Find intersections and penetrations between geometric surfaces and solids.
+Setup CAD Models with Metadata
+Use metadata generated as part of the CAD import process to setup CAE models.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are
+three-dimensional entities that can be used in automatic tetra and solid meshing.
+The surfaces defining a solid can belong to multiple component collectors. The display of a
+solid and its bounding surfaces are controlled only by the component collector to which the
+solid belongs.
+Bounding Surface
+A bounding surface defines the outer boundary of a single solid.
+Bounding surfaces are shaded green by default.
+A bounding surface is unique and is not shared with any other solid. A single solid
+volume is defined entirely by bounding surfaces.
+Fin Surface
+A fin surface has the same solid on all sides, that is, it acts as a fin inside of a
+single solid.
+Fin surfaces are shaded red by default.
+A fin surface can be created when manually merging solids or when creating solids
+with internal fin surfaces.
+Full Partition Surface
+A full partition surface defines a shared boundary between one or more solids.
+Full partition surfaces are shaded yellow by default.
+A full partition surface can be created when splitting a solid or when using Boolean
+operations to join multiple solids at shared or intersecting locations.
+Figure 1.
+Create Solids
+block - Creates three-dimensional block-shaped solid primitives (Solids panel).
+cylinder full - Creates three-dimensional full cylinder solid primitives
+(Solids panel).
+cylinder partial - Creates three-dimensional partial cylinder solid primitives
+(Solids panel).
+cone full - Creates three-dimensional full cone solid primitives (Solids
+panel).
+cone partial - Creates three-dimensional partial cone solid primitives (Solids
+panel).
+sphere center and radius - Creates three-dimensional sphere solid primitives by
+specifying the center and radius (Solids panel).
+sphere four nodes - Creates three-dimensional sphere solid primitives by
+specifying four nodes (Solids panel).
+torus center and radius - Creates three-dimensional torus solid primitives by
+specifying the center, normal direction, minor radius and major radius (Solids
+panel).
+torus three nodes - Creates three-dimensional torus solid primitives by
+specifying three nodes (Solids panel).
+torus partial - Creates three-dimensional partial torus solid primitives
+(Solids panel).
+bounding surfaces - Creates solids by converting closed surface shells which
+define the solid boundary (Solids panel).
+spin - Creates solids by spinning surfaces around an axis (Solids panel).
+drag along vector - Creates solids by dragging surfaces along a vector (Solids
+panel).
+drag along line - Creates solids by dragging surfaces along a line (Solids
+panel).
+drag along normal - Creates solids by dragging surfaces along their normal
+(Solids panel).
+ribs - Creates and modifies simple ribs between two surfaces (Ribs panel).
+ruled linear - Creates solids by interpolating linearly between surfaces
+(Solids panel).
+ruled smooth - Creates solids by interpolating smoothly between surfaces
+(Solids panel).
+duplicate - Creates solids by duplicating existing solids. This is available in
+many panels when the "duplicate" advanced entity selector is available on a
+solids collector.
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire.
+Edit Solids
+delete - Deletes solids (Delete panel).
+trim - Trims solids using nodes, lines, surfaces and planes (Solid Edit panel).
+merge - Combines two or more solids into a single solid (Solid Edit panel).
+detach - Detaches solids that have shared fin faces from each other (Solid Edit
+panel).
+boolean - Performs complex merge and split functions on solids (Solid Edit
+panel).
+dimensioning - Modifies dimensions of or between surfaces (Dimensioning panel).
+translate - Moves solids along a vector direction (Translate panel).
+rotate - Rotates solids about a vector axis (Rotate panel).
+scale - Scales the dimensions of solids either proportionally or uniformly
+(Scale panel).
+reflect - Reflects solids about a plane to create a mirror image (Reflect
+panel).
+position - Translates and rotate solids into new positions (Position panel).
+permute - Switches the coordinates of solids (Permute panel).
+renumber - Renumbers solids (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire. See tutorial HM-2080 for an example.
+Query Solids
+shortest distance - Finds the shortest distance between entities
+( Shortest Distance dialog).
+interference check - Finds penetrations/intersections between geometries
+(Geometry Interference Check dialog).
+normal - Reviews the normal direction of solid surfaces (Normals panel).
+organize - Moves solids into different component collectors (Organize panel).
+numbers - Displays the IDs of solids (Numbers panel).
+count - Counts the total or displayed solids (Count panel).
+area - Queries the total area of the selected solids' surfaces (Mass Calc
+panel).
+volume - Queries the total volume of the selected solids (Mass Calc panel).
+dimensioning - Queries dimensions of or between surfaces (Dimensioning panel).
+Misc. API commands that do not have an associated panel.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

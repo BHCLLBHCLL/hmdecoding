@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""hmdecoder — HyperMesh .hm v11.05 容器/节点/单元/显示/几何点解码器。"""
+"""hmdecoder — HyperMesh .hm 容器/节点/单元/显示/几何点解码器。
+
+支持 DB 版本族: v10-legacy, v11-classic (11.03–11.05), v12-13 (部分).
+节点段: [136] 头 + 记录 52B ([id][0][0][x][y][z][0x4]) / 92B (+40B 附加) / 56B ([x][y][z][0x4][id+1][0][0]).
+元素段: [997][seg][175][count][X][Y]; A 型 (X=3, CONST 锚) / B 型 (X=2, 链式 eid).
+"""
 import gzip, struct
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -51,98 +56,228 @@ def d64(p, o): return struct.unpack_from("<d", p, o)[0]
 CONST = 0x70241FF5
 MARK_GEOM = 0x40008126
 
-def find_node_section(p):
-    cands = []
-    for i in range(0, len(p) - 28):
-        if u32(p, i + 8) == 1 and u32(p, i + 12) == 136:
-            n = u32(p, i + 16)
-            if 1 <= n <= 10_000_000:
-                cands.append((i, n))
-    best = None
-    for hdr, count in cands[:8]:
-        for shift, idoff, coordoff in ((20, 0, 0xC), (24, 0, 0xC), (20, 4, 0x10), (16, 0, 0xC)):
-            base = hdr + shift
-            ok = 0; bad = 0; total = 0
-            probe = min(count, 200)
-            for k in range(probe):
-                rec = base + k * 52
-                if rec + 0x30 > len(p):
-                    break
-                nid = u32(p, rec + idoff)
-                x = d64(p, rec + coordoff); y = d64(p, rec + coordoff + 8); z = d64(p, rec + coordoff + 16)
-                total += 1
-                if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9:
-                    ok += 1
-                else:
-                    bad += 1
-                    if bad > 40 and count > 100:
-                        break
-            need = max(3, min(count // 4, 150))
-            if total >= need and ok >= need and ok > bad * 4:
-                cfg = (ok, hdr, count, shift, idoff, coordoff)
-                if best is None or ok > best[0]:
-                    best = cfg
-    if best:
-        return [best[1:]]
-    return []
+NODE_LAYOUTS = ((52, 0, 12, False), (52, 4, 12, False), (52, 8, 20, False),
+                (92, 0, 12, False), (92, 4, 12, False), (92, 8, 20, False),
+                (56, 44, 0, True))
 
-def parse_nodes(p, hdr, count, shift, idoff, coordoff):
-    nodes = {}
-    base = hdr + shift
-    for k in range(count):
-        rec = base + k * 52
-        if rec + 0x30 > len(p):
+def find_node_section(p):
+    hits = []
+    start = 0
+    while True:
+        i = p.find(b"\x88\x00\x00\x00", start)
+        if i < 0:
             break
-        nid = u32(p, rec + idoff)
-        x = d64(p, rec + coordoff); y = d64(p, rec + coordoff + 8); z = d64(p, rec + coordoff + 16)
+        n = u32(p, i + 4)
+        if 1 <= n <= 10_000_000:
+            hits.append((i, n))
+        start = i + 1
+    hits.sort(key=lambda h: -h[1])
+    best = None
+    for hi, count in hits[:600]:
+        for base in range(hi - 32, hi + 48, 4):
+            if base < 0:
+                continue
+            for stride, idoff, xoff, chain in NODE_LAYOUTS:
+                ok = 0; bad = 0
+                seen = set()
+                for k in range(min(count, 60)):
+                    rec = base + k * stride
+                    if rec + stride > len(p):
+                        break
+                    x = d64(p, rec + xoff)
+                    if chain:
+                        tailok = u32(p, rec + 48) == 0 and u32(p, rec + 52) == 0
+                        nid = u32(p, rec + 44) - 1
+                    else:
+                        tailok = True
+                        nid = u32(p, rec + idoff)
+                    if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and tailok:
+                        ok += 1
+                        seen.add(nid)
+                    else:
+                        bad += 1
+                        if bad > 3:
+                            break
+                # 假候选 id 大量重复 (如 molding1 base=142 全 3) -> 淘汰
+                if len(seen) < max(5, ok // 2):
+                    continue
+                if ok > 30 and (best is None or ok > best[0]):
+                    best = (ok, (hi, count, base, stride, idoff, chain))
+    if best and best[0] >= 45:
+        return best[1]
+    return None
+
+def parse_nodes(p, cfg):
+    hi, count, base, stride, idoff, chain = cfg
+    nodes = {}
+    for k in range(count):
+        rec = base + k * stride
+        if rec + stride > len(p):
+            break
+        if chain:
+            nid = u32(p, rec + 44) - 1
+            x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
+        else:
+            nid = u32(p, rec + idoff)
+            x, y, z = d64(p, rec + 12), d64(p, rec + 20), d64(p, rec + 28)
         nodes[nid] = Node(nid, x, y, z)
     return nodes, base
 
-def find_elem_header(p):
-    for i in range(0, len(p) - 16):
-        if u32(p, i) == 997 and u32(p, i + 4) == 3 and u32(p, i + 8) == 175:
-            n = u32(p, i + 12)
-            if 1 <= n <= 100_000_000:
-                return (i, n)
+def row_map_from_nodes(p, cfg, base):
+    hi, count, stride, idoff, chain = cfg[0], cfg[1], cfg[3], cfg[4], cfg[5]
+    if chain:
+        return {k + 1: k + 1 for k in range(count)}
+    return {k + 1: u32(p, base + k * stride + idoff) for k in range(count)}
+
+# ---------------------------------------------------------------------------
+# 元素段
+# ---------------------------------------------------------------------------
+CONFIG_NODES = {103: 3, 104: 4, 204: 4, 220: 8, 205: 4, 206: 6, 208: 8,
+                100: 2, 101: 2, 102: 2, 105: 2, 106: 2, 108: 2, 112: 2, 114: 2,
+                201: 3, 202: 3, 203: 3, 301: 6, 302: 8, 303: 6, 304: 8, 305: 10, 306: 12}
+
+def find_elem_segments(p):
+    segs = []
+    i = 0
+    while i < len(p) - 24:
+        if u32(p, i) == 997:
+            segid = u32(p, i + 4); cfg71 = u32(p, i + 8); cnt = u32(p, i + 12)
+            X = u32(p, i + 16); Y = u32(p, i + 20)
+            if X in (2, 3) and 100 <= cfg71 <= 500 and 1 <= cnt <= 10_000_000 and Y < 10_000_000:
+                segs.append((i, segid, cfg71, cnt, X, Y))
+        i += 1
+    return segs
+
+def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
+    for s in range(sh + 16, sh + 64):
+        if u32(p, s) != CONST:
+            continue
+        elems = {}
+        rec = s
+        ok = True
+        for k in range(min(cnt, max_rec if max_rec else cnt)):
+            if u32(p, rec) != CONST:
+                # 断点重连: 记录流可能被其他数据块打断
+                nxt = None
+                for j in range(rec + 4, min(rec + 200, len(p) - 4)):
+                    if u32(p, j) == CONST:
+                        nxt = j
+                        break
+                if nxt is None:
+                    ok = False; break
+                rec = nxt
+                if u32(p, rec) != CONST:
+                    ok = False; break
+            eid = u32(p, rec + 4)
+            if not (0 < eid < 10_000_000):
+                ok = False; break
+            nxt = None
+            for j in range(rec + 24, min(rec + 200, len(p) - 4)):
+                if u32(p, j) == CONST:
+                    nxt = j
+                    break
+            d = (nxt - rec) if nxt else None
+            got = None
+            prelens = [0, 4, 8, 12, 16, 20, 24, 28, 32] if d else [0]
+            for prelen in prelens:
+                rec_len = (d - prelen) if d else None
+                if rec_len is not None and (rec_len < 32 or rec_len % 4 or rec_len > 140):
+                    continue
+                lim = (rec_len - 12) if rec_len else 84
+                cands = []
+                for off in range(12, lim, 4):
+                    v = u32(p, rec + off)
+                    f = v >> 16
+                    if 300 <= f <= 500 and (v & 0xFFFF) == 0:
+                        cands.append(off)
+                for fp in sorted(cands, reverse=True):
+                    nodes_off = rec + fp + 4
+                    n = 0
+                    while n < 12 and nodes_off + 4 * n + 4 <= len(p) and u32(p, nodes_off + 4 * n) != 0:
+                        n += 1
+                    if n < 1:
+                        continue
+                    if rec_len is not None and nodes_off + 4 * n + 8 != rec + rec_len:
+                        continue
+                    if u32(p, nodes_off + 4 * n) != 0:
+                        continue
+                    nds = [u32(p, nodes_off + 4 * j) for j in range(n)]
+                    if all(1 <= r <= row_count for r in nds):
+                        got = (prelen, n, nds, (u32(p, rec + fp) >> 16) - 256)
+                        break
+                if got:
+                    break
+            if got is None:
+                ok = False; break
+            prelen, n, nds, config = got
+            elems[eid] = (config, [row_map.get(r, r) for r in nds])
+            if nxt is None:
+                break
+            rec = nxt
+        if ok:
+            return elems
     return None
 
-def parse_elements_variant_a(p, row_map):
+def _parse_b_type(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
+    s = sh + 24
     elems = {}
-    for i in range(0, len(p) - 0x30):
-        if u32(p, i) == 0 and u32(p, i + 4) == 0x01680000:
-            refs = [u32(p, i + 8 + j * 4) for j in range(4)]
-            eid = u32(p, i + 0x24) - 1
-            if eid < 1 or all(r == 0 for r in refs):
-                continue
-            nodes = [row_map.get(r, r) for r in refs if r != 0]
-            if eid not in elems:
-                elems[eid] = Elem(eid, nodes, 0)
-    for i in range(0x20, len(p) - 0x30):
-        if u32(p, i + 0x20) == CONST and u32(p, i + 0x28) == 0x10019:
-            refs = [u32(p, i + j * 4) for j in range(4)]
-            nodes = [row_map.get(r, r) for r in refs if r != 0]
-            if nodes:
-                eid = max(elems) + 1 if elems else 1
-                if eid not in elems:
-                    elems[eid] = Elem(eid, nodes, 0)
+    rec = s
+    eid = first_eid
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        if u32(p, rec) != 0 or u32(p, rec + 4) != 0:
+            # 断点重连: 跳过异常数据块继续
+            nxt = None
+            for j in range(rec + 4, min(rec + 400, len(p) - 4)):
+                if u32(p, j) == 0 and u32(p, j + 4) == 0 and 300 <= u16(p, j + 8) <= 500:
+                    nxt = j
+                    break
+            if nxt is None:
+                break
+            rec = nxt
+            if u32(p, rec) != 0 or u32(p, rec + 4) != 0:
+                break
+        flag = u16(p, rec + 8)
+        if not (300 <= flag <= 500):
+            break
+        config = flag - 256
+        n = CONFIG_NODES.get(config)
+        if n is None:
+            break
+        nds = [u32(p, rec + 10 + j * 4) for j in range(n)]
+        if not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (config, [row_map.get(r, r) for r in nds])
+        nxt = None
+        for j in range(rec + 10 + 4 * n + 4, rec + 400):
+            if u32(p, j) == 0 and u32(p, j + 4) == 0 and 300 <= u16(p, j + 8) <= 500:
+                nxt = j
+                break
+        if nxt is None:
+            break
+        stride = nxt - rec
+        if u32(p, nxt - 8) != 0:
+            break
+        ne = u32(p, nxt - 4)
+        if not (0 < ne < 10_000_000):
+            break
+        eid = ne
+        rec = nxt
     return elems
 
-def parse_elements_variant_b(p, row_map, row_count):
+def decode_elements(p, row_map, row_count):
+    segs = find_elem_segments(p)
+    if not segs:
+        return None
     elems = {}
-    for i in range(0, len(p) - 30):
-        if u32(p, i + 4) == 0 and u32(p, i + 8) == 0:
-            eid = u32(p, i)
-            flag = u16(p, i + 12)
-            if eid < 100000 or eid > 10_000_000 or flag not in (359, 460):
-                continue
-            refs = [u16(p, i + 14), u16(p, i + 18), u16(p, i + 22), u16(p, i + 26)]
-            if not all(r <= row_count for r in refs):
-                continue
-            nodes = [row_map.get(r, 0) for r in refs if r != 0]
-            if eid not in elems:
-                elems[eid] = Elem(eid, nodes, flag - 256)
-    return elems
+    for (sh, segid, cfg71, cnt, X, Y) in segs:
+        got = _parse_a_type(p, sh, cnt, row_count, row_map) if X == 3 else _parse_b_type(p, sh, cnt, row_count, row_map, Y)
+        if got:
+            elems.update(got)
+    return elems or None
 
+# ---------------------------------------------------------------------------
+# 显示点 / 几何点
+# ---------------------------------------------------------------------------
 def parse_display_points(p):
     points = {}
     marks = [i for i in range(len(p) - 8) if u32(p, i) == MARK_GEOM]
@@ -181,7 +316,6 @@ def parse_display_points(p):
     return points
 
 def parse_geo_points_variant_b(p, node_ids=None):
-    """变体 B 几何点 v4: [id][1] 块 + 5 偏移候选 + 评分（z 整数 + 52B 家族必选 + y 参数过滤）。"""
     OFFSETS = (-249, -145, -93, -41, 15)
     n = len(p)
     results = {}
@@ -200,8 +334,8 @@ def parse_geo_points_variant_b(p, node_ids=None):
                         s = 0
                         if abs(z - round(z)) < 1e-4:
                             s += 10
-                        for d in (52, -52, 104, -104):
-                            j2 = j + d
+                        for dd in (52, -52, 104, -104):
+                            j2 = j + dd
                             if 0 <= j2 and j2 + 24 <= n:
                                 x2, y2, z2 = d64(p, j2), d64(p, j2 + 8), d64(p, j2 + 16)
                                 if abs(x2 - x) < 1e-4 and abs(y2 - y) < 1e-4 and abs(z2 - z) < 1e-4:
@@ -216,37 +350,53 @@ def parse_geo_points_variant_b(p, node_ids=None):
             i += 1
     return results
 
+# ---------------------------------------------------------------------------
 def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
-    if not ns:
-        return model
-    hdr, ncount, shift, idoff, coordoff = ns[0]
-    model.node_count = ncount
-    model.node_section = hdr
-    nodes, base = parse_nodes(p, hdr, ncount, shift, idoff, coordoff)
-    model.nodes = nodes
-    if not nodes:
-        return model
-    row_order = [u32(p, base + k * 52 + idoff) for k in range(ncount)]
-    row_map = {k + 1: nid for k, nid in enumerate(row_order)}
-    ehdr = find_elem_header(p)
-    if ehdr:
-        model.elem_section = ehdr[0]
-        model.elem_count = ehdr[1]
-        model.element_variant = "A"
-        model.elements = parse_elements_variant_a(p, row_map)
-        model.display_points = parse_display_points(p)
-    else:
-        model.element_variant = "B"
-        model.elements = parse_elements_variant_b(p, row_map, ncount)
-        model.elem_count = len(model.elements)
-        model.geo_points = parse_geo_points_variant_b(p, set(model.nodes))
+    if ns:
+        model.node_section = ns[0]
+        model.node_count = ns[1]
+        nodes, base = parse_nodes(p, ns)
+        model.nodes = nodes
+        if nodes:
+            row_map = row_map_from_nodes(p, ns, base)
+            elems = decode_elements(p, row_map, ns[1])
+            elems_b = _parse_ws_variant_b(p, row_map, ns[1])
+            if elems_b and (not elems or len(elems_b) > len(elems)):
+                model.elements = elems_b
+                model.elem_count = len(elems_b)
+                model.element_variant = "WS-B"
+            elif elems:
+                model.elements = elems
+                model.elem_count = len(elems)
+                model.element_variant = "segmented"
+            model.display_points = parse_display_points(p)
+            if not model.elements:
+                model.geo_points = parse_geo_points_variant_b(p, set(model.nodes))
     return model
+
+def _parse_ws_variant_b(p, row_map, row_count):
+    elems = {}
+    for i in range(0, len(p) - 30):
+        if u32(p, i + 4) == 0 and u32(p, i + 8) == 0:
+            eid = u32(p, i)
+            flag = u16(p, i + 12)
+            if eid < 100000 or eid > 10_000_000 or flag not in (359, 460):
+                continue
+            refs = [u16(p, i + 14), u16(p, i + 18), u16(p, i + 22), u16(p, i + 26)]
+            if not all(r <= row_count for r in refs):
+                continue
+            nodes = [row_map.get(r, 0) for r in refs if r != 0]
+            if eid not in elems:
+                elems[eid] = Elem(eid, nodes, flag - 256)
+    return elems
 
 if __name__ == "__main__":
     import sys
     for path in sys.argv[1:]:
         m = decode(path)
-        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} elems={len(m.elements)}/{m.elem_count} display={len(m.display_points)} geopts={len(m.geo_points)} var={m.element_variant}")
+        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} "
+              f"elems={len(m.elements)}/{m.elem_count} display={len(m.display_points)} "
+              f"geopts={len(m.geo_points)} var={m.element_variant}")

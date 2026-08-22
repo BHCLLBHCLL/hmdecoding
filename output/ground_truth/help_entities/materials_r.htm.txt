@@ -1,0 +1,1996 @@
+Materials
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Materials
+Material entities define and store material definitions for a model.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Materials
+Material entities define and store material definitions for a model.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Materials
+Material entities define and store material definitions for a model.
+Materials do not have a display state in the modeling window . You
+can color the model according to the colors assigned to each material, which is based on
+element material relationships, by changing the color mode to material.
+Element material relationships are dependent on the solver interface. In general, when a
+component is assigned a material, that material assignment is applied to all elements
+collected by that component. The method of assigning materials at the component level is
+therefore referred to as indirect material assignment. Direct material assignment is
+performed directly on the elements themselves, typically via a property assignment. Direct
+material assignments always take precedence over indirect property and material
+assignments.
+Abaqus Cards
+The material keywords *MATERIAL, *GASKET MATERIAL, and *CONNECTOR BEHAVIOR are supported in
+the ABAQUS_MATERIAL, GASKET_MATERIAL and CONNECTOR_BEHAVIOR card images, respectively.
+Abaqus has a large selection of material types, many of which
+are not supportered. In the Abaqus solver interface, material
+cards can be imported as generic materials. Generic materials are assigned the
+GENERIC_MATERIAL card image, and all material sub-options, parameters, and data lines are
+imported as simple text.
+The validity or syntax of data is not checked when material cards are imported as generic
+materials. You must manually check the validity of the data. This method is helpful when
+material models are already defined, and are imported for the purpose of adding them to the
+corresponding sectional properties. No editing, updating, or review of the material data is
+intended.
+The Generic Material setting can be enabled in the File Options
+dialog, that opens when you import a solver deck. You can also add an **HM_GENERIC_MATERIAL
+comment before a material card to have it imported as a generic material.
+User comments blocks are supported for all materials. These comments are preserved during
+import and export of the Abaqus solver deck.
+Card
+Description
+*BIAXIAL TEST DATA
+Provides biaxial test data (compression and/or tension).
+*BRITTLE CRACKING
+Define cracking and postcracking properties for the brittle cracking material
+model.
+*BRITTLE FAILURE
+Used with the brittle cracking material model to specify brittle failure of
+the material.
+*BRITTLE SHEAR
+Define the postcracking shear behavior of a material used in a brittle
+cracking model.
+*CLAY HARADENING
+Define piecewise linear hardening/softening of the Cam-clay plasticity yield
+surface.
+*CLAY PLASTICITY
+Specify the plastic part of the material behavior for elastic-plastic
+materials that use the extended Cam-clay plasticity model.
+*COMBINED TEST DATA
+Simultaneously defines the normalized shear and bulk compliance or relaxation
+moduli as functions of time. Note: Must be used in conjunction with the
+*VISCOELASTIC option. Cannot be used if the *SHEAR
+TEST DATA and *VOLUMETRIC TEST DATA options are
+used.
+*CONDUCTIVITY
+Defines thermal conductivity. Note: Sub-option in the ABAQUS_MATERIAL card image .
+*CONNECTOR BEHAVIOR
+Begins the specification of a connector behavior.
+*CONNECTOR CONSTITUTIVE REFERENCE
+Defines reference lengths and angles to be used in specifying connector
+constitutive behavior. Note: Sub-option in the CONNECTOR_BEHAVIOR card
+image.
+*CONNECTOR CONTACT FORCE
+Defines the damping behavior for connector elements. Note: Sub-option in the
+CONNECTOR_BEHAVIOR card image .
+*CONNECTOR DAMPING
+Defines connector damping behavior. Note: Sub-option in the CONNECTOR_BEHAVIOR
+card image.
+*CONNECTOR DERIVED COMPONENTS
+Define user-customized components from numbered components.
+*CONNECTOR ELASTICITY
+Defines connector elastic behavior. Note: Sub-option in the CONNECTOR_BEHAVIOR
+card image .
+*CONNECTOR FAILURE
+Defines a failure criterion for connector elements. Note: Sub-option in the
+CONNECTOR_BEHAVIOR card image. Only available in the Explicit
+template.
+*CONNECTOR FRICTION ( Abaqus 6.4
+version)
+Defines friction forces and moments in connector elements. Note: Sub-option in
+the CONNECTOR_BEHAVIOR card image .
+*CONNECTOR FRICTION ( Abaqus 6.5 or later
+version)
+Defines friction forces and moments in connector elements. Note: Sub-option in the CONNECTOR_BEHAVIOR
+card image. A *FRICTION card is needed, which can be created as a property
+using the FRICTION card image .
+*CONNECTOR HARDENING
+Defines the initial yield surface size and, optionally, the post-yield
+hardening behavior in connector available components of relative
+motion. Note: Sub-option in the CONNECTOR_BEHAVIOR card image .
+*CONNECTOR LOCK
+Defines a locking criterion for connector elements. Note: Sub-option in the
+CONNECTOR_BEHAVIOR card image .
+*CONNECTOR PLASTICITY
+Defines plasticity behavior in connector elements. It must be used in
+conjunction with the *CONNECTOR HARDENING option.
+*CONNECTOR POTENTIAL
+Define a restricted set of mathematical functions to represent yield or
+limiting surfaces in the space spanned by connector available components.
+*CONNECTOR STOP
+Defines connector stops for connector elements. Note: Sub-option in the
+CONNECTOR_BEHAVIOR card image .
+*CREEP
+Defines a creep law. Note: Sub-option in both the ABAQUS_MATERIAL and *GASKET
+MATERIAL card image s. Only available in the Standard
+templates.
+*CRUSHABLE FOAM
+Defines the crushable foam plasticity model. Note: Sub-option in the
+ABAQUS_MATERIAL card image .
+*CRUSHABLE FOAM HARDENING
+Defines hardening for the crushable foam plasticity model. Note: Sub-option in
+the ABAQUS_MATERIAL card image .
+*DAMPING
+Defines material damping. Note: Sub-option in the ABAQUS_MATERIAL card image .
+*DETONATION POINT
+Defines detonation points for a JWL explosive equation of
+state. Note: Sub-option in the ABAQUS_MATERIAL card image . Available when *EOS, Type=JWL is selected. Only available for Abaqus /Explicit.
+*DENSITY
+Defines material mass density. Note: Sub-option in the ABAQUS_MATERIAL
+card image .
+*DIELECTRIC
+Defines dielectric material properties. Note: Sub-option in the
+ABAQUS_MATERIAL card image .
+*ELASTIC
+Defines elastic material properties. Note: Sub-option in the ABAQUS_MATERIAL
+card image .
+*EOS
+Defines a hydrodynamic material model in the form of an equation of
+state. Note: Sub-option in the ABAQUS_MATERIAL card image . It is only available for Abaqus /Explicit.
+*EOS COMPACTION
+Defines plastic compaction behavior for a hydrodynamic
+material. Note: Sub-option in the ABAQUS_MATERIAL card image . Available when *EOS, Type=USUP / TABULAR is
+selected. It is only available for Abaqus /Explicit.
+*EXPANSION
+Defines thermal expansion. Note: Sub-option in both the ABAQUS_MATERIAL and
+*GASKET MATERIAL card image s.
+*FABRIC
+Define the in-plane behavior of a fabric material under plane stress
+conditions.
+*FLUID BEHAVIOR
+Defines fluid behavior for a fluid cavity.
+*GASKET BEHAVIOR
+Begins the specification of a gasket behavior. Note: Only available in the
+Standard templates.
+*GASKET CONTACT AREA
+Defines a gasket contact area or contact width for average pressure
+output. Note: Sub-option in the *GASKET_MATERIAL card image .
+*GASKET ELASTICITY
+Defines elastic properties for the membrane and transverse shear behaviors of
+a gasket. Note: Sub-option in the *GASKET_MATERIAL card image .
+*GASKET THICKNESS BEHAVIOR
+Defines a gasket thickness-direction behavior. Note: Sub-option in the
+*GASKET_MATERIAL card image .
+*GAS SPECIFIC HEAT
+Defines the specific heat of reacted gas products for an ignition and growth
+equation of state. Note: Sub-option in the ABAQUS_MATERIAL card image. Available
+when *EOS, Type=IGNITION AND GROWTH is selected. Only available for Abaqus /Explicit.
+*HYPERELASTIC
+Defines elastic properties for approximately incompressible
+elastomers. Note: Sub-option in the ABAQUS_MATERIAL card image . Supported sub-options:
+*BIAXIAL TEST DATA
+*PLANAR TEST DATA
+*UNIAXIAL TEST DATA
+*VOLUMETRIC TEST DATA
+*HYPERFOAM
+Defines elastic properties for a hyperelastic foam. Note: Sub-option in the
+ABAQUS_MATERIAL card image . Supported sub-options:
+*BIAXIAL TEST DATA
+*PLANAR TEST DATA
+*SIMPLE SHEAR TEST DATA
+*UNIAXIAL TEST DATA
+*VOLUMETRIC TEST DATA
+*LOADING DATA
+Define the loading response data for the uniaxial behavior of connector
+elements.
+*LOW DENSITY FOAM
+Define material coefficients for low-density foam materials.
+*MATERIAL
+Begins the definition of a material.
+*MULLINS EFFECT
+Defines Mullins effect material parameters for elastomers. Note: Sub-option in
+the ABAQUS_MATERIAL card image . Supported sub-options:
+*BIAXIAL TEST DATA
+*PLANAR TEST DATA
+*UNIAXIAL TEST DATA
+*PIEZOELECTRIC
+Defines piezoelectric material properties. Note: Sub-option in the
+ABAQUS_MATERIAL card image . Only available in the
+Standard templates.
+*PLANAR TEST DATA
+Provides planar test (or pure shear) data (compression and/or
+tension). Note: This option can be used only in conjunction with the
+*HYPERELASTIC option, the *HYPERFOAM option,
+and the *MULLINS EFFECT option. This type of test does not
+define the hyperelastic material constants fully; at the least, uniaxial or
+biaxial test data should also be given.
+*PLASTIC
+Defines a metal plasticity model.
+*RATE DEPENDENT
+Defines a rate-dependent viscoplastic model. Note: Sub-option in the
+ABAQUS_MATERIAL card image .
+*REACTION RATE
+Defines the reaction rate for an ignition and growth equation of
+state. Note: Sub-option in the ABAQUS_MATERIAL card image . Available when *EOS, Type=IGNITION AND GROWTH is selected. Only available
+for Abaqus /Explicit.
+*SHEAR FAILURE
+Defines a shear failure model and criterion. Note: Sub-option in the
+ABAQUS_MATERIAL card image . Only available for
+Abaqus /Explicit.
+*SHEAR TEST DATA
+Provides shear test data. Note: Can be used only in conjunction with the
+*VISCOELASTIC option.
+*SIMPLE SHEAR TEST DATA
+Provides simple shear test data. Note: Can be used only in conjunction with
+the *HYPERFOAM option.
+*SPECIFIC HEAT
+Defines specific heat. Note: Sub-option in the ABAQUS_MATERIAL card image .
+*UNIAXIAL
+Indicate the start of shear or uniaxial test data along a particular
+direction to define the behavior of a fabric material.
+*UNIXIAL TEST DATA
+Provides uniaxial test data (compression and/or tension). Note: Can be used
+only in conjunction with the *HYPERELASTIC option, the
+*HYPERFOAM option, and the *MULLINS EFFECT
+option.
+*UNLOADING DATA
+Define unloading response for the uniaxial behavior of connector
+elements.
+*USER MATERIAL
+Defines material constants for use in subroutine UMAT, UMATHT, or
+VUMAT. Note: Sub-option in the ABAQUS_MATERIAL card image .
+*USER OUTPUT VARIABLES
+Defines the number of user variables. Note: Sub-option in both the
+ABAQUS_MATERIAL and *GASKET MATERIAL card image s.
+*VISCOELASTIC
+Defines dissipative behavior for use with elasticity. Note: Sub-option in the
+ABAQUS_MATERIAL card image . Supported sub-options:
+*COMBINED TEST DATA
+*SHEAR TEST DATA
+*VOLUMETRIC TEST DATA
+For the sub-options, the parameters SHRINF
+and VOLINF are supported.
+*VOLUMETRIC TEST DATA
+Provides volumetric test data.
+ANSYS Cards
+If an unsupported field in a card is found, a message is displayed on the status bar . Messages are also printed to the file
+ansys.msg . General slash commands, SOLUTION
+commands, POST1 commands, and POST26 commands are
+referred to as control cards. Unrecognized cards are written to a *.hmx
+file.
+Card
+Description
+MAT
+Sets the element material attribute pointer.
+MP
+Defines a linear material property as a constant or a function of
+temperature.
+MPDATA
+Defines property data to be associated with the temperature table.
+MPDATA
+Defines property data to be associated with the temperature table.
+MPTEMP
+Defines a temperature table for material properties. Note: Supports
+temperature tables for each material attribute.
+MPTEMP
+Note: Supports temperature tables for each material attribute.
+TB
+Activates a data table for nonlinear material properties or special element
+input.
+TBDATA
+Defines data for the data table.
+EXODUS Cards
+Card
+Description
+Acoustic
+Anisotropic
+Isotropic
+Isotropic_Viscoelastic
+Orthotropic
+Stochastic
+Feko
+Supported media definitions and assignments are (anisotropic) dielectric media (with
+optional magnetic properties) and metallic media. Feko ’s default
+Free space, Perfect electric conductor, and Perfect magnetic conductor materials are also
+supported.
+Properties are defined in HyperMesh to map the required
+material assignments to mesh elements.
+For Feko wire segments (Bar2 and Bar3) a Property with the Card
+Image Segment must be defined and applied to the Components that contain segments. The
+Segment radius, Core medium, and Surrounding medium must be set in such a Property.
+For Feko triangles (Tria3 and Tria6) a Property with the Card
+Image = Triangle must be defined and applied to the Components that contain triangles. The
+Front and Back medium, and the Face medium must be defined. For Metallic faces, the
+Thickness must be defined. For the boundary surface between two dielectric regions (or
+between Free space and a dielectric) the Face Medium should be left as <Unspecified>.
+For Feko tetrahedra (Tetra4) a Property with the Card Image =
+Tetrahedron must be defined and applied to the Components that contain tetrahedral mesh
+elements. The Volume medium must be set as either a dielectric medium or Perfect electric
+conductor.
+LS-DYNA Cards
+LS-DYNA allows you to program your own materials that can be used
+in a simulation. Unsupported LS-DYNA materials and user defined
+LS-DYNA materials are assigned the MAT_UNSUPPORTED card image .
+HyperMesh imports unsupported material with the MAT_UNSUPPORTED card
+image, and preserves their corresponding IDs and associated components.
+In the MAT_UNSUPPORTED card image, all material sub-options, parameters, and data lines are
+supported as simple text. The validity or syntax of any data is not checked in this mode.
+You must manually check the validity of the data. No editing, updating, or review of the
+material data is intended. Also, time step calculation and mass calculation are not
+available for the component that refers to this material.
+Card
+Description
+DI
+Defines the dielectric or metallic medium properties.
+SK
+Assigns a material property to a surface.
+Card
+Description
+*MAT_ACOUSTIC (*MAT_090)
+Appropriate for tracking low pressure stress waves in an acoustic media such
+as air or water and can be used only with the acoustic pressure element
+formulation. Note: Material Type 90
+*MAT_ALE_INCOMPRESSIBLE (*MAT_160)
+Solves imcompressible flows with the ALE solver. It should be used with the
+element formulation 6 and 12 in *SECTION_SOLID. Note: Material Type
+160
+*MAT_ANISOTROPIC_ELASTIC (*MAT_002_ANIS)
+Valid for modeling the elastic-orthotropic behavior of solids, shells and
+thick shells. Note: Material Type 2
+*MAT_ANISOTROPIC_ELASTIC_PLASTIC (*MAT_157)
+Valid for modeling the elastic-orthotropic behavior of solids, shells and
+thick shells and solid elements. Note: Material Type 157
+*MAT_ANISOTROPIC_PLASTIC (*MAT_103_P)
+Simplified version of the Material Type 103. Applies only to shell
+elements. Note: Material Type 103P
+*MAT_ANISOTROPIC_VISCOPLASTIC (*MAT_103)
+Applies to shell and brick elements. Note: Material Type 103
+*MAT_ARRUDA_BOYCE_RUBBER (*MAT_127)
+Provides a hyperelastic rubber model combined optionally with linear
+viscoelasticity. Note: Material Type 127
+*MAT_ARUP_ADHESIVE (*MAT_169)
+Used for adhesive bonding in aluminum structures. Note: Material Type
+169
+*MAT_BAMMAN (*MAT_051)
+Models temperature and rate dependent plasticity with a fairly complex model
+that has many input parameters. Note: Material Type 51
+*MAT_BAMMAN_DAMAGE (*MAT_052)
+Extension of model 51 which includes the modeling of damage. Note: Material
+Type 52
+*MAT_BARLAT_ANISOTROPIC_PLASTICITY (*MAT_033)
+Used for modeling anisotropic material behavior in forming
+processes. Note: Material Type 33
+*MAT_BARLAT_YLD2000 (*MAT_133)
+Developed to overcome some shortcomings of the six parameters Barlat model
+implemented at Material Type 33. Available for shell elements only. Note: Material
+Type 133
+*MAT_BARLAT_YLD96 (*MAT_033_b)
+Used for modeling anisotropic material behavior in forming processes in
+particular for aluminum alloys. Available for shell elements only. Note: Material
+Type 33b
+*MAT_BILKHU/DUBOIS_FOAM (*MAT_075)
+Used for the simulation of isotropic crushable forms. Note: Material Type
+75
+*MAT_BLATZ-KO_FOAM (*MAT_038)
+Used for the definition of rubber-like foams of polyurethane. Note: Material
+Type 38
+*MAT_BLATZ-KO_RUBBER (*MAT_007)
+Used for the modeling of nearly incompressible continuum
+rubber. Note: Material Type 7
+*MAT_BOLT_BEAM (*MAT_208)
+Used with beam elements using ELFORM=6 (Discrete Beam). Note: Material Type
+208
+*MAT_BRITTLE_DAMAGE (*MAT_096)
+*MAT_CABLE_DISCRETE_BEAM (*MAT_071)
+Permits elastic cables to be realistically modeled; thus, no force will
+develop in compression. Note: Material Type 71
+*MAT_CELLULAR_RUBBER (*MAT_087)
+Provides a cellular rubber model with confined air pressure combined with
+linear viscoelasticity. Note: Material Type 87
+*MAT_CLOSED_CELL_FOAM (*MAT_053)
+Used for the modeling of low density, closed cell polyurethane
+foam. Note: Material Type 53
+*MAT_CODAM2 (*MAT_219)
+A sub-laminate-based continuum damage mechanics model for fiber reinforced
+composite laminates made up of transversely isotropic layers. Used for brick,
+shell, and thick shell elements. Note: Material Type 219
+*MAT_COHESIVE_ELASTIC (*MAT_184)
+Simple cohesive elastic model for use with solid element types 19 and 20 and
+is not available for other solid element formulations. Note: Material Type
+184
+*MAT_COHESIVE_GENERAL (*MAT_186)
+Cohesive material model that includes three general irreversible mixed-mode
+interaction cohesive formulations with arbitrary normalized traction-separation
+law given by a load curve. Note: Material Type 186
+*MAT_COHESIVE_MIXED_MODE (*MAT_138)
+Cohesive material model that includes a bilinear traction-separation law with
+quadratic mixed mode delamination criterion and a damage
+formulation. Note: Material Type 138
+*MAT_COHESIVE_MIXED_MODE_ELASTOPLASTIC_RATE (*MAT_240)
+Cohesive material formulation limited to linear softening with mixed mode
+delamination criterion and a damage formulation. Note: Material Type
+240
+*MAT_COHESIVE_TH (*MAT_185)
+Cohesive material for use with solid element types 19 and 20. Not available
+for any other solid element formulation. Note: Material Type 185
+*MAT_COMPOSITE_DAMAGE (*MAT_022)
+An orthotropic material with optional brittle failure for composites can be
+defined. Note: Material Type 22
+*MAT_COMPOSITE_FAILURE_MODEL
+Note: Material Type 59
+*MAT_COMPOSITE_FAILURE_SHELL_MODEL (*MAT_059_SHELL)
+Note: Material Type 59
+*MAT_COMPOSITE_FAILURE_SOLID_MODEL (*MAT_059_SOLID)
+Note: Material Type 59
+*MAT_COMPOSITE_LAYUP (*MAT_116)
+Used for modeling the elastic responses of composite layups that have an
+arbitrary number of layers through the shell thickness. Note: Material Type
+116
+*MAT_COMPOSITE_MATRIX (*MAT_117)
+Used for modeling the elastic responses of composites where a pre-integration
+is used to compute the extensional, bending, and coupling stiffness coefficients
+for use with the Belytschko Tsay resultant shell formulation. Note: Material Type
+117
+*MAT_COMPOSITE_MSC (*MAT_161)
+Used to model the progressive failure analysis for composite materials
+consisting of unidirectional and woven fabric layers. Note: Material Type
+161
+*MAT_COMPOSITE_MSC_DMG (*MAT_162)
+Used to model the progressive failure analysis for composite materials
+consisting of unidirectional and woven fabric layers. Note: Material Type
+162
+*MAT_CONCRETE_DAMAGE (*MAT_072)
+Used to analyze buried steel reinforced concrete structures subjected to
+impulsive loadings. Note: Material Type 72
+*MAT_CONCRETE_DAMAGE_REL3 (*MAT_072R3)
+Used to analyze buried steel reinforced concrete structures subjected to
+impulsive loadings. Note: Material Type 72R3
+*MAT_CONCRETE_EC2 (*MAT_172)
+Represents plain concrete only, reinforcing steel only, or a smeared
+combination of concrete and reinforcement. Note: Material Type 172
+*MAT_CORUS_VEGTER (*MAT_136)
+Plane stress orthotropic material model for metal forming. Note: Material Type
+136
+*MAT_CRUSHABLE_FOAM (*MAT_063)
+Used to model crushable foam with optional damping and tension
+cutoff. Note: Material Type 63
+*MAT_CSCM (*MAT_159)
+Concrete material Note: Material Type 159
+*MAT_CSCM_CONCRETE (*MAT_159_CONCRETE)
+Concrete material Note: Material Type 159
+*MAT_DAMPER_NONLINEAR_VISCUOUS (*MAT_S05)
+Used for discrete springs and dampers. Note: Material Type SD-5
+*MAT_DAMPER_VISCOUS (*MAT_S02)
+Used for discrete springs and dampers. Note: Material Type SD-2
+*MAT_DESHPANDE_FLECK_FOAM (*MAT_154)
+Used for modeling aluminum foam used as a filler material in aluminum
+extrusions to enhance the energy absorbing capability of the extrusion. For solid
+elements. Note: Material Type 154
+*MAT_ELASTIC (*MAT_001)
+Isotropic elastic material that is available for beam, shell and solid
+elements. Note: Material Type 1
+*MAT_ELASTIC_FLUID (*MAT_001_FLUID)
+Isotropic elastic material available for beam, shell and solid
+elements. Note: Material Type 1
+*MAT_ELASTIC_PLASTIC_HYDRO (*MAT_010)
+Used for the modeling of an elastic-plastic hydrodynamic
+material. Note: Material Type 10
+*MAT_ELASTIC_PLASTIC_THERMAL (*MAT_004)
+Temperature dependent material coefficients can be defined. Note: Material
+Type 4
+*MAT_ELASTIC_SPRING_DISCRETE_BEAM (*MAT_074)
+Permits elastic springs with damping to be combined and represented with a
+discrete beam element type 6. Note: Material Type 74
+*MAT_ELASTIC_VISCOPLASTIC_THERMAL (*MAT_106)
+Elastic viscoplastic material with thermal effects. Note: Material Type
+106
+*MAT_ELASTIC_WITH_VISCOSITY (*MAT_060)
+Used to simulate forming of glass products at high
+temperatures. Note: Material Type 60
+*MAT_ELASTIC_6DOF_SPRING_DISCRETE_BEAM (*MAT_093)
+Defined for simulating the effects of nonlinear elastic and nonlinear viscous
+beams by using six springs each acting about one of the six local degrees of
+freedom. Note: Material Type 93
+*MAT_EMMI (*MAT_151)
+The Evolving Microstructural Model of Inelasticity (EMMI) is a temperature
+and rate-dependent state variable model developed to represent the large
+deformation of metals under diverse loading conditions. This model is available
+for 3D solid elements, 2D solid elements and thick shell forms 3 and
+5. Note: Material Type 151
+*MAT_ENHANCED_COMPOSITE_DAMAGE (*MAT_054)
+Enhanced versions of the composite model Material Type 22. Note: Material
+Types 54-55
+*MAT_FABRIC (*MAT_034)
+Developed for airbag materials. Note: Material Type 34
+*MAT_FINITE_ELASTIC_STRAIN_PLASTICITY (*MAT_112)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain rate dependency can be defined. Note: Material Type
+112
+*MAT_FLD_TRANSVERSELY_ANISOTROPIC (*MAT_039)
+Used for simulating sheet forming processes with anisotropic
+material. Note: Material Type 39
+*MAT_FLD_3_PARAMETER_BARLAT (*MAT_190)
+Used for modeling sheets with anisotropic materials under plane stress
+conditions. Note: Material Type 190
+*MAT_FORCE_LIMITED (*MAT_029)
+With this material model, for the Belytschko-Schwer beam only, plastic hinge
+forming at the ends of a beam can be modeled using curve
+definitions. Note: Material Type 29
+*MAT_FRAZER_NASH_RUBBER_MODEL (*MAT_031)
+This model defines rubber from uniaxial test data. Note: Material Type
+31
+*MAT_FU_CHANG_FOAM (*MAT_083)
+Rate effects can be modeled in low and medium density foams. Note: Material
+Type 83
+*MAT_FU_CHANG_FOAM_DAMAGE_DECAY (*MAT_083_DAMAGE_DECAY)
+Rate effects can be modeled in low and medium density foams. Note: Material
+Type 83
+*MAT_GAS_MIXTURE (*MAT_148)
+Used for the simulation of thermally equilibrated ideal gas
+mixtures. Note: Material Type 148
+*MAT_GENERAL_JOINT_DISCRETE_BEAM (*MAT_097)
+Used to define a general joint constraining any combination of degrees of
+freedom between two nodes. Note: Material Type 97
+*MAT_GENERAL_NONLINEAR_1DOF_DISCRETE_BEAM (*MAT_121)
+Very general spring and damper model. Note: Material Type 121
+*MAT_GENERAL_NONLINEAR_6DOF_DISCRETE_BEAM (*MAT_119)
+Very general spring and damper model. Note: Material Type 119
+*MAT_GENERAL_SPRING_DISCRETE_BEAM
+Permits elastic and elastoplastic springs with damping to be represented with
+a discrete beam element type 6 using six springs each acting about one of the six
+local degrees of freedom. Note: Material Type 196
+*MAT_GENERAL_VISCOELASTIC (*MAT_076)
+Provides a general viscoelastic Maxwell model having up to 6 terms in the
+prony series expansion and is useful for modeling dense continuum rubbers and
+solid explosives. Note: Material Type 76
+*MAT_GEOLOGIC_CAP_MODEL (*MAT_025)
+This is an inviscid two invariant geologic cap model. Note: Material Type
+25
+*MAT_GEPLASTIC_SRATE_2000a (*MAT_101)
+Characterizes General Electric's commercially available engineering
+thermoplastics subjected to high strain rate events. Note: Material Type
+101
+*MAT_GURSON (*MAT_120)
+Gurson dilatational-plastic model. Available for shell and solid
+elements. Note: Material Type 120
+*MAT_GURSON_JC (*MAT_120_JC)
+Enhancement of Material Type 120. Gurson model with additional Johnson-Cook
+failure criterion. Note: Material Type 120B
+*MAT_GURSON_RCDC (*MAT_120_RCDC)
+This is an enhancement of material Type 120. This is the Gurson model with
+the Wilkins Rc-Dc fracture model added. This model is available for shell and
+solid elements. Note: Material Type 120C
+*MAT_HIGH_EXPLOSIVE_BURN (*MAT_008)
+Used fo the modeling of the detonation of a high explosive. Note: Material
+Type 8
+*MAT_HILL_FOAM (*MAT_177)
+Highly compressible foam. Note: Material Type 177
+*MAT_HILL_3R (*MAT_122)
+Planar anisotropic material model with 3 R values. Note: Material Type
+122
+*MAT_HILL_90 (*MAT_243)
+Used for modeling sheets with anisotropic materials under plane stress
+conditions. Note: Material Type 243
+*MAT_HONEYCOMB (*MAT_026)
+The major use of this material model is for honeycomb and foam materials with
+real anisotropic behavior. Note: Material Type 26
+*MAT_HYDRAULIC_GAS_DAMPER_DISCRETE_BEAM (*MAT_070)
+Special purpose element represents a combined hydraulic and gas-filled damper
+which has a variable orifice coefficient. Note: Material Type 70
+*MAT_HYPERELASTIC_RUBBER (*MAT_077_H)
+Provides a general hyperelastic rubber model combined optionally with linear
+viscoelasticity. Note: Material Type 77
+*MAT_INELASTIC_SPRING_DISCRETE_BEAM (*MAT_094)
+Elastoplastic springs with damping are represented with a discrete beam
+element type 6. Note: Material Type 94
+*MAT_INELASTIC_6DOF_SPRING_DISCRETE_BEAM (*MAT_095)
+Defined for simulating the effects of nonlinear inelastic and nonlinear
+viscous beams by using six springs each acting about one of the six local degrees
+of freedom. Note: Material Type 95
+*MAT_ISOTROPIC_ELASTIC_FAILURE (*MAT_013)
+Non-iterative plasticity with simple plastic strain failure
+model. Note: Material Type 13
+*MAT_ISOTROPIC_ELASTIC_PLASTIC (*MAT_012)
+Very low cost isotropic plasticity model for three-dimensional
+solids. Note: Material Type 12
+*MAT_JOHNSON_COOK (*MAT_015)
+The Johnson/Cook strain and temperature sensitive plasticity is sometimes
+used for problems where the strain rates vary over a large range and adiabatic
+temperature increases due to plastic heating causes material
+softening. Note: Material Type 15
+*MAT_JOHNSON_HOLMQUIST_CERAMICS (*MAT_110)
+Used for modeling ceramics, glass, and other brittle materials. Note: Material
+Type 110
+*MAT_JOHNSON_HOLMQUIST_CONCRETE (*MAT_111)
+Used for modeling concrete subjected to large strains, high strain rates, and
+high pressures. Note: Material Type 111
+*MAT_JOHNSON_HOLMQUIST_JH1 (*MAT_241)
+Used for modeling ceramics, glass, and other brittle materials. Note: Material
+Type 241
+*MAT_KELVIN-MAXWELL_VISCOELASTIC (*MAT_061)
+Used for modeling viscoelastic bodies, such as foams. Note: Material Type
+61
+*MAT_KINEMATIC_HARDENING_BARLAT2000 (*MAT_242)
+Used to model metal sheets under cyclic plasticity loading and with
+anisotropy in plane stress condition. Note: Material Type 242
+*MAT_KINEMATIC_HARDENING_BARLAT89 (*MAT_226)
+Used to model metal sheets under cyclic plasticity loading and with
+anisotropy in place stress condition. Note: Material Type 226
+*MAT_KINEMATIC_HARDENING_TRANSVERSELY_ANISOTROPIC (*MAT_125)
+Note: Material Type 125
+*MAT_LAMINATED_COMPOSITE_FABRIC (*MAT_058)
+Depending on the type of failure surface, may be used to model composite
+materials with unidirectional layers, complete layers, complete laminates, and
+woven fabrics. Note: Material Type 58
+*MAT_LAMINATED_GLASS (*MAT_032)
+With this material model, a layered glass including polymeric layers can be
+modeled. Note: Material Type 32
+*MAT_LAYERED_LINEAR_PLASTICITY (*MAT_114)
+Layered elastoplastic material with an arbitrary stress versus strain curve
+and an arbitrary strain rate dependency can be defined. Note: Material Type
+114
+*MAT_LINEAR_ELASTIC_DISCRETE_BEAM (*MAT_066)
+Used for simulating the effects of a linear elastic beam by using six springs
+each acting about one of the six local degrees of freedom. Note: Material Type
+66
+*MAT_LOW_DENSITY_FOAM (*MAT_057)
+Used for modeling high density foams. Note: Material Type 57
+*MAT_LOW_DENSITY_SYNTHETIC_FOAM (*MAT_179)
+Used for modeling rate independent low density foams, which have the property
+that the hysteresis in the loading-unloading curve is considerably reduced after
+the first loading cycle. Note: Material Type 179
+*MAT_LOW_DENSITY_SYNTHETIC_FOAM_WITH_FAILURE (*MAT_179_WITH_FAILURE)
+Used for modeling rate independent low density foams, which have the property
+that the hysteresis in the loading-unloading curve is considerably reduced after
+the first loading cycle. Note: Material Type 179
+*MAT_LOW_DENSITY_SYNTHETIC_FOAM_ORTHO (*MAT_180)
+Used for modeling rate independent low density foams, which have the property
+that the hysteresis in the loading-unloading curve is considerably reduced after
+the first loading cycle. Note: Material Type 180
+*MAT_LOW_DENSITY_SYNETHIC_FOAM_ORTHO_WITH_FAILURE (*MAT_180_WITH_FAILURE)
+Used for modeling rate independent low density foams, which have the property
+that the hysteresis in the loading-unloading curve is considerably reduced after
+the first loading cycle. Note: Material Type 180
+*MAT_LOW_DENSITY_VISCOUS_FOAM (*MAT_073)
+Used for modeling Low Density Urethane Foam with high compressibility and
+with rate sensitivity which can be characterized by a relaxation
+curve. Note: Material Type 73
+*MAT_MICROMECHANICS_DRY_FABRIC (*MAT_235)
+Used for modeling the elastic response of loose fabric used in inflatable
+structures, parachutes, body armor, blade containments, and airbags. Note: Material
+Type 235
+*MAT_MODIFIED_CRUSHABLE_FOAM (*MAT_163)
+Dedicated to modeling crushable foam with optional damping, tension cutoff,
+and strain rate effects. Note: Material Type 163
+*MAT_MODIFIED_HONEYCOMB (*MAT_126)
+Used for aluminum honeycomb crushable foam materials with anisotropic
+behavior. Note: Material Type 126
+*MAT_MODIFIED_PIECEWISE_LINEAR_PLASTICITY (*MAT_123)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain-rate dependency can be defined. Note: Material Type
+123
+*MAT_MODIFIED_PIECEWISE_LINEAR_PLASTICITY_RATE (*MAT_123_RATE)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain rate dependency can be defined. Note: Material Type
+123
+*MAT_MODIFIED_PIECEWISE_LINEAR_PLASTICITY_RTCL (*MAT_123_RTCL)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain rate dependency can be defined. Note: Material Type
+123
+*MAT_MODIFIED_ZERILLI_ARMSTRONG (*MAT_065)
+Rate and temperature sensitive plasticity model which is sometimes preferred
+in ordinance design calculations. Note: Material Type 65
+*MAT_MOMENT_CURVATURE_BEAM (*MAT_166)
+Beam material for performing non-liner elastic or multi-linear plastic
+analysis. Note: Material Type 166
+*MAT_MOONEY_RIVLIN_RUBBER (*MAT_027)
+A two-parametric material model for rubber can be defined. Note: Material Type
+27
+*MAT_MTS (*MAT_088)
+Available for applications involving large strains, high pressures and strain
+rates. Note: Material Type 88
+*MAT_NONLINEAR_ELASTIC_DISCRETE_BEAM (*MAT_067)
+Used for simulating the effects of nonlinear elastic and nonlinear viscous
+beams by using six springs each acting about one of the six local degrees of
+freedom. Note: Material Type 67
+*MAT_NONLINEAR_ORTHOTROPIC (*MAT_040)
+Used fo the definition of an orthotropic nonlinear elastic material based on
+a finite strain formulation with the initial geometry as the
+reference. Note: Material Type 40
+*MAT_NONLINEAR_PLASTIC_DISCRETE_BEAM (*MAT_068)
+Used for simulating the effects of nonlinear elastoplastic, linear viscous
+behavior of beams by using six springs each acting about one of the six local
+degrees of freedom. Note: Material Type 68
+*MAT_NULL (*MAT_009)
+Allows equations of state to be considered without computing deviatoric
+stresses. Note: Material Type 9
+*MAT_OGDEN_RUBBER (*MAT_077_O)
+Provides the Ogden (1984) rubber model combined optionally with linear
+viscoelasticity. Note: Material Type 77
+*MAT_ORIENTED_CRACK (*MAT_017)
+This material may be used to model brittle materials which fail due to large
+tensile stresses. Note: Material Type 17
+*MAT_ORTHOTROPIC_ELASTIC (*MAT_002)
+Valid for modeling the elastic-orthotropic behavior of solids, shells and
+thick shells. Note: Material Type 2
+*MAT_ORTHOTROPIC_SIMPLIFIED_DAMAGE (*MAT_221)
+An orthotropic material with optional simplified damage and optional failure
+for composites can be defined. Only valid for 3D solid elements with reduced or
+full integration. Note: Material Type 221
+*MAT_ORTHOTROPIC_THERMAL (*MAT_021)
+A linearly elastic, orthotropic material with orthotropic thermal
+expansion. Note: Material Type 21
+*MAT_ORTHOTROPIC_VISCOELASTIC (*MAT_086)
+Allows the definition of an orthotropic material with a viscoelastic part.
+Applies to shell elements. Note: Material Type 86
+*MAT_PIECEWISE_LINEAR_PLASTICITY (*MAT_024)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain rate dependency can be defined. Note: Material Type
+24
+*MAT_PLASTICITY_COMPRESSION_TENSION (*MAT_124)
+An isotropic elastic-plastic material where unique yield stress versus
+plastic strain curves can be defined for compression and tension. Note: Material
+Type 124
+*MAT_PLASTICITY_COMPRESSION_TENSION_E0S (*MAT_155)
+An isotropic elastic-plastic material where unique yield stress versus
+plastic strain curves can be defined for compression and tension. Note: Material
+Type 155
+*MAT_PLASTIC_KINEMATIC (*MAT_003)
+Suited to model isotropic and kinematic hardening plasticity with the option
+of including rate effects. Note: Material Type 3
+*MAT_PLASTICITY_POLYMER (*MAT_089)
+An elasto-plastic material with an arbitrary stress versus strain curve and
+arbitrary strain rate dependency can be defined. Note: Material Type
+89
+*MAT_PLASTICITY_WITH_DAMAGE (*MAT_082, *MAT_081)
+An elasto-visco-plastic material with an arbitrary stress versus strain curve
+and arbitrary strain rate dependency can be defined. Note: Material Types
+81-82
+*MAT_PLASTICITY_WITH_DAMAGE_ORTHO (*MAT_081_ORTHO)
+Invokes an orthotropic damage model. Note: Material Types 81-82
+*MAT_PLASTICITY_WITH_DAMAGE_ORTHO_RCDC (*MAT_082_ORTHO_RCDC)
+Invokes the damage model developed by Wilkins. Note: Material Types
+81-82
+*MAT_PML_ELASTIC (*MAT_230)
+A perfectly-matched layer (PML) material. An absorbing layer material used to
+simulate wave propagation in an unbounded isotropic elastic medium. Only available
+for solid 8-node bricks (element type 2). Note: Material Type 230
+*MAT_PML_ELASTIC_FLUID (*MAT_230_FLUID)
+A perfectly-matched layer (PML) material with a pressure fluid constitutive
+law. Used in a wave-absorbing layer adjacent to a fluid material
+(*MAT_ELASTIC_FLUID) in order to simulate wave propagation in an unbound fluid
+medium. Note: Material Type 230
+*MAT_POLYMER (MAT_168)
+Used for brick elements. Note: Material Type 168
+*MAT_POWDER (*MAT_271)
+Used to analyze the compaction and sintering of cemented carbides. Only
+available for solid elements. Note: Material Type 271
+*MAT_POWER_LAW_PLASTICITY (*MAT_018)
+This is an isotropic plasticity model with rate effects which uses a power
+law hardening rule. Note: Material Type 18
+*MAT_PSEUDO_TENSOR (*MAT_016)
+This model has been used to analyze buried steel reinforced concrete
+structures subjected to impulsive loadings. Note: Material Type 16
+*MAT_RATE_SENSITIVE_POLYMER (*MAT_141)
+Used to model the simulation of an isotropic ductile polymer with strain rate
+effects.
+Known as the modified Ramaswamy-Stouffer model. Note: Material Type
+141
+*MAT_RATE_SENSITIVE_POWERLAW_PLASTICITY (*MAT_064)
+Used to model strain rate sensitive elasto-plastic material with a power law
+hardening. Note: Material Type 64
+*MAT_RESULTANT_ANISOTROPIC (*MAT_170)
+This model is available for the Belytschko-Tsay and the C0 triangular shell
+elements and is based on a resultant stress formulation. Note: Material Type
+170
+*MAT_RESULTANT_PLASTICITY (*MAT_028)
+A resultant formulation for beam and shell elements including elasto-plastic
+behavior can be defined. Note: Material Type 28
+*MAT_RIGID (*MAT_020)
+Parts made from this material are considered to belong to a rigid body (for
+each part ID). Note: Material Type 20
+*MAT_RIGID_DISCRETE (*MAT_220)
+Rigid material for shells or solids. Note: Material Type 220
+*MAT_SAMP-1 (*MAT_187)
+Uses an isotropic C-1 smooth yield surface for the description of
+non-reinforced plastics. Note: Material Type 187
+*MAT_SCHWER_MURRARY_CAP_MODEL (*MAT_145)
+The Schwer & Murray Cap Model, known as the Continuous Surface Cap Model,
+is a three invariant extension of the Geological Cap Model (Material Type 25) that
+also includes viscoplasticity for rate effects and damage mechanics to model
+strain softening. Note: Material Type 145
+*MAT_SEATBELT (*MAT_B01)
+Define a seat belt material. Note: Material Type B01
+*MAT_SEISMIC_BEAM (*MAT_191)
+Enables lumped plasticity to be developed at the 'node 2' end of
+Belytschko-Schwer beams (resultant formulation). Note: Material Type
+191
+*MAT_SHAPE_MEMORY (*MAT_030)
+This material model describes the superelastic response present in
+shape-memory alloys that is the peculiar material ability to undergo large
+deformations with full recovery in loading-unloading cycles. Note: Material Type
+30
+*MAT_SID_DAMPER_DISCRETE_BEAM (*MAT_069)
+The side impact dummy uses a damper that is not adequately treated by the
+nonlinear force versus relative velocity curves since the force characteristics
+are dependent on the displacement of the piston. Note: Material Type
+69
+*MAT_SIMPLIFIED_JOHNSON_COOK (*MAT_098)
+Used for problems where the strain rates vary over a large
+range. Note: Material Type 98
+*MAT_SIMPLIFIED_JOHNSON_COOK_ORTHOTROPIC_DAMAGE (*MAT_099)
+Implemented with multiple through thickness integration points. Extension of
+Model 98 to include orthotropic damage as a means of treating failure in aluminum
+panels. Note: Material Type 99
+*MAT_SIMPLIFIED_RUBBER_FOAM (*MAT_181)
+Provides a rubber and foam model defined by a single uniaxial load curve or
+by a family of uniaxial curves at discrete strain rates. Note: Material Type
+181
+*MAT_SIMPLIFIED_RUBBER_FOAM_WITH_FAILURE (*MAT_181_WITH_FAILURE)
+Provides a rubber and foam model defined by a single uniaxial load curve or
+by a family of uniaxial curves at discrete strain rates. Note: Material Type
+181
+*MAT_SIMPLIFIED_RUBBER_WITH_DAMAGE (*MAT_183)
+Provides an incompressible rubber model defined by a single uniaxial load
+curve for loading (or a table if rate effects are considered) and a single
+uniaxial load curve for unloading. Note: Material Type 183
+*MAT_SOIL_AND_FOAM (*MAT_005)
+Simple model that works in some ways like a fluid. Note: Material Type
+5
+*MAT_SOIL_AND_FOAM_FAILURE (*MAT_014)
+The input for this model is the same as for *MAT_SOIL_AND_FOAM; however, when
+the pressure reaches the failure pressure, the element loses its ability to carry
+tension. Note: Material Type 14
+*MAT_SOIL_CONCRETE (*MAT_078)
+Permits concrete and soil to be efficiently modeled. Note: Material Type
+78
+*MAT_SPECIAL_ORTHOTROPIC (*MAT_130)
+Applies to Belytschko-Tsay and the C0 triangular shell
+elements. Note: Material Type 130
+*MAT_SPOTWELD (*MAT_100)
+Applies to beam elements Type 9 and to solid elements Type 1 with Type 6
+hourglass controls. Note: Material Type 100
+*MAT_SPOTWELD_DAIMLER_CHRYSLER (*MAT_100_DAIMLER_CHRYSLER)
+Applies to solid elements Type 1 with Type 6 hourglass
+controls. Note: Material Type 100
+*MAT_SPOTWELD_DAMAGE-FAILURE (*MAT_100_DAMAGE-FAILURE)
+Applies to beam element type 9 and to solid element type 1 with type 6
+hourglass controls. Note: Material Type 100
+*MAT_SPRING_ELASTIC (*MAT_S01)
+Used for discrete springs and dampers. Provides a translational or rotational
+elastic spring located between two nodes. Note: Material Type SD-1
+*MAT_SPRING_ELASTOPLASTIC (*MAT_S03)
+Used for discrete springs and dampers. Provides an elastoplastic
+translational or rotational spring with isotropic hardening located between two
+nodes. Note: Material Type SD-3
+*MAT_SPRING_GENERAL_NONLINEAR (*MAT_S06)
+Used for discrete springs and dampers. Provides a general nonlinear
+translational or rotational spring with arbitrary loading and unloading
+definitions. Note: Material Type SD-6
+*MAT_SPRING_INELASTIC (*MAT_S08)
+Used for discrete springs and dampers. Provides an inelastic tension or
+compression only, translational or rotational spring. Note: Material Type
+SD-8
+*MAT_SPRING_MAXWELL (*MAT_S07)
+Used for discrete springs and dampers. Provides a three Parameter Maxwell
+Viscoelastic translational or rotational spring. Note: Material Type
+SD-7
+*MAT_SPRING_NONLINEAR_ELASTIC (*MAT_S04)
+Used for discrete springs and dampers. Provides a nonlinear elastic
+translational and rotational spring with arbitrary force versus displacement and
+moment versus rotation, respectively. Note: Material Type SD-4
+*MAT_STEEL_EC3
+Tables and formulae from Eurocode 3 are used to derive the mechanical
+properties and their variation with temperature, although these can be overriden
+by user-defined curves. Note: Material Type 202
+*MAT_STEINBERG (*MAT_011)
+This material is available for modeling materials deforming at very high
+strain rates (>105) and can be used with solid elements. Note: Material Type
+11
+*MAT_STEINBERG_LUND (*MAT_011_LUND)
+This material is a modification of the Steinberg model to include the rate
+model of Steinberg and Lund (1989). Note: Material Type 11
+*MAT_STRAIN_RATE_DEPENDENT_PLASTICITY (*MAT_019)
+A strain rate dependent material can be defined. Note: Material Type
+19
+*MAT_TABULATED_JOHNSON_COOK (*MAT_224)
+Defines an elasto-viscoplastic material with arbitrary stress versus strain
+curve(s), and arbitrary strain rate dependency. Note: Material Type
+224
+*MAT_TEMPERATURE_DEPENDENT_ORTHOTROPIC (*MAT_023)
+Defines an orthotropic elastic material with arbitrary temperature
+dependency. Note: Material Type 23
+*MAT_THERMAL_ISOTROPIC (*MAT_T01)
+Defines isotropic thermal properties. Note: Thermal Material Property Type
+1
+*MAT_THERMAL_ISOTROPIC_TD_LC (*MAT_T06)
+Defines isotropic thermal properties that are temperature dependent specified
+by load curves. Note: Thermal Material Property Type 6
+*MAT_THERMAL_ORTHOTROPIC (*MAT_T02)
+Defines orthotropic thermal properties. Note: Thermal Material Property Type
+2
+*MAT_THERMO_ELASTO_VISCOPLASTIC_CREEP (*MAT_188)
+Defines creep separately from plasticity. Note: Material Type
+188
+*MAT_TRANSVERSELY_ANISOTROPIC_CRUSHABLE_FOAM (*MAT_142)
+Used for an extruded foam material that is transversely istropic, crushable,
+and of low density with no significant Poisson effect. Note: Material Type
+142
+*MAT_TRANSVERSELY_ANISOTROPIC_ELASTIC_PLASTIC (*MAT_037)
+Simulates sheet forming processes with anisotropic material. Note: Material
+Type 37
+*MAT_TRANSVERSELY_ANISOTROPIC_ELASTIC_PLASTIC_NLP_FAILURE (*MAT_037_NLP_FAILURE)
+Simulates sheet forming processes with anisotropic material. Note: Material
+Type 37
+*MAT_TRANSVERSELY_ANISOTROPIC_ELASTIC_PLASTIC_ECHANGE (*MAT_037_ECHANGE)
+Simulates sheet forming processes with anisotropic material. Note: Material
+Type 37
+*MAT_TRIP (*MAT_113)
+Isotropic elasto-plastic material model that applies to shell elements
+only. Note: Material Type 113
+*MAT_UHS_STEEL (*MAT_244)
+Material for hot stamping and press hardening. Note: Material Type
+244
+*MAT_UNSUPPORTED
+*MAT_USER_DEFINED_MATERIAL
+User can supply their own subroutines. Note: Material Types
+41-50
+*MAT_VACUUM (*MAT_140)
+Dummy material representing a vacuum in a multi-material Euler/ALE
+model. Note: Material Type 140
+*MAT_VISCOELASTIC (*MAT_006)
+Used for the modeling of viscoelastic behavior for beams (Hughes-Liu),
+shells, and solids. Note: Material Type 6
+*MAT_VISCOELASTIC_HILL_FOAM (*MAT_178)
+Highly compressible foam. Note: Material Type 178
+*MAT_VISCOELASTIC_LOOSE_FABRIC (*MAT_234)
+Used for modeling the elastic and viscoelastic response of loose fabric used
+in body armor, blade containments, and airbags. Note: Material Type
+234
+*MAT_VISCOPLASTIC_MIXED_HARDENING (*MAT_225)
+An elasto_viscoplastic material with an arbitrary stress versus strain curve
+and arbitrary strain rate dependency can be defined. Kinematic, isotropic, or a
+combination or kinematic and isotropic hardening can be specified. Also, failure
+based on plastic strain can be defined. Note: Material Type 225
+*MAT_VISCOUS_FOAM (*MAT_062)
+Used to represent the Confor Foam on the ribs of EuroSID side impact
+dummy. Note: Material Type 62
+*MAT_WINFRITH_CONCRETE (*MAT_084)
+Only Type 84 includes rate effects. Model is a smeared crack, smeared rebar
+model implemented in the 8-node single integration point continuum
+element. Note: Material Type 84 and Type 85
+*MAT_WOOD (*MAT_143)
+Wood material. Note: Material Type 143
+*MAT_WOOD_FIR (*MAT_143_FIR)
+Wood material. Note: Material Type 143
+*MAT_WOOD_OPTION
+Transversely isotropic material and is available for solid
+elements. Note: Material Type 143
+*MAT_WOOD_PINE (*MAT_143_PINE)
+Wood material. Note: Material Type 143
+*MAT_WTM_STM
+Anisotropic-viscoplastic material model. Note: Material Type
+135
+*MAT_WTM_STM_PLC (*MAT_135_PLC)
+Anisotropic material. Note: Material Type 135PLC
+*MAT_1DOF_GENERALIZED_SPRING (*MAT_146)
+Linear or spring damper that allows different degrees of freedom at two nodes
+to be coupled. Note: Material Type 146
+*MAT_3-PARAMETER_BARLAT (*MAT_036)
+Used for modeling sheets with anisotropic materials under plane stress
+conditions. Note: Material Type 36
+*MAT_3-PARAMETER_BARLAT_NLP (*MAT_036_NLP)
+Used for modeling sheets with anisotropic materials under plane stress
+conditions. Note: Material Type 36
+Nastran Cards
+The PCOMP card contains all information regarding composite materials, including the
+orientation of the longitudinal direction of each ply. The material longitudinal axis of the
+element is obtained either by rotating the x axis of the element THETA degree (from THETA
+field in the element card) counterclockwise, or by projecting the x axis of a system (from
+MCID field in the element card) onto the surface of the element. Each ply orientation, shown
+a as ply direction, is obtained by rotating the material longitudinal axis THETAi degree
+(from the THETAi field in the PCOMP card) counterclockwise.
+Card
+Description
+MAT1
+Defines the material properties for linear isotropic materials.
+MAT2
+Defines the material properties for linear anisotropic materials for
+two-dimensional elements.
+MAT4
+Defines the constant or temperature-dependent thermal material properties for
+conductivity, heat capacity, density, dynamic viscosity, heat generation,
+reference enthalpy, and latent heat associated with a single-phase change.
+MAT5
+Defines the thermal material properties for anisotropic materials.
+MAT8
+Defines the material property for an orthotropic material for isoparametric
+shell elements.
+MAT9
+Defines the material properties for linear, temperature-independent,
+anisotropic materials for solid isoparametric elements.
+MAT10
+Defines material properties for fluid elements in coupled fluid-structural
+analysis.
+MATEP
+Specifies elasto-plastic material properties to be used for large deformation
+analysis. Used in SOL 600 only.
+MATHE
+Specifies hyperelastic (rubber-like) material properties for nonlinear (large
+strain and large rotation) analysis in SOL 600 and MD Nastran SOL 400 only.
+MATHP
+Specifies material properties for use in fully nonlinear (i.e., large strain
+and large rotation) hyperelastic analysis of rubber-like materials
+(elastomers).
+MATG
+Specifies gasket material properties to be used in SOL 600 and MD Nastran SOL 400.
+MATHP
+Specifies material properties for use in fully nonlinear (that is, large
+strain and large rotation) hyperelastic analysis of rubber-like materials
+(elastomers).
+MATEP
+Specifies elasto-plastic material properties.
+MATS1
+Specifies stress-dependent material properties for use in applications
+involving nonlinear materials.
+MATT1
+Specifies temperature-dependent material properties on MAT1 entry fields via
+TABLEMi entries.
+MATT2
+Specifies temperature-dependent material properties on MAT2 entry fields via
+TABLEMj entries.
+MATT4
+Specifies table references for temperature-dependent MAT4 material
+properties.
+MATT8
+Specifies temperature-dependent material properties on MAT8 entry fields via
+TABLEMi entries.
+MATT9
+Specifies temperature-dependent material properties on MAT9 entry fields via
+TABLEMk entries.
+OptiStruct Cards
+Card
+Description
+MAT1
+Defines the material properties for linear,
+temperature-independent, and isotropic materials. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT2
+Defines the material properties for linear,
+temperature-independent, and anisotropic materials for two-dimensional
+elements. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT3
+Defines the material properties for linear,
+temperature-independent, and orthotropic materials used by the CTAXI and CTRIAX6
+axisymmetric elements. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT4
+Defines constant thermal material properties for
+conductivity, density, and heat generation. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT5
+Defines the thermal material properties for anisotropic
+materials. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT8
+Defines the material properties for linear
+temperature-independent orthotropic material for two-dimensional elements. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT9
+Defines the material properties for linear,
+temperature-independent, and anisotropic materials for solid elements. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MAT9ORT
+Defines the material properties for linear,
+temperature-independent, and orthotropic materials for solid elements in terms of
+engineering constants. Note: Bulk Data Entry
+MAT10
+Defines material properties for fluid elements in coupled
+fluid-structural analysis. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MATFAT
+Defines material properties for fatigue
+analysis. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MATF1
+Specifies frequency-dependent material properties on
+MAT1 entry fields via TABLEDi
+entries. Note: Bulk Data Entry
+MATF2
+Specifies frequency-dependent material properties on
+MAT2 entry fields via TABLEDi
+entries. Note: Bulk Data Entry
+MATF8
+Specifies frequency-dependent material properties on
+MAT8 entry fields via TABLEDi
+entries. Note: Bulk Data Entry
+MATF9
+Specifies frequency-dependent material properties on
+MAT9 entry fields via TABLEDi
+entries. Note: Bulk Data Entry
+MATF10
+Specifies frequency-dependent material properties on
+MAT10 entry fields via TABLEDi
+entries. Note: Bulk Data Entry
+MATHE
+Defines material properties for nonlinear hyperelastic
+materials. The Polynomial form is available and various material types can be
+defined by specifying the corresponding coefficients. Note: Bulk Data Entry
+MATPE1
+Defines the material properties for poro-elastic
+materials. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+MATT1
+Specifies temperature-dependent material properties on
+MAT1 entry fields via TABLEMi
+entries. Note: Bulk Data Entry
+MATT2
+Specifies temperature-dependent material properties on
+MAT2 entry fields via TABLEMj
+entries. Note: Bulk Data Entry
+MATT4
+Defines temperature-dependent material properties for the
+corresponding MAT4 Bulk Data Entry fields via
+TABLEMi entries. Note: Bulk Data Entry
+MATT5
+Defines temperature-dependent material properties on
+MAT5 entry fields via TABLEMi
+entries. Note: Bulk Data Entry
+MATT8
+Specifies temperature-dependent material properties on
+MAT8 entry fields via TABLEMi
+entries. Note: Bulk Data Entry
+MATT9
+Specifies temperature-dependent material properties on
+MAT9 entry fields via TABLEMk
+entries. Note: Bulk Data Entry
+MGASK
+Defining the material properties for gasket-like
+materials. Note: Bulk Data Entry
+PAM-CRASH Cards
+Card
+Description
+MAT_SECURE
+PLY
+TYPE 1
+Elastic Plastic Note: Post-Yield behavior - defined by Yield Stress list
+box.
+TYPE 2
+Crushable Foam
+TYPE 5
+Linear Viscoelastic
+TYPE 7
+Isotropic - Elastic-Plastic-Hydrodynamic
+TYPE 11
+Blatz-Ko Rubber
+TYPE 16
+Elastic-Plastic with Damage
+TYPE 17
+Hyperleastic Mooney-Rivlin Note: To enter LTC on card 4, a curve must
+exist.
+TYPE 18
+Hyperelastic Hart-Smith
+TYPE 20
+Inelastic Crushable Foam
+TYPE 21
+Elastic Foam Note: Curve definition may be defined with points or with curve
+entities.
+TYPE 22
+Non-linear Viscoelastic
+TYPE 25
+Solid for Foam Side Impact Barriers
+TYPE 26
+Elastic Plastic with Gurson Damage Model
+TYPE 30
+Unidirectional Composite Bi-Phase Note: To enter IPLY on card 3, a material
+collector with a defined PLY_DATA card image must
+exist.
+TYPE 31
+Unidirectional Composite Non-linear Note: To enter IPLY on card 3, a material
+collector with a defined PLY_DATA card image must
+exist.
+TYPE 36
+Elastic/Stiffening - Plastic with Failure
+TYPE 37
+Viscoelastic Ogden Rubber
+TYPE 41
+Improved Side Impact Barrier TYPEerial Note: Full material input and
+simplified material input are available.
+TYPE 42
+TYPE 45
+General Non-linear Strain Rate Dependent
+TYPE 52
+Elastic-Plastic Solid with Fracture Criteria
+TYPE 61
+Elastic-Plastic 8 Node Thick Shell
+TYPE 62
+Elastic-Plastic for 8-Node Thick Shell Elements with Total Lagrangian
+Formulation
+TYPE 71
+Elastic-Plastic with EWK Damage and Failure
+TYPE 99
+Null TYPEerial for Solid
+TYPE 100
+Null TYPEerial
+TYPE 101
+Elastic
+TYPE 102
+Elastic Plastic
+TYPE 103
+Elastic Plastic
+TYPE 105
+Elastic Plastic with Isotropic Damage
+TYPE 106
+Elastic Plastic with Anisotropic Damage
+TYPE 107
+TYPE 108
+Anisotropic Elastic Plastic
+TYPE 109
+Note: TYPE 109 data will not be exported (not valid for PAM 2006 and
+above).
+TYPE 110
+Super Elastic
+TYPE 115
+Elastic Plastic with Gurson Damage
+TYPE 116
+Elastic Plastic with Isotropic Damage
+TYPE 117
+Note: Type 117 data will not be exported (not valid for Pam 2006 and
+above).
+TYPE 118
+Anisotropic Elastic Plastic
+TYPE 121
+CRASH/FORMING, Non-linear Visco Elastic
+TYPE 126
+Glass
+TYPE 128
+Anisotropic Elastic Plastic
+TYPE 130
+Multilayered Shell Elements Note: To specify a ply database, a material
+collector with the PLY_DATA card image must exist in the
+database. Ply auxiliary variables default to blank and can be
+overridden.
+TYPE 131
+Multilayered Shell Elements Note: To specify a ply database, a material
+collector with the PLY_DATA card image must exist in the
+database. Ply auxiliary variables default to blank and can be
+overridden.
+TYPE 132
+Multilayered Shell Elements Note: To specify a ply database, a material
+collector with the PLY_DATA card image must exist in the
+database. Ply auxiliary variables default to blank and can be
+overridden.
+TYPE 143
+Elastic-Plastic with Elastic Stiffening
+TYPE 150
+Layered TYPEerials for Membrane Elements
+TYPE 151
+Fabric Membrane Elements with Non Linear Fibre
+TYPE 161
+Elastic for 4-Node Thick Shell
+TYPE 162
+Elastic Plastic with 4-Node Thick Shell
+TYPE 171
+Elastic Plastic with EWK Damage
+TYPE 200
+Null TYPERerial
+TYPE 201
+Elastic Note: Card fields vary depending upon the element type selected (beam
+or bar).
+TYPE 202
+Elastic-Plastic Note: Card fields vary depending upon the element type
+selected. Post-Yield behavior - defined by Yield Stress list box.
+TYPE 203
+Nonlinear for BAR Note: Number of editable fields depends on NLOAD, NUNLD, and
+NRELD.
+TYPE 204
+Nonlinear for BAR/DASHPOT Note: Force-deflection curve specification requires
+existence of curves in the database.
+TYPE 205
+Nonlinear Tension Only Barn Note: NLOAD can be set to 0 or to a curve
+(right-click field label to reset NLOAD curve selection). Other fields for
+material type 205 depend on the value of NLOAD.
+TYPE 212
+Elastic-Plastic for Beam Elements Note: Post-Yield behavior - defined by Yield
+Stress list box.
+TYPE 213
+Elastic-Plastic for Beam Elements Note: Post-Yield behavior - defined by Yield
+Stress list box. Specification of the cross section description through the list
+box affects the layout of cards 8 through NIPS 8.
+TYPE 214
+Global Beam Column Note: Curves must exist in the model before specifying
+curve fields.
+TYPE 220
+Nonlinear 6-DOF Spring/Dashpot Note: Curves must exist in the model before
+specifying curve fields.
+TYPE 221
+Spherical Joint Elements Note: Curves must exist in the model before
+specifying curve fields.
+TYPE 222
+Flexion Torsion Joint Elements Note: Curves must exist in the model before
+specifying curve fields.
+TYPE 223
+Nonlinear 6-DOF Spring-Beam Elements Note: Curves must exist in the model
+before specifying curve fields.
+TYPE 224
+6-DOF Penalty Spring Beam Elements Note: 6-DOF penalty spring beam
+elements
+TYPE 230
+KineTYPEic Joint Elements Note: Curves must exist in the model before
+specifying curve fields.
+TYPE 301
+SLINK, ELINK elements or TIED interface.
+TYPE 302
+PLINK elements.
+TYPE 303
+LLINK elements
+TYPE 304
+TIED Interfaces
+PLYDATA
+Only TSAI-WU failure criterion supported
+Permas Cards
+Card
+Description
+$COMPRESS
+Fluid compressibility
+$CONDUCTIVITY
+Heat conductivity
+$DAMPING
+Structural damping
+$DENSITY
+Material density
+$DIELECTRIC
+Definition of dielectricity.
+$ELASTIC
+Linear elastic material data.
+$ELCONDUCT
+Definition of electric conductivity.
+$ENTER MATERIAL
+Material input bracket header line.
+$FLDENS
+Definition of fluid material density.
+$FLUID
+Opens the bracket for definition of a fluid material.
+$GASKET
+Definition of material for gaskets.
+$GSKLOAD
+Definition of the loading behavior for gasket material.
+$GSKUNLOAD
+Definition of the unloading behavior for gasket material.
+$HARDENING
+Hardening
+$HEATCAP
+Heat capacity
+$MATERIAL
+Definition of homogenous material.
+$PERMEABILITY
+Definition of magnetic permeability.
+$PLASTIC
+Plasticity data
+$SURFABS
+Definition of absorption at the boundary surface of a fluid.
+$THERMEXP
+Thermal expansion coefficients
+$VOLDRAG
+Definition of volumetric drag of a fluid.
+$YIELD
+Yield limit
+Radioss Cards
+Radioss allows you to program your own materials that can be
+used in a simulation. Unsupported Radioss materials and user
+defined Radioss materials are assigned the MAT_UNSUPPORTED
+card image .
+HyperMesh imports unsupported materials with the MAT_UNSUPPORTED card image , and preserves their corresponding IDs and associated
+components.
+In the MAT_UNSUPPORTED card image , all material sub-options,
+parameters, and data lines are supported as simple text. HyperMesh does
+not check the validity or syntax of any data in this mode. You must manually check the
+validity of the data. No editing, updating, or review of the material data is intended. Also
+time step calculation and mass calculation are not available for the component that refers
+to this material.
+Card
+Description
+/ALE/MAT
+Describes the ALE material. Note: Block Format Keyword
+/MAT/LAW12 (3D_COMP)
+Describes a solid material using the Tsai-Wu
+formulation that is usually used to model composites. This material is assumed to be
+3D orthotropic-elastic before the Tsai-Wu criterion is reached. The material becomes
+nonlinear afterwards. The Tsai-Wu criterion can be set dependent on the plastic work
+and strain rate in each of the orthotropic directions and in shear to model material
+hardening. Stress based orthotropic criterion for brittle damage and failure is
+available. This material is a generalization and improvement of /MAT/LAW14
+(COMPSO) . Note: Block Format Keyword
+/MAT/B-K-EPS
+Describes the boundary conditions material in flow
+analysis (ALE or EULER). It is based on boundary material /MAT/LAW11
+(BOUND) activating boundary turbulence modeling and adding 2 input lines
+for k -
+ε
+˙
+parameters. It is compatible for 2D and 3D analysis. It is not compatible with
+Multi-material ALE laws, LAW37 (BIMAT) and /MAT/LAW51
+(MULTIMAT) . Note: Block Format Keyword
+/MAT/LAW57 (BARLAT3)
+Describes plasticity hardening defined by a user
+function and can be used only with shell elements. This is an elasto-plastic
+orthotropic law for modeling anisotropic materials in forming processes especially
+aluminum alloys. This material law must be used with property set type
+/PROP/TYPE9 (SH_ORTH) or /PROP/TYPE10
+(SH_COMP) . Note: Block Format Keyword
+/MAT/LAW20 (BIMAT)
+ALE multi-material law for 2D analysis. Note: Block Format Keyword
+/MAT/LAW37 (BIPHAS)
+Describes the hydrodynamic bi-material liquid gas
+material. It is not recommended to use this multi-material laws (LAW37) with
+Radioss single precision engine. Note: Block Format Keyword
+/MAT/LAW34 (BOLTZMAN)
+Describes the Boltzmann (visco-elastic) material.
+This law is applicable only for solid elements and can be used to model polymers and
+elastomers. Note: Block Format Keyword
+/MAT/LAW11 (BOUND)
+Describes the boundary conditions material in flow
+analysis (ALE or EULER). It is compatible for 2D and 3D analysis. It is not
+compatible with Multi-Material ALE laws, LAW37 (BIMAT) and
+/MAT/LAW51 (MULTIMAT) . In case of turbulence, activate boundary
+turbulence modeling using /MAT/B-K-EPS and input κ -
+ε
+˙
+boundary conditions. Note: Block Format Keyword
+/MAT/LAW15 (CHANG)
+Models composite shell elements, similar to LAW25.
+The plastic behavior is based on the Tsai-Wu criteria ( /MAT/LAW25
+(COMPSH) for Tsai-Wu description) and failure is based on the
+Chang-Chang failure criterion is used. Note: Block Format Keyword
+/MAT/LAW25 (COMPSH)
+Two variations of the same material LAW25 are
+implemented:Tsai-wu formulation and CRASURV formulation. Note: Block Format Keyword
+/MAT/LAW14 (COMPSO)
+Describes an orthotropic solid material using the
+Tsai-Wu formulation that is mainly designed to model uni-directional composites.
+This material is assumed to be 3D orthotropic-elastic before the Tsai-Wu criterion
+is reached. The material becomes nonlinear afterwards. The nonlinearity in direction
+3 is the same as that in direction 2 to represent the behavior of a composite matrix
+material. The Tsai-Wu criterion can be set dependent on the plastic work and strain
+rate in each of the orthotropic directions and in shear to model material hardening.
+Stress based orthotropic criterion for brittle damage and failure is available.
+/MAT/LAW12 (3D_COMP) is an improved version of this material
+and should be used instead of LAW14. Note: Block Format Keyword
+/MAT/LAW24 (CONC)
+Models brittle elastic-plastic behavior of
+reinforced concrete. The law assumes that the two failure mechanisms are tensile
+cracking and compressive crushing of the concrete material. This keyword is
+compatible only with solid elements. Note: Block Format Keyword
+/MAT/LAW59 (CONNECT)
+Describes the Connection material, which can be used
+to model spotweld, welding line, glue, or adhesive layers in laminate composite
+material. Elastic and elastoplastic behavior in normal and shear directions can be
+defined. The curves that represent plastic behavior can be specified for different
+strain rates. This material is applicable only to solid hexahedron elements
+( /BRICK ) and the material time-step does not depend on element
+height. Note: Block Format Keyword
+/MAT/LAW68 (COSSER)
+Describes the honeycomb material. Note: Block Format Keyword
+/MAT/LAW44 (COWPER)
+The Cowper-Symonds law models an elasto-plastic
+material. The basic principle is the same as the standard Johnson-Cook model; the
+only difference between the two laws lies in the expression for strain rate effect
+on flow stress. Note: Block Format Keyword
+/MAT/LAW22 (DAMA)
+This law is identical to Johnson-Cook material
+( /MAT/LAW2 ), except that the material undergoes damage if
+plastic strains reach a user-defined value (
+ε
+d
+a
+m
+). This law can be applied to both shell and solid
+elements. Note: Block Format Keyword
+/MAT/LAW21 (DPRAG)
+Specific interface between a non-deformable
+master surface and a slave surface designed for stamping. All nodes of the master
+surface must belong to the rigid body. Note: Block Format Keyword
+/MAT/LAW10 (DPRAG1)
+This law, based on Drücker-Prager yield criteria, is
+used to model materials with internal friction such as rock-concrete. The plastic
+behavior of these materials is dependent on the pressure in the material. This law
+is similar to LAW21 ( /MAT/LAW21 (DRAGP) ); the only difference
+being that in this law, the pressure is defined as a cubic function of volumetric
+strain, and hence requires the input of certain coefficients. This law is compatible
+only with solid elements. Note: Block Format Keyword
+/MAT/LAW1 (ELAST)
+Defines an isotropic, linear elastic material using
+Hooke's law. This law represents a linear relationship between stress and strain. It
+is available for truss, beam (type 3 only), shell and solid elements. Note: Block Format Keyword
+/MAT/LAW65 (ELASTOMER)
+Describes non-linear elastoplastic material with
+strain rate dependent loading and unloading behavior. Note: Block Format Keyword
+/MAT/LAW58 (FABR_A)
+Describes a hyperelastic anisotropic fabric
+material. It uses an anisotropic coordinate system with anisotropy angle, following
+element deformation. The material formulation provides coupling between warp and
+weft directions in order to reproduce physical interaction between fibers. The shear
+degree of freedom is fully decoupled from the translational degrees of freedom.
+Optionally, nonlinear stress-strain curves for loading and unloading can be
+specified for warp, weft directions and in shear. Note: Block Format Keyword
+/MAT/LAW19 (FABRI)
+Defines an elastic orthotropic material and is
+available only for shell elements. It is used to model airbag fabrics. Note: Block Format Keyword
+/MAT/LAW33 (FOAM_PLAS)
+Models a visco-elastic plastic foam material. This
+law is applicable only for solid elements and is typically used to model low
+density, closed cell polyurethane foams such as impact limiters. Note: Block Format Keyword
+/MAT/LAW70 (FOAM_TAB)
+Describes the visco-elastic foam tabulated material.
+This material law can be used only with solid elements. Note: Block Format Keyword
+/MAT/LAW35 (FOAM_VISC)
+Describes a visco-elastic foam material using
+Generalized Maxwell-Kelvin-Voigt model where viscosity is based on Navier equations.
+This law is applicable only for shell and solid elements and can be used for open
+cell foams, polymers, elastomers, seat cushions and dummy paddings. Note: Block Format Keyword
+/MAT/GAS
+Describes the gas molecular weight and specific heat
+coefficients. Note: Block Format Keyword
+/MAT/LAW16 (GRAY)
+This material law is based on Gray EOS and
+Johnson-Cook yield criteria. Note: Block Format Keyword
+/MAT/LAW52 (GURSON)
+This law is based on the Gurson constitutive law,
+which is used to model visco-elastic-plastic strain rate dependent porous
+metals. Note: Block Format Keyword
+/MAT/LAW63 (HANSEL)
+This law describes the trip steel plastic material.
+This material law can be used only with shell elements. Note: Block Format Keyword
+/MAT/LAW32 (HILL)
+Describes the Hill orthotropic plastic material. It
+is applicable only to shell elements. This law differs from LAW43
+(HILL_TAB) only in the input of yield stress. Note: Block Format Keyword
+/MAT/LAW72 (HILL_MMC)
+Describes the anisotropic hill material with a
+modified Mohr fracture criteria. This law is available for shell and
+solid. Note: Block Format Keyword
+/MAT/LAW43 (HILL_TAB)
+Describes the Hill orthotropic material and is
+applicable only to shell elements. This law differs from LAW32
+(HILL) only in the input of yield stress (here it is defined by a user
+function). Note: Block Format Keyword
+/MAT/LAW73
+Describes the Thermal Hill orthotropic material and
+is applicable only to shell elements. This law differs from /MAT/LAW43
+(HILL_TAB) by the fact that yield stress not only depends on strain rate
+and plastic strain, but also on temperature (it is defined by a user
+table). Note: Block Format Keyword
+/MAT/LAW28 (HONEYCOMB)
+Describes a three dimensional nonlinear
+elasto-plastic material, usually used to model honeycomb or foam material. Nonlinear
+elasto-plastic behavior can be specified for each othrotropic direction and shear as
+function of strain or volumetric strain. All degrees of freedom are uncoupled and
+the material is fully compressible. Tension and shear strain based failure criteria
+can be specified. Note: Block Format Keyword
+/MAT/LAW4 (HYD_JCOOK)
+Represents an isotropic elasto-plastic material using
+the Johnson-Cook material model. This model expresses material stress as a function
+of strain, strain rate and temperature. This material may account for the nonlinear
+dependence between pressure and volumetric strain when corresponding equation of
+state is specified. A built-in failure criterion based on the maximum plastic strain
+is available. This material law is compatible with solid elements only. Note: Block Format Keyword
+/MAT/LAW3 (HYDPLA)
+Represents an isotropic elasto-plastic material using
+the Johnson-Cook material model. This model expresses material stress as a function
+of strain and may account for the nonlinear dependence between pressure and
+volumetric strain when corresponding equation of state is specified. A built-in
+failure criterion based on the maximum plastic strain is available. This material
+law is compatible with solid elements only. Note: Block Format Keyword
+/MAT/LAW6 (HYDRO)
+Describes the hydrodynamic viscous fluid
+material using a polynomial EOS. Note: Block Format Keyword
+/MAT/LAW79 (JOHN_HOLM)
+Describes the behavior of brittle materials, such as
+ceramics and glass. The implementation is the second Johnson Holmquist model:
+JH-2. Note: Block Format Keyword
+/MAT/LAW5 (JWL)
+Describes the Jones-Wilkins-Lee EOS for detonation
+products of high explosives. Note: Block Format Keyword
+/MAT/LAW6 (K-EPS)
+Describes the k -
+ε
+˙
+turbulence viscous material for fluid. Note: Block Format Keyword
+/MAT/LAW40 (KELVINMAX)
+Describes the generalized Maxwell-Kelvin material.
+This law can only be used with solid elements. Note: Block Format Keyword
+/MAT/LAW66
+Models an isotropic tension-compression
+elasto-plastic material law using user-defined functions for the work-hardening
+portion of the stress-strain (plastic strain vs. stress). This law can be defined
+for compression and tension. Note: Block Format Keyword
+/MAT/LAW69
+This law (extension of /MAT/LAW42
+(OGDEN) ) defines a hyperelastic and incompressible material specified
+using the Ogden, Mooney-Rivlin material models. It is generally used to model
+incompressible rubbers, polymers, foams, and elastomers. Material parameters are
+computed from engineering stress-strain curve from uniaxial tension and compression
+tests. It is used with shell and solid elements. Note: Block Format Keyword
+/MAT/LAW74
+Describes the Thermal Hill orthotropic 3D material
+and is applicable only to solid elements. The yield stress may depend on strain
+rate, or on both strain rate and temperature. Note: Block Format Keyword
+/MAT/LAW77
+This open cell foam material law is a generalization
+of LAW70 . It accounts for a non-viscous compressible ideal gas
+flow inside of the foam and its interaction with the foam structure. ALE simulation
+of the gas flow and Lagrangian simulation of the foam deformation is performed on
+the same elements system. Interaction between the gas flow and the structure is
+through Darcy law and direct application of the gas pressure to the
+structure. Note: Block Format Keyword
+/MAT/LAW78
+This law is the Yoshida-Uemori model for describing
+the large-strain cyclic plasticity of metals. The law is based on the framework of
+two surfaces theory: the yielding surface and the bounding surface. During the
+plastic deformation, a yield surface will move within the bounding surface and will
+never change its size, and the bounding surface can change both in size and
+location. The plastic-strain dependency of the Young's modulus and the
+work-hardening stagnation effect are also taken into account. Concerning SPH, it is
+compatible with solid only, this can be verified with the /SPH/WavesCompression
+test. The solid version is only isotropic. The shell version is anisotropic based on
+Hill criterion. Note: Block Format Keyword
+/MAT/LAW80
+Models the ultra-high strength steel behavior at
+high temperatures and the phase transformation phenomena from austenite to ferrite,
+pearlite, bainite and martensite during cooling. Note: Block Format Keyword
+/MAT/LAW81
+This law is based on Drücker-Prager yield criteria
+with cap. It has a strain-hardening cap model based on the principles of Foster.
+Plasticity has an isotropic hardening. Failure surface is limited to the standard
+linear Drücker-Prager relation, with symmetry around the pressure axis. This law is
+LAG, ALE and EULER compatible. Note: Block Format Keyword
+/MAT/LAW82
+Defines the Ogden material. This law is compatible
+with solid and shell elements. In general it is used to model polymers and
+elastomers. Note: Block Format Keyword
+/MAT/LAW83
+Describes the Connection material, which can be used
+to model spotweld, welding line, glue, or adhesive layers in laminate composite
+material. Elastic and elastoplastic behavior can be defined. The plastic behavior of
+the material can be coupled in normal and shear directions for corresponding
+strain-rates. This material is applicable only to solid hexahedron elements
+( /BRICK ) and the material time-step does not depend on element
+height. Note: Block Format Keyword
+/MAT/LAW41 (LEE-TARVER)
+Describes detonation products using an ignition and
+growth model of a reactive material. The Lee-Tarver model is based on the assumption
+that ignition starts at local hot spots in the passage of shock front and grows
+outward from these sites. The reaction rate is controlled by the pressure and the
+surface area as in a deflagration process. Note: Block Format Keyword
+/MAT/LAW46 (LES_FLUID)
+Describes the viscous fluid material with sub-grid
+scale viscosity. Note: Block Format Keyword
+/MAT/LAW51 (MULTIMAT)
+Up to four material laws can be defined:
+elasto-plastic solid, liquid, gas and detonation products. The material boundaries
+inside an element are not explicitly defined, but an anti-diffusive technique is
+used to avoid expansion of transition zone ( /UPWIND in Radioss Starter Input). Note: Block Format Keyword
+/MAT/LAW42 (OGDEN)
+Defines a hyperelastic, viscous, and incompressible
+material specified using the Ogden, Mooney-Rivlin material models. This law is
+generally used to model incompressible rubbers, polymers, foams, and elastomers.
+This material can be used with shell and solid elements. Note: Block Format Keyword
+/MAT/LAW27 (PLAS_BRIT)
+Combines an isotropic elasto-plastic Johnson-Cook
+material model with an orthotropic brittle failure model. Material damage is
+accounted for prior to failure. Failure and damage occur only in tension. This law
+is applicable only for shells. Note: Block Format Keyword
+/MAT/LAW23 (PLAS_DAMA)
+Models an isotropic elastic plastic material and
+combines Johnson-Cook material model with a generalized damage model. The law is
+applicable only for solid elements. Note: Block Format Keyword
+/MAT/LAW2 (PLAS_JOHNS)
+Represents an isotropic elasto-plastic material using
+the Johnson-Cook material model. This model expresses material stress as a function
+of strain, strain rate and temperature. A built-in failure criterion based on the
+maximum plastic strain is available. Note: Block Format Keyword
+/MAT/LAW60 (PLAS_T3)
+Models an isotropic elasto-plastic material using
+user-defined functions for the work-hardening portion of the stress-strain curve
+(that is, plastic strain vs. stress) for different strain rates. It is similar to
+LAW36, except yield stress is a nonlinear interpolation from the
+functions. Note: Block Format Keyword
+/MAT/LAW36 (PLAS_TAB)
+Models an isotropic elasto-plastic material using
+user-defined functions for the work-hardening portion of the stress-strain curve
+(for example, plastic strain vs. stress) for different strain rates. Note: Block Format Keyword
+/MAT/LAW75 (POROUS)
+Describes the P-α porous material model. This
+material describes ductile Porous material with Herrmann model. It only works with
+8-node brick element and is not compatible with ALE. Note: Block Format Keyword
+/MAT/LAW54 (PREDIT)
+Describes the predit material. This material law is
+only used with /PROP/TYPE36 (PREDIT) . Note: Block Format Keyword
+/MAT/LAW13 (RIGID)
+Models part(s) as rigid bodies. Note: Block Format Keyword
+/MAT/LAW76 (SAMP)
+Describes a semi-analytical elasto-plastic material
+using user-defined functions for the work-hardening portion for tension, compression
+and shear (stress as function of strain). Note: Block Format Keyword
+/MAT/LAW26 (SESAM)
+This ALE material law describes a SESAME tabular
+EOS, used with a Johnson-Cook yield criterion. SESAME EOS covers a wide range of
+phases including solids, fluids and high temperature/high density plasmas, and the
+well-known transitions between these various phases. It requires SESAME tables,
+which were developed at Los Alamos National Laboratory in USA. Note: Block Format Keyword
+/MAT/LAW49 (STEINB)
+Defines an elastic plastic material with thermal
+softening. Note: Block Format Keyword
+/MAT/LAW18 (THERM)
+Describes thermal material. Note: Block Format Keyword
+/MAT/LAW53 (TSAI_TAB)
+Describes the law that is a uni-directional
+orthotropic elasto-plastic law and is only used with solid elements. Note: Block Format Keyword
+/MAT/LAW64 (UGINE_ALZ)
+Describes the Ugine & Alz trip steel material.
+This material law can be used only with shell elements. Note: Block Format Keyword
+/MAT/USERij
+Describes the user material. Note: Block Format Keyword
+/MAT/LAW50 (VISC_HONEY)
+Describes the honeycomb material with strain rate
+dependency (based on material LAW28 + strain rate dependency). Note: Block Format Keyword
+/MAT/LAW62 (VISC_HYP)
+Describes the hyper visco-elastic material. This law
+is compatible with solid and shell elements. In general it is used to model polymers
+and elastomers. Note: Block Format Keyword
+/MAT/LAW38 (VISC_TAB)
+Describes the visco-elastic foam tabulated material
+and can only be used with solid elements. Note: Block Format Keyword
+/MAT/LAW0 (VOID)
+Defines elements to act as a void, or an empty
+space. Note: Block Format Keyword
+/MAT/LAW48 (ZHAO)
+Describes the Zhao material law used to model an
+elasto-plastic strain rate dependent materials. The law is applicable only for
+solids and shells. The global plasticity option for shells (N=0 in shell property
+keyword) is not available in the actual version. Note: Block Format Keyword
+/VISC/PRONY
+This is an isotropic visco-elastic Maxwell model
+that can be used to add visco-elasticity to certain shell and solid element material
+models. The visco-elasticity is input using a Prony series. Note: Block Format Keyword
+Samcef Cards
+Card
+Description
+.MAT, ANISOTROPIC
+Define the properties of one or several materials.
+.MAT, ISOTROPIC
+Define the properties of one or several materials.
+.MAT, ORTHOTROPIC
+Define the properties of one or several materials.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

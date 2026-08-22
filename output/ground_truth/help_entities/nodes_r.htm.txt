@@ -1,0 +1,329 @@
+Nodes
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Geometry Settings
+Overview of settings used when creating and editing geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Points
+A point is a zero-dimensional geometric entity.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity. It has a separate underlying
+mathematical definition, specified when it was created.
+Dimensioning
+Change the dimensions of existing geometry, thus changing the basic shape of solids and other enclosed volumes.
+Extract and Edit Midsurfaces
+Extract the midsurface of thin solids, and review and edit midsurface plates.
+Match Topology
+Fix gaps between stitched edges and vertices to make the actual geometry of the surfaces consistent with the model
+topology.
+Find Intersections and Penetrations
+Find intersections and penetrations between geometric surfaces and solids.
+Setup CAD Models with Metadata
+Use metadata generated as part of the CAD import process to setup CAE models.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position
+on the structure being modeled.
+A nodes is used by an element entity to define the location and shape of that element. It
+is also used as temporary input to create geometry entities.
+A node may contain a pointer to other geometric entities and can be associated directly to
+them.
+Nodes are considered to be used if they are referenced in the definition of an element,
+system, vector, group, load, equation, or are referenced by any card image on any HyperMesh entity. Unused nodes and any loads that are attached to unused nodes
+are automatically deleted .
+Nodes can not be organized into components. Nodes can also be organized into HyperMesh include files, which defines the solver include file they will be
+exported to.
+A node as displayed a small circle or sphere, depending on the mesh graphics mode. Its
+color is always yellow.
+Create Nodes
+xyz - Creates by specifying (x,y,z) coordinates (Nodes panel).
+on geometry - Creates at graphically selected locations on points, lines,
+surfaces and planes (Nodes panel).
+arc center - Creates nodes at the center of the arc that best approximates the
+input set of nodes, points or lines (Nodes panel).
+extract parametric - Creates nodes at parametric locations on lines and
+surfaces (Nodes panel).
+extract on line - Creates evenly spaced or biased nodes on a selection of
+lines (Nodes panel).
+interpolate nodes - Creates evenly spaced or biased nodes by interpolating
+between existing nodes in space (Nodes panel).
+interpolate on line - Creates evenly spaced or biased nodes by interpolating
+between existing nodes on a line (Nodes panel).
+interpolate on surface - Creates evenly spaced or biased nodes by interpolating
+between existing nodes on a surface (Nodes panel).
+intersect - Creates nodes at the intersection of geometric entities:
+lines/lines, lines/surfaces, lines/solids, lines/planes, vector/lines,
+vector/surfaces, vector/solids and vector/plane (Nodes panel).
+temp nodes - Creates nodes by duplicating existing nodes or creating nodes on
+existing geometry or elements (Temp Nodes panel).
+circle center - Creates nodes at the center of the circle defined by exactly
+three nodes (Distance panel).
+duplicate - Creates nodes by duplicating existing nodes. This is available in
+many panels when the "duplicate" advanced entity selector is available on a
+nodes input collector.
+on screen - Creates nodes by pre-selecting existing geometry or elements and
+clicking on the locations to create the nodes. This is available in any panel
+that has a node or node list input collector (Picking nodes on geometry or
+elements).
+Misc. API commands that do not have an associated panel.
+Edit Nodes
+clear - Deletes temp nodes (Temp Nodes panel).
+associate - Associates nodes to fixed points, surface edges and surfaces by
+moving them onto those entities (Node Edit panel).
+move - Moves nodes along surfaces (Node Edit panel).
+place - Places nodes on a surface at a specified location (Node Edit panel).
+remap - Moves nodes by mapping them from one line or surface edge to another
+(Node Edit panel).
+align - Aligns/projects nodes to an imaginary line (Node Edit panel).
+find - Create temp nodes by finding FE nodes associated with other FE entities
+(Find panel).
+translate - Moves nodes along a vector direction (Translate panel).
+rotate - Rotates nodes about a vector axis (Rotate panel).
+scale - Scales the dimensions of nodes either proportionally or uniformly
+(Scale panel).
+reflect - Reflects nodes about a plane to create a mirror image (Reflect
+panel).
+project - Projects nodes onto a plane, vector, line/surface edge or surface
+(Project panel).
+position - Translates and rotate nodes into new positions (Position panel).
+permute - Switches the coordinates of nodes (Permute panel).
+renumber - Renumbers nodes (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Query Nodes
+card editor - With an appropriate template loaded, the card editor can be used
+to review node information (Card Editor panel).
+distance - Finds the distance between two nodes (Distance panel).
+shortest distance - Finds the shortest distance between entities (Shortest
+Distance dialog).
+angle - Finds the angle between three nodes (Distance panel).
+organize - Moves nodes into different include files (Organize panel).
+numbers - Displays the IDs of nodes (Numbers panel).
+count - Counts the total or displayed nodes (Count panel).
+Misc. API commands that do not have an associated panel.
+Supported Solver Cards
+Solver cards supported for nodes.
+Abaqus
+Card
+Description
+*NFILL
+Generates nodes for a region of a mesh by filling in nodes
+between two bounds. Note: Resolved to individual entities on
+import, and are written back on export the same
+way.
+*NGEN
+Generates nodes incrementally. Note: Nodes can only be created
+incrementally between two nodes. Nodes generated along a
+parabola or curve are not supported (LINE=P or C
+parameter is not supported).
+SYSTEM parameter is
+currently unsupported.
+Resolved to individual
+entities on import, and are written back on export the
+same way.
+*NODE
+Defines nodal coordinates. Note: The
+SYSTEM parameter is created
+automatically during export based upon the type of reference
+coordinate system that is assigned to the nodes. The card
+image for a node is displayed in global Cartesian
+coordinates in HyperMesh .
+ANSYS
+Card
+Description
+N
+Defines a node.
+N
+Defines a node.
+N
+Defines a node.
+NBLOCK
+Defines a node.
+EXODUS
+Card
+Description
+NODE
+LS-DYNA
+Card
+Description
+*NODE
+Defines a node and its coordinates in the global coordinate
+system. Note: Card can be previewed, but not
+edited.
+*NODE_RIGID_SURFACE
+Defines a rigid node and its coordinates in the global
+coordinate system. Note: Card can be previewed, but not
+edited.
+Nastran
+Card
+Description
+GRID
+Defines the location of a geometric grid point, the
+directions of its displacement, and its permanent single-point
+constraints. Note: Permanent single point constraint field
+supported for feinput only. On export, equivalent SPC cards
+are output.
+SPOINT
+Defines scalar points. Note: Supported the same way
+GRID is supported. On import or
+export, all nodes that are designated to be SPOINT will be
+converted to nodes at the origin.
+OptiStruct
+Card
+Description
+GRID
+Defines the location of a geometric grid point of the
+structural model, the directions of its displacement, and its permanent single-point
+constraints. Note: Bulk Data Entry Exported in large field format by
+the optistructlf
+template.
+SPOINT
+Defines sets of single-point constraints, enforced
+displacements for static analysis, and thermal boundary conditions for heat transfer
+analysis. Note: Bulk Data Entry Ideally a scalar point has no
+location, but in HyperMesh it is
+represented as a node.
+PAM-CRASH
+Card
+Description
+CNODE/
+Defines a common node.
+NODE/
+Defines a node.
+Note: Use the find_cnodes summary template to highlight all
+CNODE nodes as temporary nodes.
+Permas
+Card
+Description
+$COOR
+Defines nodal points and their coordinates.
+Radioss
+Card
+Description
+/CNODE
+Defines the coordinate of common node, which could be
+merged to the nearest selected NODE or CNODE. Note: Block Format Keyword
+/NODE
+Defines the coordinate of node, which is fundamental unit
+of graphic in structure. Note: Block Format Keyword
+Samcef
+Card
+Description
+.NOE
+Defines the coordinates of the nodes of the
+structure.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

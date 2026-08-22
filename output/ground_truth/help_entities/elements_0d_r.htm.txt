@@ -1,0 +1,156 @@
+0D Elements
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+SPH Meshing
+Smooth Particle Hydrodynamics (SPH), Finite Point Method (FPM) is a technique used to analyze bodies that do not have
+high cohesive forces among themselves and undergo large deformation, such as liquids and gases.
+0D Elements
+Supported 0D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Elements
+Elements are FE idealizations for a portion of a physical part.
+Criteria and Parameter Settings
+Configure criteria and parameter settings.
+SPH Meshing
+Smooth Particle Hydrodynamics (SPH), Finite Point Method (FPM) is a technique used to analyze bodies that do not have
+high cohesive forces among themselves and undergo large deformation, such as liquids and gases.
+0D Elements
+Supported 0D elements.
+SPH Element Mapping
+The generated SPH elements are mapped specific cards.
+Create SPH Mesh ( LS-DYNA , Radioss , PAM-CRASH 2G )
+Create a SPH mesh using existing elements, components, surfaces, or solids in your model.
+Create SPH Mesh ( Abaqus )
+Create a SPH mesh using existing components in your model.
+Line Meshing
+1D mesh that allows accurate testing of connectors, such as bolts, and similar rod-like or bar-like objects that can
+be modeled as a simple line for FEA purposes.
+Surface Meshing
+A surface mesh or "shell mesh" represents model parts that are relatively two-dimensional, such as sheet metal or
+a hollow plastic cowl or case.
+Volume Meshing
+Volume mesh or "solid meshing" uses three-dimensional elements to represent fully 3D objects, such as solid parts
+or sheets of material that have enough thickness and surface variety that solid meshing makes more sense than 2D shell
+meshing.
+Mesh Controls
+Mesh controls are used to automate and streamline the meshing process.
+Check Mesh Quality
+Evaluate the overall quality of a mesh, and resolve criteria violations.
+Edit Mesh
+Modify your mesh by detect holes, locating edges or features, refining mesh pattern, and so on.
+Batchmesher
+Batchmesher is a tool that performs geometry feature recognition, cleanup and automatic meshing in batch mode for given CAD files.
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+SPH Meshing
+Smooth Particle Hydrodynamics (SPH), Finite Point Method (FPM) is a technique used to analyze bodies that do not have
+high cohesive forces among themselves and undergo large deformation, such as liquids and gases.
+0D Elements
+Supported 0D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+0D Elements
+Supported 0D elements.
+0D elements are essentially mesh nodes with an additional value attached to them.
+SPH Elements
+Node-like particles which have no geometric connectivity among themselves. Each SPH
+element has an effective mass.
+Mass Elements
+Configuration 1 - 0D elements with a single node that allow you to assign
+concentrated mass to the model in order to represent a physical part that may not be
+modeled with another FE idealization. Masses have the ability to store one node, a
+value of mass, and a property reference.
+Mass elements are displayed as a dot with the letter M written at the centroid of the
+element.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

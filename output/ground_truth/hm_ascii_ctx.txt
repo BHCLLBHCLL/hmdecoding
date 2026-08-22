@@ -1,0 +1,35 @@
+  352:    19   "acis"
+  353:    20   "parasolid"
+  354:    21   "connector"
+  355:    22   "hmascii"
+  356:    23   "config"
+  357:    24   "tcl"
+---
+  383:     4    "#cmold\\cmold"
+  384:     5    "#ls-dyna\\dynakey"
+  385:     6    "#ls-dyna\\dynaseq"
+  386:     7    "#hmascii\\hmascii"
+  387:     8    "#ideas\\ideas"
+  388:     9    "#marc\\marc"
+---
+  588:             set HmFileFilters [ list {{JT files} {*.jt}} ];
+  589:             set title "JT File";
+  590:         }
+  591:         "hmascii" {
+  592:             set HmFileFilters [ list {{HMAscii files} {*.hmascii}} ];
+  593:             set title "HMAscii File";
+---
+  589:             set title "JT File";
+  590:         }
+  591:         "hmascii" {
+  592:             set HmFileFilters [ list {{HMAscii files} {*.hmascii}} ];
+  593:             set title "HMAscii File";
+  594:         }
+---
+  590:         }
+  591:         "hmascii" {
+  592:             set HmFileFilters [ list {{HMAscii files} {*.hmascii}} ];
+  593:             set title "HMAscii File";
+  594:         }
+  595:         "aveva" {
+---

@@ -1,0 +1,831 @@
+Sets
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists
+of set IDs.
+Sets can only be generated for certain entity types.
+Sets do not have a display state in the modeling window .
+Abaqus Cards
+User Comment blocks are supported for all sets, and will be preserved during the import and
+export of the Abaqus input deck.
+Sets using the GENERATE parameter can be expanded upon import by
+enabling the Expand sets defined by range option from the File Options
+dialog, which opens when you import a solver deck. This option is useful when node/element
+IDs are renumbered during import.
+Card
+Description
+*DISTRIBUTION
+Define spatial distributions.
+*ELSET
+Assign elements to an element set.
+*EMBEDDED ELEMENT
+Specify an element or a group of elements that lie embedded in a group of
+“host” elements in a model.
+*NODAL THICKNESS
+Define shell or membrane thickness at nodes.
+*NSET
+Assign nodes to a node set.
+ANSYS Cards
+Card
+Description
+CMGRP
+Groups components and assemblies into an assembly. Note: This is supported as
+sets of sets.
+EXODUS Cards
+Card
+Description
+NodeSets
+Provides a means to reference a group of nodes with a single ID. Also used
+to specify load or boundary conditions, or to identify nodes for a special
+output request.
+LS-DYNA Cards
+Default LS-DYNA attribute values for a set can be edited, whereas
+individual values cannot be edited.
+Card
+Description
+*ALE_MULTI-MATERIAL_GROUP
+Defines the appropriate ALE material groupings for interface reconstruction
+when many ALE Multi-Material Groups are present in a model.
+*DEFINE_HEX_SPOTWELD_ASSEMBLY
+Assembly of elements that describes a spotweld.
+*DEFINE_HEX_SPOTWELD_ASSEMBLY_N
+*SET_BEAM(TITLE)
+Define a set of beam elements.
+*SET_BEAM_ADD
+Define a beam set by combining beam sets.
+*SET_BEAM_GENERATE(TITLE)
+Generates a block of beam element IDs between a starting ID and an ending
+ID.
+*SET_DISCRETE(TITLE)
+Define a set of discrete elements.
+*SET_DISCRETE_ADD
+Define a discrete set by combining discrete sets.
+*SET_DISCRETE_GENERATE(TITLE)
+Generates a block of discrete element IDs between a starting ID and an ending
+ID.
+*SET_NODE_ADD
+Define a node set by combining node sets.
+*SET_NODE_ADD_ADVANCED
+Define a node set by combining node sets or by combining NODE, SHELL, SOLID,
+BEAM, SEGMENT, DISCRETE and THICK SHELL sets.
+*SET_NODE_COLUMN
+Define a nodal set with some identical or unique attributes.
+*SET_NODE_LIST(TITLE)
+Define a nodal set with some identical or unique attributes.
+*SET_NODE_LIST_GENERATE(TITLE)
+Generate a block of node IDs between a starting nodal ID number and an ending
+nodal ID number.
+*SET_PART_ADD
+Define a part set by combining part sets.
+*SET_PART_COLUMN(TITLE)
+Define a set of parts with optional attributes.
+*SET_PART_LIST_GENERATE(TITLE)
+Generate a block of part IDs between a starting part ID number and an ending
+part ID number.
+*SET_SEGMENT_GENERAL
+Definition of contact surface from parts, elements, box.
+*SET_SHELL_ADD
+Define a shell set by combining shell sets.
+*SET_SHELL_COLUMN
+Define a set of shell elements with optional identical or unique
+attributes.
+*SET_SHELL_LIST(TITLE)
+Define a set of shell elements with optional identical or unique
+attributes.
+*SET_SHELL_LIST_GENERATE(TITLE)
+Define a set of shell elements with optional identical or unique
+attributes.
+*SET_SOLID(TITLE)
+Define a set of solid elements.
+*SET_SOLID_ADD
+Define a solid set by combining solid sets.
+*SET_SOLID_GENERAL
+*SET_SOLID_GENERATE(TITLE)
+Generate a block of solid element IDs between a starting ID and an ending
+ID.
+*SET_TSHELL(TITLE)
+Define a set of thick shell elements.
+*SET_TSHELL_GENERAL
+*SET_TSHELL_GENERATE(TITLE)
+Generate a block of thick shell element IDs between a starting ID and an
+ending ID.
+Nastran Cards
+When reading input decks that were not created in HyperMesh , an attempt
+is made to create two sets for each set found: one containing elements and one containing
+nodes. You can delete the unnecessary set. Sets that are created are maintained as node or
+element sets by using the $HMSET comment cards.
+Card
+Description
+AECOMP
+Defines a component for use in monitor point definition or external
+splines.
+AECOMPL
+Defines a component for use in aeroelastic monitor point definition or
+external splines as a union of other components.
+AELIST
+Defines a list of aerodynamic elements or grid ID’s.
+BCPROP
+Defines a 3D contact region by element properties.
+BNDFREE1
+BOLT
+Defines a rigid bolt by a set of MPC constraints.
+BOLTLD
+CSUPER
+Defines the grid or scalar point connections for identical or mirror image
+superelements or superelements from an external source.
+CSUPEXT
+Assigns exterior points to a superelement.
+ERPPNL
+Defines one or more panels by referencing sets of elements or
+properties.
+PANEL
+Defines one or more panels by referencing sets of grid points, elements or
+properties.
+ROTORG
+Specifies grids that compose the rotor line model.
+RSPINR
+Specifies the relative spin rates between rotors for complex eigenvalue,
+frequency response, and static analysis. Note: Supported in conjunction with
+ROTORG.
+RSPINT
+Specifies rotor spin rates for Transient analysis. Note: Supported in
+conjunction with ROTORG.
+SEBNDRY
+Defines a list of grid points in a partitioned superelement for the automatic
+boundary search between a specified superelement or between all other
+superelements in the model.
+SEBSET1
+Defines boundary degrees-of-freedom to be fixed (b-set) during generalized
+dynamic reduction or component mode calculations.
+SECSET1
+Defines boundary degrees-of-freedom to be free (c-set) during generalized
+dynamic reduction or component mode synthesis calculations.
+SEQSET1
+Defines the generalized degrees-of-freedom of the superelement to be used in
+generalized dynamic reduction or component mode synthesis.
+SESET
+Defines interior grid points for a superelement.
+SET
+Defines a set of element or grid point numbers to be plotted. Note: Node and
+element sets supported with the THRU option.
+SET1
+Defines a list of structural grid points or element identification
+numbers.
+SET3
+Defines a list of grids, elements or points.
+SEUSET1
+Defines a degree-of-freedom set for a superelement.
+OptiStruct Cards
+OptiStruct sets are represented in HyperMesh
+as entity sets. The sets can be composed of grids, elements, design variables, MBD entities,
+mode numbers, frequencies or times for reference by other input definitions. In addition to
+the definition of entity sets through the explicit selection of the constituents, it is
+possible to define a set of nodes or a set of elements through a combination of formulaic
+expressions.
+Sets that are created in HyperMesh are maintained on I/O by using the
+$HMSET comment cards.
+Card
+Description
+BORE
+Defines the surface, coordinate system, and parameters
+required to request Bore Deformation output for Static Analysis Subcases. Note: Bulk Data Entry
+ERPPNL
+Defines one or more sets of elements as panels for
+equivalent radiated power output for a frequency response analysis of a coupled
+fluid-structural model. Note: Bulk Data Entry
+MBDCRV
+Defines an ordered list of grids as a Multibody Deformable
+Curve. Note: Bulk Data Entry
+MBDSRF
+Defines a multibody deformable surface. Note: Bulk Data Entry
+MBPCRV
+Defines a Multi-body Parametric Curve using node
+sets. Note: Bulk Data Entry
+PANEL
+Defines up to four sets of grid points or elements as
+panels for panel participation output for a frequency response analysis of a coupled
+fluid-structural model. Note: Bulk Data Entry
+PANELG
+Defines a set of grid points and/or elements as generic
+panel. Note: Bulk Data Entry
+ROTORG
+Specifies grids that determine the Rotor Line
+model. Note: Bulk Data Entry
+RSPINR
+Defines the relative spin rates between rotors during a
+rotor dynamic analysis in Modal Complex Eigenvalue or Frequency Response solution
+sequences. Note: Bulk Data Entry
+SET
+Defines a set of grids, elements, design variables, MBD
+entities, mode numbers, frequencies or times for reference by other input
+definitions. Note: Bulk Data Entry Sets of integer and real values are supported as
+entity sets.
+SET3
+Defines a set of grids or elements. Note: Bulk Data Entry
+PAM-CRASH Cards
+During import, entity sets are automatically generated. PAM-CRASH cards with general entity selection generate entity sets.
+Card
+Description
+GES /
+GROUP /
+Keyword selection. Note: GROUP / card and general entity selection (GES) are
+mapped as set of sets. A set is created if only one keyword is used.
+A
+set of sets will be created:
+If the definition uses more than one keyword.
+Unresolved groups are used in the definition.
+More than one GRP keyword is present in the
+definition.
+A GROUP definition is always implemented as a set of set.
+Permas Cards
+Card
+Description
+ESET
+Definition of new element sets. An element set may be defined by a list of
+element numbers or other element set names or using some generation rules.
+ESETBIN
+Definition of element set bins. An element set bin is defined by a list of
+element set names.
+NSET
+Definition of new node sets. A node set may be defined by a list of node
+numbers or other node set names or using some generation rules.
+NSETBIN
+Definition of node set bins. A node set bin is defined by a list of node set
+names.
+SFSET
+Definition of new surface sets. A surface set may be defined by a list of
+surface numbers or other surface set names or using some generation rules.
+Radioss Cards
+Sets of different types but with the same ID are supported.
+Card
+Description
+/GRBEAM
+Defines the beam groups. Note: Block Format Keyword
+/GRBEAM/BEAM
+Defines the beam number groups. Note: Block Format Keyword
+/GRBEAM/BOX
+Defines the beam groups which are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRBEAM/BOX2
+Defines the beam groups which are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRBEAM/GRBEAM
+Defines the beam groups which are selected from
+other beam groups. Note: Block Format Keyword
+/GRBEAM/MAT
+Defines the beam material groups which belong to
+given materials. Note: Block Format Keyword
+/GRBEAM/PART
+Defines the beam part groups which belong to given
+parts. Note: Block Format Keyword
+/GRBEAM/PROP
+Defines the beam property groups which belong to
+given properties. Note: Block Format Keyword
+/GRBEAM/SUBSET
+Defines the beam subset groups which belong to
+givens subsets. Note: Block Format Keyword
+/GRBRIC
+Defines the brick groups. Note: Block Format Keyword
+/GRBRIC/BOX
+Defines the brick box groups which are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRBRIC/BOX2
+Defines the brick box groups which are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRBRIC/BRIC
+Defines the brick number groups. Note: Block Format Keyword
+/GRBRIC/GRBRIC
+Defines the brick groups which are selected from
+other brick groups. Note: Block Format Keyword
+/GRBRIC/MAT
+Defines the brick material groups which belong to
+given materials. Note: Block Format Keyword
+/GRBRIC/PART
+Defines the brick part groups which belong to
+given parts. Note: Block Format Keyword
+/GRBRIC/PROP
+Defines the brick property groups which belong to
+given properties. Note: Block Format Keyword
+/GRBRIC/SUBSET
+Defines the brick subset groups which belong to
+given subsets. Note: Block Format Keyword
+/GRNOD
+Defines the node groups. Note: Block Format Keyword
+/GRNOD/BOX
+Defines the node box groups which are inside the
+box. Note: Block Format Keyword
+/GRNOD/GENE
+Defines the node groups. Note: Block Format Keyword
+/GRNOD/GRBEAM
+Defines the node groups which are selected from
+beam groups. Note: Block Format Keyword
+/GRNOD/GRBRIC
+Defines the node groups which are selected from
+brick groups. Note: Block Format Keyword
+/GRNOD/GRQUAD
+Defines the node groups which are selected from
+quad groups. Note: Block Format Keyword
+/GRNOD/GRSH3N
+Defines the 3 node shell groups which are
+selected from 3-node shell groups. Note: Block Format Keyword
+/GRNOD/GRSHEL
+Defines the 4 node shell groups which are
+selected from 4-node shell groups. Note: Block Format Keyword
+/GRNOD/GRSPRI
+Defines the node spring groups which are selected
+from spring groups. Note: Block Format Keyword
+/GRNOD/GRTRUS
+Defines the node truss groups which are selected
+from truss groups. Note: Block Format Keyword
+/GRNOD/MAT
+Defines the node material groups which belong to
+given materials. Note: Block Format Keyword
+/GRNOD/NODE
+Defines the node groups. Note: Block Format Keyword
+/GRNOD/NODENS
+Defines the unsortable node number
+groups. Note: Block Format Keyword
+/GRNOD/PART
+Defines the node part groups which belong to given
+parts. Note: Block Format Keyword
+/GRNOD/PROP
+Defines the node part groups which belong to given
+parts. Note: Block Format Keyword
+/GRNOD/SUBSET
+Defines the node subset groups which belong to
+given subset. Note: Block Format Keyword
+/GRNOD/SURF
+Defines the node surface groups which belong to
+given surfaces. Note: Block Format Keyword
+/GRPART
+Defines the part groups. Note: Block Format Keyword
+/GRQUAD
+Defines the quad groups. Note: Block Format Keyword
+/GRQUAD/BOX
+Defines the quad groups are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRQUAD/BOX2
+Defines the quad groups are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRQUAD/GRQUAD
+Defines the quad groups which are selected from
+other quad groups. Note: Block Format Keyword
+/GRQUAD/MAT
+Defines the quad material groups which belong to
+given materials. Note: Block Format Keyword
+/GRQUAD/PART
+Defines the quad part groups which belong to given
+parts. Note: Block Format Keyword
+/GRQUAD/PROP
+Defines the quad property groups which belong to
+given properties. Note: Block Format Keyword
+/GRQUAD/QUAD
+Defines the quad number groups. Note: Block Format Keyword
+/GRQUAD/SUBSET
+Defines the quad subset groups which belong to
+given subsets Note: Block Format Keyword
+/GRSH3N
+Defines the 3-node shell groups. Note: Block Format Keyword
+/GRSH3N/BOX
+Defines the 3-node shell groups which are inside
+the box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRSH3N/BOX2
+Defines the 3-node shell groups which are inside
+the box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRSH3N/GRSH3N
+Defines the 3-node shell groups which are
+selected from other 3-node shell groups. Note: Block Format Keyword
+/GRSH3N/MAT
+Defines the 3-node shell material groups which
+belong to given materials. Note: Block Format Keyword
+/GRSH3N/PART
+Defines the 3-node shell part groups which belong
+to given parts. Note: Block Format Keyword
+/GRSH3N/PROP
+Defines the 3 node shell groups which belong to
+given properties. Note: Block Format Keyword
+/GRSH3N/SH3N
+Defines the 3-node shell groups. Note: Block Format Keyword
+/GRSH3N/SUBSET
+Defines the 3-node shell subset groups which
+belong to given subsets. Note: Block Format Keyword
+/GRSHEL
+Defines the shell groups. Note: Block Format Keyword
+/GRSHEL/BOX
+Defines the shell box groups which are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRSHEL/BOX2
+Defines the shell box groups which are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRSHEL/GRSHEL
+Defines the shell groups which are selected from
+other shell groups. Note: Block Format Keyword
+/GRSHEL/MAT
+Defines the shell material groups which belong to
+given materials. Note: Block Format Keyword
+/GRSHEL/PART
+Defines the shell part groups which belong to
+given parts. Note: Block Format Keyword
+/GRSHEL/PROP
+Defines the shell property groups which belong to
+given properties. Note: Block Format Keyword
+/GRSHEL/SHEL
+Defines the shell number groups. Note: Block Format Keyword
+/GRSHEL/SUBSET
+Defines the shell subset groups which belong to
+given subsets. Note: Block Format Keyword
+/GRSPRI
+Defines the spring groups. Note: Block Format Keyword
+/GRSPRI/BOX
+Defines the spring groups which are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRSPRI/BOX2
+Defines the spring groups which are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRSPRI/GRSPRI
+Defines the spring groups which are selected
+from other spring groups. Note: Block Format Keyword
+/GRSPRI/PART
+Defines the spring part groups which belong to
+given parts. Note: Block Format Keyword
+/GRSPRI/PROP
+Defines the spring property groups which belong to
+given properties. Note: Block Format Keyword
+/GRSPRI/SPRI
+Defines the spring groups. Note: Block Format Keyword
+/GRSPRI/SUBSET
+Defines the spring subset groups which belong to
+given subsets. Note: Block Format Keyword
+/GRTRUS
+Defines the truss groups. Note: Block Format Keyword
+/GRTRUS/BOX
+Defines the truss box groups which are inside the
+box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/GRTRUS/BOX2
+Defines the truss box groups which are inside the
+box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/GRTRUS/GRTRUS
+Defines the truss groups which are selected from
+other truss groups. Note: Block Format Keyword
+/GRTRUS/MAT
+Defines the truss material groups which belong to
+given materials. Note: Block Format Keyword
+/GRTRUS/PART
+Defines the truss part groups which belong to
+given parts. Note: Block Format Keyword
+/GRTRUS/PROP
+Defines the truss property groups which belong to
+given properties. Note: Block Format Keyword
+/GRTRUS/SUBSET
+Defines the truss subset groups which belong to
+given subsets. Note: Block Format Keyword
+/GRTRUS/TRUS
+Defines the truss groups. Note: Block Format Keyword
+/LINE
+Defines the line. Note: Block Format Keyword
+/LINE/BOX
+Defines the lines inside the box. Note: Block Format Keyword All elements having all nodes inside the box or
+on its surface are selected.
+/LINE/BOX2
+Defines the lines inside the box. Note: Block Format Keyword All elements with at least one node inside the
+box or on its external surface are selected.
+/LINE/EDGE
+Defines the selected edges from given surfaces as
+lines. Note: Block Format Keyword
+/LINE/GRBEAM
+Defines the lines selected from beam
+groups. Note: Block Format Keyword
+/LINE/GRTRUS
+Defines the lines selected from truss
+groups. Note: Block Format Keyword
+/LINE/MAT
+Defines the lines which belong to given
+materials. Note: Block Format Keyword
+/LINE/PROP
+Defines the lines which belong to given
+properties. Note: Block Format Keyword
+/LINE/SURF
+Defines the lines which belong to given
+surfaces. Note: Block Format Keyword
+/SURF
+Defines the surface definition. Note: Block Format Keyword
+/SURF/BOX
+Defines the surfaces inside the box. Note: Block Format Keyword All segments supported by solids, shells and
+3-node shells with all nodes inside the box or on its external surface are
+selected (segments lying on solid elements are not considered).
+/SURF/BOX/ALL
+Defines the surfaces inside the box (include
+inner segments). Note: Block Format Keyword All segments supported by solids, shells and
+3-node shells with all nodes inside the box or on its external surface are
+selected (segments lying on solid elements are not
+considered).
+/SURF/BOX/EXT
+Defines the surfaces which are inside the box
+(exclude inner segments). Note: Block Format Keyword All segments supported by solids, shells and
+3-node shells with all nodes inside the box or on its external surface are
+selected (segments lying on solid elements are not
+considered).
+/SURF/BOX2
+Defines the surfaces inside the box. Note: Block Format Keyword All segments with at least one node inside the
+box or on its surface are selected.
+/SURF/GRSHELL
+Defines the surface selected from shell
+groups. Note: Block Format Keyword
+/SURF/MAT
+Defines the material surfaces which belong to given
+materials. Note: Block Format Keyword
+/SURF/MAT/ALL
+Defines the material surfaces which belong to
+given materials. Note: Block Format Keyword
+/SURF/MAT/EXT
+Defines the external material surfaces which
+belong to given materials. Note: Block Format Keyword
+/SURF/PART
+Defines the parts surfaces which belong to given
+parts. Note: Block Format Keyword
+/SURF/PART/ALL
+Defines the parts surfaces which belong to given
+parts. Note: Block Format Keyword
+/SURF/PART/EXT
+Defines the external parts surfaces which belong
+to given parts. Note: Block Format Keyword
+/SURF/PROP
+Defines the property surfaces which belong to given
+properties. Note: Block Format Keyword
+/SURF/PROP/ALL
+Defines the property surfaces which belong to
+given properties. Note: Block Format Keyword
+/SURF/PROP/EXT
+Defines the external property surfaces which
+belong to given properties. Note: Block Format Keyword
+/SURF/SUBSET
+Defines the subset surfaces which belong to given
+subsets. Note: Block Format Keyword
+/SURF/SUBSET/ALL
+Defines the subset surfaces which belong to
+given subsets. Note: Block Format Keyword
+/SURF/SUBSET/EXT
+Defines the external subset surfaces which
+belong to given subsets. Note: Block Format Keyword
+/SURF/SURF
+Defines the surface selected from other
+surfaces. Note: Block Format Keyword
+Samcef Cards
+Card
+Description
+.SEL NOE
+Defines a set of grids.
+.SEL MAI
+Defines a set of elements.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

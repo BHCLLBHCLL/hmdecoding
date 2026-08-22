@@ -1,0 +1,174 @@
+Optimization Equations
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Optimization Entities
+Entities used to set up optimization problems.
+Optimization Equations
+Optimization equation entities define and store equations for optimization problems.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Design Variables
+Design variable entities define and store design variables for optimization problems.
+Design Variable Links
+Design variable link entities define links between design variables for optimization problems.
+Design Variable Property Relationships
+Design variable property relationship entities define relationships between design variables and properties for optimization
+problems.
+Discrete Design Variables
+Discrete design variable entities define and store discrete design variables for optimization problems.
+Optimization Responses
+Optimization response entities define and store model responses for optimization problems.
+Optimization Constraints
+Optimization constraint entities define and store constraints on model responses for optimization problems.
+Optimization Equations
+Optimization equation entities define and store equations for optimization problems.
+Optimization Table Entries
+Optimization table entry entities define and store table data for optimization problems.
+Objectives
+Objective entities define and store an objective for an optimization problem.
+Objective References
+Objective reference entities define and store objective references for an optimization problem.
+Optimization Constraint Screenings
+Optimization constraint screening entities define and store constraint screening data for optimization problems.
+Optimization Controls
+Optimization control entities define and store controls for optimization problem run.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Optimization Entities
+Entities used to set up optimization problems.
+Optimization Equations
+Optimization equation entities define and store equations for optimization problems.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Optimization Equations
+Optimization equation entities define and store equations for optimization
+problems.
+Optimization equations do not have a display state in the modeling window .
+Nastran Cards
+Card
+Description
+DEQATN
+Defines one or more equations for use in design sensitivity or p-element
+analysis. Note: Equations referenced on DRESP2 ,
+DVPREL2
+OptiStruct Cards
+Card
+Description
+DEQATN
+Specifies one or more equations for use in
+optimization. Note: Bulk Data Entry
+Radioss Cards
+Card
+Description
+DEQATN
+Specifies one or more equations for use in optimization.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

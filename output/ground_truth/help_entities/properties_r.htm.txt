@@ -1,0 +1,1015 @@
+Properties
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a
+model.
+Properties do not have a display state in the modeling window . You
+can color the model according to the colors assigned to each property, which is based on
+element property relationships, by changing the color mode to propety.
+Element property relationships are dependent on the solver interface. In general, when a
+component is assigned a property, that property assignment is applied to all elements
+collected by that component. The method of assigning properties at the component level is
+therefore referred to as indirect property assignment. Direct property assignment is
+performed directly on the elements themselves, typically via a property assignment. Direct
+property assignments always take precedence over indirect property and material
+assignments.
+Abaqus Cards
+Card
+Description
+*ADAPTIVE CONTROLS
+Controls various aspects of the adaptive meshing and advection algorithms
+applied to an adaptive mesh domain.
+*BEAM ADDED INERTIA
+Define additional beam inertia.
+*BEAM GENERAL SECTION
+Specify a beam section when numerical integration over the section is not
+required. Note: Only one *BEAM GENERAL SECTION card is output per component,
+therefore the beam elements in each component must have the same cross-sectional
+properties.
+*BEAM SECTION
+Specify a beam section when numerical integration over the section is
+required. Note: Only one *BEAM SECTION card is output per component, therefore
+the beam elements in each component must have the same cross-sectional
+properties.
+*COHESIVE SECTION
+Specify element properties for cohesive elements.
+*CONNECTOR SECTION
+Specify connector attributes for connector elements. Note:
+The following types are supported:
+Standard template:
+,
+Explicit template:
+All listed above, as well as ROTATION-ACCELEROMETER
+*CONTACT DAMPING
+Define viscous damping between contacting surfaces. Note: This card is a
+sub-option in the *SURFACE INTERACTION card image .
+*DASHPOT
+Define dashpot behavior. Note: Only one *DASHPOT card is output per component, therefore the spring
+elements in each component must have the same properties. When the *DASHPOT
+card is written for DASHPOT1 elements, both dof1 and dof2 are written, but
+Abaqus only reads dof1.
+For DASHPOTA
+elements, choose the DASHPOTA option in the *DASHPOT card image .
+*ELEMENT PROPERTIES
+*EULERIAN SECTION
+Define properties of Eulerian continuum elements, including the list of
+materials that may occupy the elements.
+*FASTENER (SPOT WELD) PROPERTY
+Prescribe mesh-independent fastener properties.
+*FLUID BULK MODULUS
+Define compressibility for a hydraulic fluid. Note: This option is used to
+define compressibility for the hydraulic fluid model. It can only be used in
+conjunction with the *FLUID BEHAVIOR option or the
+*FLUID PROPERTY option.
+*FLUID DENSITY
+Specify hydrostatic fluid density. Note: This option is used to define the
+reference fluid density for fluid cavities. It is only applicable for hydraulic
+and pneumatic fluids, and should not be used for user-defined fluids. The
+*FLUID DENSITY option can only be used in conjunction with
+the *FLUID BEHAVIOR option or the *FLUID
+PROPERTY option.
+*FLUID EXPANSION
+Specify the thermal expansion coefficient for a hydraulic fluid. Note: This
+option is used to define thermal expansion coefficients for the hydraulic fluid
+model. It can only be used in conjunction with the *FLUID
+BEHAVIOR option or the *FLUID PROPERTY
+option.
+*FLUID PROPERTY
+Define properties for hydrostatic fluid elements.
+*FRICTION
+Specify a friction model. Note: This card is a sub-option in the *SURFACE
+INTERACTION card image. It is also supported as a separate card image to allow
+for it to be used as a sub-option of the *CONNECTOR FRICTION card (in *CONNECTOR
+BEHAVIOR).
+*GAP
+Specify clearance and local geometry for GAP-type elements. Note: Only one
+*GAP card is output per component, therefore the gap elements in each component
+must have the same properties. Not available in the Explicit
+template.
+*GASKET SECTION
+Specify element properties for gasket elements. Note: Not available in the
+Explicit template.
+*ITS
+Define the properties for ITS-type elements.
+*JOINT
+Define properties for JOINTC elements. Note: Only one *JOINT card is output
+per component, therefore the spring elements in each component must have the
+same properties. The *SPRING and *DASHPOT cards in the *JOINT property behave
+the same way as the individual cards mentioned above. See the How do I section
+below for more information.
+Not available in the Explicit
+template.
+*M1
+Define the first bending moment behavior of beams.
+*M2
+Define the second bending moment behavior of beams.
+*MASS
+Specify a point mass. Note: Only one *MASS card is output per component,
+therefore the mass elements in each component must have the same
+properties.
+*MEMBRANE SECTION
+Specify section properties for membrane elements.
+*NONSTRUCTURAL MASS
+Specify mass contribution to the model from nonstructural features. Note: Only
+available in the Explicit template.
+*PHYSICAL CONSTANTS
+Specify physical constants.
+*REBAR LAYER
+Reinforcement definition Note: The keyword is available in the card image of
+the SHELL SECTION (homogeneous and composite), MEMBRANE SECTION, and SURFACE
+SECTION.
+*RIGID BODY
+Define a set of elements as a rigid body and define rigid element
+properties. Note: For Analytical Rigid Surfaces, the ANALYTICAL
+SURFACE parameter should point to the corresponding
+ANALYTICAL_RIGID_SURFACE group from the card image of the *RIGID BODY
+card.
+*ROTARY INERTIA (no longer listed on panel)
+Define rigid body rotary inertia. Note: Only one *ROTARY INERTIA card is
+output per component, therefore the ROTARY1 elements in each component must have
+the same properties.
+*SECTION CONTROLS
+Specify section controls.
+*SHELL GENERAL SECTION
+Define a general, arbitrary, elastic shell section.
+*SHELL SECTION
+Specify a shell cross-section.
+*SOLID SECTION
+Specify element properties for solid, infinite, acoustic, and truss
+elements.
+*SPRING
+Define spring behavior. Note: Only one *SPRING card is output per component, therefore the spring
+elements in each component must have the same properties. When the *SPRING
+card is written for SPRING1 elements, both dof1 and dof2 are written, but
+Abaqus only reads dof1.
+For SPRINGA
+elements, choose the SPRINGA option in the *SPRING card image .
+*SURFACE BEHAVIOR
+Define alternative pressure-overclosure relationships for contact. Note: This
+card is a sub-option in the *SURFACE INTERACTION card image .
+*SURFACE INTERACTION
+Define surface interaction properties. Note: For Abaqus Explicit template, this card is defined as a
+group.
+*SURFACE PROPERTY / *EMISSIVITY
+Define surface properties for cavity radiation analysis. It must immediately
+precede the *EMISSIVITY option.
+*SURFACE SECTION
+Specify section properties for surface elements.
+*SURFACE SMOOTHING
+Create a surface smoothing definition for contact interactions. It must be
+used in conjunction with the *CONTACT PAIR option.
+*TRANSVERSE SHEAR STIFFNESS
+Define transverse shear stiffness for beams and shells. Note: This option must
+be used in conjunction with the *BEAM GENERAL SECTION ,
+*BEAM SECTION , *COHESIVE SECTION ,
+*SHELL GENERAL SECTION , or the *SHELL
+SECTION options. The transverse shear stiffness defined with this
+option affects only the transverse shear flexible elements whose section
+properties are defined by the immediately preceding section
+option.
+ANSYS Cards
+Card
+Description
+SECTYPE
+Associates section type information with a section ID number.
+LS-DYNA Cards
+Card
+Description
+*CONSTRAINED_JOINT_STIFFNESS_FLEXION-TORSION
+Define optional rotational and translational joint stiffness for
+joints.
+*CONSTRAINED_JOINT_STIFFNESS_GENERALIZED
+Define optional rotational and translational joint stiffness for
+joints.
+*CONSTRAINED_JOINT_STIFFNESS_TRANSLATIONAL
+Define optional rotational and translational joint stiffness for
+joints.
+*DAMPING_PART_MASS
+Define mass weighted damping by part ID
+*DAMPING_PART_MASS_SET
+*DAMPING_PART_STIFFNESS
+Assign Rayleigh stiffness damping coefficient by part ID
+*DAMPING_PART_STIFFNESS_SET
+*DAMPING_RELATIVE
+Apply damping relative to the motion of a rigid body.
+*DEFINE_CONNECTION_PROPERTIES
+Define failure related parameters for solid element spot weld failure by
+*MAT_SPOTWELD_DAIMLERCHRYSLER.
+*EOS_GRUNEISEN (EOS 4)
+Equation of state Form 4.
+*EOS_IDEAL_GAS (EOS 12)
+Equation of state for 12 for modeling ideal gas.
+*EOS_IGNITION_AND_GROWTH_OF_REACTION_IN_HE (EOS 7)
+Equation of state Form 7.
+*EOS_JWL (EOS 2)
+Equation of state Form 2.
+*EOS_LINEAR_POLYNOMIAL (EOS 1)
+Equation of state Form 1. Define coefficients for linear polynomial EOS and
+initialize the initial thermodynamic state of the material.
+*EOS_LINEAR_POLYNOMIAL_WITH_ENERGY_LEAK (EOS 6)
+Equation of state Form 6.
+*EOS_PROPELLANT_DEFLAGRATION (EOS 10)
+Equation of state Form 10. Added to model airbag propellants.
+*EOS_RATIO_OF_POLYNOMIALS (EOS 5)
+Equation of state Form 5.
+*EOS_SACK_TUESDAY (EOS 3)
+Equation of state Form 3.
+*EOS_TABULATED (EOS 9)
+Equation of state Form 9.
+*EOS_TABULATED_COMPACTION (EOS 8)
+Equation of state Form 8.
+*EOS_TENSOR_PORE_COLLAPSE (EOS 11)
+Equation of state Form 11.
+*INTEGRATION_BEAM
+Define user defined through the thickness integration rules for the beam
+element.
+*INTEGRATION_SHELL
+Define user defined through the thickness integration rules for the shell
+element.
+*MAT_ADD_EROSION
+Many of the consitutive models in LS-DYNA do not
+allow failure and erosion. This option provides a way of including failure in
+these models although the option can also be applied to constitutive models of
+other failure/erosion criterion.
+*SECTION_BEAM(TITLE)
+Define cross sectional properties for beam, truss, discrete beam and cable
+elements.
+*SECTION_BEAM_AISC
+Defines cross-sectional properties for beams and trusses.
+*SECTION_DISCRETE(TITLE)
+Define spring and damper elements for translation and rotation.
+*SECTION_POINT_SOURCE(TITLE)
+Provides the inlet boundary condition for single gas flow (inflation
+potential) via a set of point source(s).
+*SECTION_POINT_SOURCE_MIXTURE(TITLE)
+Provides: (a) an element formulation for a solid ALE part of the type similar
+to ELFORM=11 of *SECTION_SOLID and (b) the inlet gas injection boundary condition
+for multiple-gas mixture in-flow via a set of point sources.
+*SECTION_SEATBELT(TITLE)
+Define section properties for the seat belt elements.
+*SECTION_SHELL(TITLE)
+Define section properties for shell elements.
+*SECTION_SHELL_ALE(TITLE)
+Define section properties for shell elements.
+*SECTION_SHELL_EFG(TITLE)
+Define section properties for shell elements.
+*SECTION_SOLID(TITLE)
+Define section properties for solid continuum and fluid elements.
+*SECTION_SOLID_ALE(TITLE)
+Define section properties for solid continuum and fluid elements.
+*SECTION_SOLID_EFG(TITLE)
+Define section properties for solid continuum and fluid elements.
+*SECTION_SPH
+Define section properties for SPH particles.
+*SECTION_SPH_TENSOR
+*SECTION_SPH_USER
+*SECTION_TSHELL(TITLE)
+Define section properties for SPH particles.
+Nastran Cards
+Only one card image can be loaded into each property collector.
+1D elements can be grouped into components with 2D and 3D elements for display purposes.
+The component groupings are maintained on export and import.
+Properties for PBAR and PBEAM cards can be manually input in the card image or
+automatically created.
+The HM_ELAS card defines properties for an HM_Spring element.
+The Nastran and OptiStruct solver
+interfaces allow the property between groups to have the same ID. For example, PBAR3, PSHELL
+3 and PSOLID 3. Duplicate IDs within the same group is not allowed.
+Nastran and OptiStruct properties
+are grouped as follows:
+0D_Rigids
+PMASS
+1D
+PBAR, PBARL, PBEAM, PBEAML, PBEAND, PROD, PTUBE, PWELD
+SPRING_GAP
+PBUSH, PBUSH1D, PDAMP, PELAS, PGAP, PVISC
+2D
+PSHELL, PSHEAR, PCOMP, PCOMG
+3D
+PSOLID
+Card
+Description
+BCBDPRP
+Defines contact body parameters.
+BCONPRG
+Defines geometric contact parameters of touching bodies.
+BCONPRP
+Defines physical contact parameters of touching bodies.
+PAABSF
+Defines the properties of a frequency-dependent acoustic absorber
+element.
+PACABS
+Defines the properties of the acoustic absorber element.
+PACBAR
+Defines the properties of the acoustic barrier element. Note: PACBAR is
+referenced by a CHACBR entry only. Either FRESON or KRESON must be specified,
+but not both.
+PACINF
+Defines the properties of acoustic conjugate infinite elements.
+PAERO1
+Defines associated bodies for the panels in the Doublet-Lattice
+method.
+PAERO2
+Defines the cross-sectional properties of aerodynamic bodies.
+PAXSYMH
+Defines the properties of a linear axisymmetric harmonic element.
+PBAR
+Defines the properties of a simple beam element (CBAR entry).
+PBARL
+Defines the properties of a simple beam element (CBAR entry) by
+cross-sectional dimensions.
+PBEAM
+Defines the properties of a beam element (CBEAM entry). This element may be
+used to model tapered beams. Note: Blank fields are not supported for intermediate
+stations. Appropriate default values are inserted during feinput.
+PBEAML
+Defines the properties of a beam element by cross-sectional
+dimensions. Note: Blank fields are not supported for intermediate stations.
+Appropriate default values are inserted during feinput.
+PBEND
+Defines the properties of a curved beam, curved pipe, or elbow element (CBEND
+entry).
+PBUSH
+Defines the nominal property values for a generalized spring-and-damper
+structural element.
+PBUSH1D
+Defines linear and nonlinear properties of a one-dimensional spring and
+damper element (CBUSH1D entry).
+PBUSHT
+Defines the frequency dependent properties or the stress dependent properties
+for a generalized spring and damper structural element.
+PCOMP
+Defines the properties of an n-ply composite material laminate.
+PCOMPG
+Defines global (external) ply IDs and properties for a composite material
+laminate.
+PCOMPLS
+Defines global (external) ply IDs and properties for a composite material
+laminate in SOL 600 and SOLs 400 and 700.
+PCONVM
+Specifies forced convection boundary condition properties for a boundary
+condition surface element.
+PDAMP
+Specifies the damping value of a scalar damper element using defined CDAMP1
+or CDAMP3 entries.
+PELAS
+Specifies the stiffness, damping coefficient, and stress coefficient of a
+scalar elastic (spring) element (CELAS1 or CELAS3 entry).
+PELAST
+Defines the frequency dependent properties for a PELAS Bulk Data
+entry.
+PFAST
+Defines the CFAST fastener property values.
+PGAP
+Defines the properties of the gap element (CGAP entry).
+PHBDY
+Property entry referenced by a CHBDYP element to give auxiliary geometric
+information for it.
+PLPLANE
+Defines the properties of a fully nonlinear (i.e., large strain and large
+rotation) hyperelastic plane strain
+or axisymmetric element.
+PLSOLID
+Defines a fully nonlinear (i.e., large strain and large rotation)
+hyperelastic solid element.
+PMASS
+Specifies the mass value of a scalar mass element (CMASS1 or CMASS3
+entries).
+PROD
+Defines the properties of a rod element (CROD entry).
+PSEAM
+Defines the PSEAM property values.
+PSHEAR
+Defines the properties of a shear panel (CSHEAR entry).
+PSHELL
+Defines the membrane, bending, transverse shear, and coupling properties of
+thin shell elements.
+PSHELL1
+Defines the properties of SOL 700 shell elements, which are more complicated
+than the shell elements defined using the PSHELL entry.
+PSHLN1
+PSOLID
+Defines the properties of solid elements (CHEXA, CPENTA, and CTETRA
+entries).
+PTUBE
+Defines the properties of a thin-walled cylindrical tube element (CTUBE
+entry).
+PVISC
+Defines properties of a one-dimensional viscous damping element (CVISC
+entry).
+PWELD
+Defines the properties of connector (CWELD) elements.
+OptiStruct Cards
+Only one property definition is allowed on each property collector. For definitions like
+PMASS, which allow more than one definition on the same card, this is separated on import
+into four different cards.
+1D elements can be organized into components with 2D and 3D elements, and these component
+groupings are maintained on export and import. However, this usage is not recommended.
+Card
+Description
+HM_ELAS
+Defines properties for a HM_Spring element. Note: Bulk Data Entry
+PAABSF
+Defines the properties of the fluid acoustic absorber
+element. Note: Bulk Data Entry
+PAXI
+Defines the properties of axisymmetric elements. Referenced
+by CTAXI entry. Note: Bulk Data Entry Referenced by
+CTAXI .
+PBAR
+Defines the properties of a simple beam (bar), which is used
+to create bar elements via the CBAR entry. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PBARL
+Defines the properties of a simple beam (bar) by
+cross-sectional dimensions, which is used to create bar elements via the
+CBAR entry. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PBEAM
+Defines the properties of beam elements defined via the
+CBEAM entry. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PBEAML
+Defines the properties of a beam element by
+cross-sectional dimensions that are used to create beam elements via the
+CBEAM entry. Note: Bulk Data Entry
+PBUSH
+Defines the nominal property values for a generalized
+spring-damper-mass structural element. Note: Bulk Data Entry
+PBUSH1D
+Defines the linear and nonlinear properties for a
+one-dimensional spring-and-damper structural element. Note: Bulk Data Entry
+PCOMP
+Defines the structure and properties of an n-ply composite
+laminate material. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PCOMPG
+Defines the structure and properties of a composite
+laminate material, allowing for global ply identification. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PCOMPP
+Defines the properties of a composite laminate material
+used in ply-based composite definition. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PCONT
+Defines properties of a CONTACT
+interface. Note: Bulk Data Entry
+PCONTX
+Defines properties of a CONTACT
+interface for geometric nonlinear analysis. Note: Bulk Data Entry
+PDAMP
+Specifies the damping of a scalar damper element using
+defined CDAMP1 or CDAMP3 entry. Note: Bulk Data Entry
+PELAS
+Used to define the stiffness and stress coefficient of a
+scalar elastic element (spring) by means of the CELAS1 or
+CELAS3 entry. Note: Bulk Data Entry
+PFAST
+Define properties of connector ( CFAST )
+elements. Note: Bulk Data Entry
+PGAP
+Defines properties of the gap ( CGAP or
+CGAPG ) elements. Note: Bulk Data Entry
+PGASK
+Defining the properties for solid gasket
+elements. Note: Bulk Data Entry
+PLSOLID
+Defines the properties of nonlinear hyperelastic solid
+elements, referenced by CHEXA , CPENTA , and
+CTETRA Bulk Data Entries. The MATHE
+hyperelastic material can be referenced to define corresponding material
+properties. Note: Bulk Data Entry
+PMASS
+Defines the mass value of a scalar mass element
+( CMASS1 or CMASS3 entry). Note: Bulk Data Entry
+PROD
+Defines the properties of a rod, which is referenced by the
+CROD entry. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PSHEAR
+Defines the properties of a shear panel. Note: Bulk Data Entry
+PSHELL
+Defines the membrane, bending, transverse shear, and
+membrane-bending coupling of shell elements. Note: Bulk Data Entry Exported in large field format by
+optistructlf template.
+PSOLID
+Defines the properties of solid elements, referenced by
+CHEXA , CPENTA , CPYRA and
+CTETRA Bulk Data Entries. Note: Bulk Data Entry
+PTUBE
+Defines the properties of a thin-walled cylindrical tube
+element, referenced by a CTUBE entry. Note: Bulk Data Entry
+PVISC
+Defines properties of a one-dimensional viscous damping
+element ( CVISC entry). Note: Bulk Data Entry
+PWELD
+Defines properties of connector ( CWELD )
+elements. Note: Bulk Data Entry
+PAM-CRASH Cards
+Card
+Description
+FRICT /
+Friction modeling definition.
+GASPEC /
+Specification of air bag gas.
+RUPMO /
+Rupture model definition.
+Permas Cards
+Card
+Description
+$GEODAT BEAM
+Beam
+$GEODAT CONA
+Surface convection
+$GEODAT CONS
+Shell surface convection
+$GEODAT DAMPER
+Viscous damper
+$GEODAT FLANGE
+Flange
+$GEODAT GASKET
+Gasket
+$GEODAT MASS
+Mass
+$GEODAT SCALAR
+Scalar
+$GEODAT SHELL
+Shell
+$GEODAT SOLID
+Solid
+$GEODAT SPRING
+Spring
+$GEODAT SPRINGX
+Spring
+Radioss Cards
+Radioss allows you to program your own properties, mostly for
+springs, that can be used in a simulation. Unsupported Radioss
+properties and user defined Radioss properties are assigned the
+PROP_UNSUPPORTED card image.
+HyperMesh imports unsupported properites with the PROP_UNSUPPORTED card
+image, and preserves their corresponding IDs and associated components.
+In the PROP_UNSUPPORTED card image, all property sub-options, parameters, and data lines
+are supported as simple text. HyperMesh does not check the validity or
+syntax of any data in this mode. You must manually check the validity of the data. No
+editing, updating, or review of the property data is intended. Also time step calculation
+and mass calculation are not available for the component that refers to this property.
+Card
+Description
+/ADMESH/SET
+Defines the criteria for adaptive meshing in parts.
+This keyword is not available for SPMD computation. Note: Block Format Keyword
+/DAMP/
+Defines the Rayleigh mass and stiffness damping
+coefficients applied to a set of nodes. The damping can be applied to any nodal DOF
+either in local or global coordinate system. Note: Block Format Keyword
+/EOS/GRUNEISEN
+Describes the Gruneisen equation of
+state. Note: Block Format Keyword
+/EOS/POLYNOMIAL
+Describes the Linear polynomial equation of
+state P( ρ ,E). Note: Block Format Keyword
+/EOS/PUFF
+Describes the linear polynomial equation of state
+P(ρ,E) . Note: Block Format Keyword
+/EOS/SESAME
+Describes the SESAME table equation of
+state. Note: Block Format Keyword
+/EOS/TILLOTSON
+Describes the Tillotson equation of
+state. Note: Block Format Keyword
+/FAIL
+Describes the failure models. Note: Block Format Keyword
+/FAIL/CHANG
+Describes the Chang failure model. Note: Block Format Keyword
+/FAIL/CONNECT
+Describes the failure model for CONNECTION
+material with elongation criteria and/or energy criteria. Note: Block Format Keyword
+/FAIL/ENERGY
+Describes a specific energy failure
+model. Note: Block Format Keyword
+/FAIL/FLD
+Describes the forming limit. Note: Block Format Keyword
+/FAIL/HASHIN
+Describes the Hashin failure model. This failure
+model is available for Shell and Solid. Note: Block Format Keyword
+/FAIL/JOHNSON
+Describes the failure criteria by Johnson-Cook
+failure model. Note: Block Format Keyword
+/FAIL/LAD_DAMA
+Describes the Ladeveze failure model for
+delamination (interlaminar fracture). Note: Block Format Keyword
+/FAIL/PUCK
+Describes the Puck failure model. Note: Block Format Keyword
+/FAIL/SPALLING
+Describes the Spalling and Johnson-Cook failure
+model. Note: Block Format Keyword
+/FAIL/TAB1
+Describes the strain failure model based on damage
+accumulation using user-defined functions. Note: Block Format Keyword
+/FAIL/TBUTCHER
+Describes a Tuler-Butcher failure
+model. Note: Block Format Keyword
+/FAIL/TENSSTRAIN
+Describes a strain failure model. Note: Block Format Keyword
+/FAIL/USERi (USER 1, 2, 3)
+Describes a user failure model. Note: Block Format Keyword
+/FAIL/WIERZBICKI
+Describes the BAO-XUE-Wierzbicki failure
+model. Note: Block Format Keyword
+/FAIL/WILKINS
+Describes the Wilkins failure model. Note: Block Format Keyword
+/FAIL/XFEM
+Describes a XFEM (eXtended Finite Element Method)
+failure model. Note: Block Format Keyword
+/LEAK/MAT
+Specifies effective leakage area of porous airbag
+fabric materials LAW19 and LAW58 as function of time, pressure, area and other
+parameters. Note: Block Format Keyword
+/PROP
+Describes the property sets. Note: Block Format Keyword
+/PROP/TYPE3 (BEAM)
+Describes the beam property for torsion, bending,
+membrane or axial deformation. Note: Block Format Keyword
+/PROP/TYPE43 (CONNECT)
+Designed for spotweld, welding line or glue type
+connections. Only used with /MAT/CONNECT material law. Note: Block Format Keyword
+/PROP/TYPE14 (FLUID)
+Describes the general fluid property
+set. Note: Block Format Keyword
+/PROP/INJECT1
+Describes mass injected for each constituent
+gas. Note: Block Format Keyword
+/PROP/INJECT2
+Describes molar fraction injected for each
+constituent gas and total mass injected. Note: Block Format Keyword
+/PROP/TYPE18 (INT_BEAM)
+Describes the integrated beam property set. This
+beam model is based on Timoshenko theory and takes into account transverse shear
+strain without warping in torsion. It can be used for deep beam cases (short beams).
+Beam section and position of integration points can be either used as predefined or
+prescribed directly. Note: Block Format Keyword
+/PROP/TYPE33 (KJOINT)
+Describes the joint type spring. Note: Block Format Keyword
+/PROP/TYPE45 (KJOINT2)
+Describes the joint type spring between two rigid
+bodies. Note: Block Format Keyword
+/PROP/TYPE19 (PLY)
+Defines the ply property set used in ply-based
+composite definition. It is used in combination with /PROP/STACK
+(/PROP/TYPE17) or /PROP/TYPE51 to create ply-based
+sandwich composite properties. Note: Block Format Keyword
+/PROP/TYPE15 (POROUS)
+Describes the porous solid element property set
+(extended Darcy's law). Note: Block Format Keyword
+/PROP/TYPE5 (RIVET)
+Describes the rivet property set. Note: Block Format Keyword
+/PROP/TYPE10 (SH_COMP)
+Defines the composite shell property set. It is
+possible to define composite with several layers and each layer with individual
+orthotropic direction. Note: Block Format Keyword
+/PROP/TYPE16 (SH_FABR)
+Defines the anisotropic layered shell property
+set. This property is currently only compatible with Elastic Anisotropic Fabric
+( /MAT/LAW58 (FABR_A) ) and only one layer is allowed. Note: Block Format Keyword
+/PROP/TYPE9 (SH_ORTH)
+Defines the orthotropic shell property. Note: Block Format Keyword
+/PROP/TYPE19 (PLY)
+Defines the ply property set used in ply-based
+composite definition. It is used in combination with /PROP/STACK
+(/PROP/TYPE17) or /PROP/TYPE51 to create ply-based
+sandwich composite properties. Note: Block Format Keyword
+/PROP/TYPE11 (SH_SANDW)
+Defines the sandwich shell property set. It is
+possible to define sandwich composite with several layers and each lay with
+individual material, thickness, layer position and orthotropic direction. This
+property is only compatible with Material Laws 15, 25, 27, 36, 60, 72 and user
+laws. Note: Block Format Keyword
+/PROP/TYPE1 (SHELL)
+Describes the shell property set which used for
+3-node or 4-node shell element. Belytschko, QBAT or QEPH shell formulation are
+available. Note: Block Format Keyword
+/PROP/TYPE6 (SOL_ORTH)
+Describes the orthotropic solid property set. This
+property set is used to define the fiber plane for
+/MAT/LAW14(COMPS0) , the steel reinforcement direction for
+/MAT/LAW24 (CONC) or the cell direction for /MAT/LAW28
+(HONEYCOMB) . This property is only available for 8-node linear solid
+elements ( /BRICK ), tetrahedron elements
+( /TETRA4 and /TETRA10 ), and 2D solid
+elements ( /QUAD ). Quadratic bricks ( /BRIC20
+and /SHEL16 ) and pentahedron elements
+( /PENTA6 ) are not compatible with this property. Note: Block Format Keyword
+/PROP/TYPE14 (SOLID)
+Defines the general solid property
+set. Note: Block Format Keyword
+/PROP/SPH
+Defines the axisymmetric spring property
+set. Note: Block Format Keyword
+/PROP/TYPE25 (SPR_AXI)
+Defines the axisymmetric spring property
+set. Note: Block Format Keyword
+/PROP/TYPE13 (SPR_BEAM)
+A beam type spring property that works as a beam
+element with six independent modes of deformation. This spring accounts for
+non-linear stiffness, damping and different unloading. Deformation, force and
+energy-based failure criteria are available. Note: Block Format Keyword
+/PROP/TYPE44 (SPR_CRUS)
+A spring element property that represents a simple
+macro model of a crushable frame in compression, tension, torsion and bending.
+Originally, this element was developed in cooperation with PSA PEUGEOT
+CITROËN. Note: Block Format Keyword
+/PROP/TYPE8 (SPR_GENE)
+A spring property that works with six independent
+modes of deformation. This spring accounts for non-linear stiffness, damping and
+different unloading. Deformation, force and energy based failure criteria are
+available. The general spring property is often used to model a joint connection
+between two parts. Note: Block Format Keyword
+/PROP/TYPE32 (SPR_PRE)
+Describes the pretension spring property
+set. Note: Block Format Keyword
+/PROP/TYPE12 (SPR_PUL)
+A pulley spring property set (with one
+translational DOF) used to model a pulley. Note: Block Format Keyword
+/PROP/TYPE26 (SPR_TAB)
+Defines the tabulated spring property. Note: Block Format Keyword
+/PROP/TYPE4 (SPRING)
+Defines spring property with one translational DOF.
+This spring accounts for non-linear stiffness, damping and different unloading.
+Deformation based failure criteria is available. Note: Block Format Keyword
+/PROP/TYPE17 (STACK)
+Defines the sandwich shell property set using the
+stack and ply approach. Note: Block Format Keyword
+/PROP/TYPE2 (TRUSS)
+Defines the truss property set. Note: Block Format Keyword
+/PROP/TYPE22 (TSH_COMP)
+Defines the composite thick shell property
+set. Note: Block Format Keyword
+/PROP/TYPE21 (TSH_ORTH)
+Defines the orthotropic thick shell property
+set. Note: Block Format Keyword
+/PROP/TYPE20 (TSHELL)
+Defines the general thick shell property
+set. Note: Block Format Keyword
+/PROP/USER
+User-defined property. Note: Block Format Keyword
+/PROP/TYPE0 (VOID)
+Defines the void property set. Note: Block Format Keyword
+/THERM_STRESS/MAT
+Adds thermal expansion property for Radioss material (shell and solid). Note: Block Format Keyword
+Samcef Cards
+Card
+Description
+.BPR
+Define beam profiles.
+.ETASHELL
+Used to assign the laminate to the elements. The Projection method is
+supported.
+.ETASOLID
+Used to assign the laminate to the elements. The Projection method is
+supported.
+.MCCBUSH
+Defines the property on the BUSH element.
+.PHP SHELL
+Assign physical properties to an existing mesh.
+SOLIDMAT
+Assign physical properties to an existing mesh. Note: This is a dummy property
+that creates a link between the elements and the material, as it is not possible
+to directly assign a material to the elements.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

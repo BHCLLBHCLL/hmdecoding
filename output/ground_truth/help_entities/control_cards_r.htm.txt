@@ -1,0 +1,1913 @@
+Control Cards
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU
+and memory limits, and others.
+A solver interface template must be loaded which defines control cards in order to create
+and edit control cards.
+Abaqus
+Control cards define model information, which needs to be specified only once in the input
+file.
+Card
+Description
+*CONSTRAINT CONTROLS
+Reset overconstraint checking controls.
+*DEPVAR
+Specify solution-dependent state variables.
+*HEADING
+Print a heading on the output.
+*PREPRINT
+Select printout for the analysis input file processor.
+*RESTART
+Save and reuse data and analysis results.
+ANSYS
+The input translator recognizes ANSYS cards. If an unsupported
+field is found in a card, a message is displayed on the status bar. The messages are also
+printed to the file ansys.msg . General slash commands,
+SOLUTION commands, POST1 commands, and
+POST26 commands are referred to as control cards. Unrecognized cards
+are written to a *.hmx file.
+Card
+Description
+ACEL
+Specifies the linear acceleration of the structure.
+ALPHAD
+Defines the mass matrix multiplier for damping.
+ANTYPE
+Specifies the analysis type and restart status.
+ARCLEN
+Activates the arc length method.
+ARCTRM
+Controls termination of the arc-length solution
+/ASSIGN
+Reassigns a file name to an ANSYS file
+identifier.
+AUTOTS
+Specifies whether to use automatic time stepping or load stepping.
+/BATCH
+Sets the program mode to "batch"
+BETAD
+Defines the stiffness matrix multiplier for damping.
+BFUNIF
+Assigns a uniform body force load to all nodes.
+BUCOPT
+Specifies buckling analysis options
+CGLOC
+Specifies the origin location of the acceleration coordinate system.
+CGOMGA
+Specifies the rotational velocity of the global origin.
+CMDOMEGA
+Specifies the rotational acceleration of an element component about a
+user-defined rotational axis.
+CMOMEGA
+Specifies the rotational velocity of an element component about a
+user-defined rotational axis.
+CNVTOL
+Sets convergence values for nonlinear analyses.
+/COM
+Places a comment in the output.
+/COPY
+Copies a file.
+CRPLIM
+Specifies the creep criterion for automatic time stepping.
+DCGOMG
+Specifies the rotational acceleration of the global origin.
+/DELETE
+Deletes a file.
+DELTIM
+Specifies the time step sizes to be used for this load step.
+DMPRAT
+Sets a constant damping ratio.
+DOF
+Adds degrees of freedom to the current DOF set.
+DOMEGA
+Specifies the rotational acceleration of the structure.
+EMUNIT
+Specifies the system of units for magnetic field problems.
+EQSLV
+Specifies the type of equation solver.
+ERESX
+Specifies extrapoloation of integration point results.
+EORIENT
+Reorient SOLID elements' axes
+ETABLE
+Fills a table of element values for further processing.
+EXPASS
+Specifies an expansion pass of an analysis.
+HARFRQ
+Defines the frequency range in the harmonic response analysis.
+HREXP
+Specifies the phase angle for the harmonic analysis expansion pass.
+HROPT
+Specifies harmonic analysis options.
+HROUT
+Specifies the harmonic analysis output options.
+IRLF
+Specifies that inertia relief calculations are to be performed.
+KBC
+Specifies stepped or ramped loading within a load step.
+KUSE
+Specifies whether or not to reuse the triangularized matrix.
+LNSRCH
+Activates a line search to be used with Newton-Raphson.
+LSSOLVE
+Reads and solves multiple load steps.
+LVSCALE
+Scales the load vector for mode superposition analyses.
+MDAMP
+Defines the damping ratios as a function of mode.
+MODE
+Specifies the harmonic loading term for this load step.
+MODOPT
+Specifies modal analysis options.
+MXPAND
+Specifies the number of modes to expand and write for a modal or buckling
+analysis.
+NCNV
+Sets the key to terminate an analysis.
+NEQIT
+Specifies the maximum number of equilibrium iterations for nonlinear
+analyses.
+NLGEOM
+Includes large-deflection effects in a static or full transient
+analysis.
+NROPT
+Specifies the Newton-Raphson options in a static or full transient
+analysis.
+NSUBST
+Specifies the number of substeps to be taken this load step.
+NUMOFF
+OMEGA
+Specifies the rotational velocity of the structure.
+OUTRES
+Controls the solution data written to the database.
+/POST1
+Enters the database results post-processor.
+PRED
+Activates a predictor in a nonlinear analysis.
+PRESOL
+Prints the solution results for elements.
+PSTRES
+Specifies whether prestress effects are calculated or included.
+RSYS
+Activates a coordinate system for printout or display of results.
+SLOAD
+Loads a pretension section.
+/SOLU
+Enters the solution processor.
+SOLU
+Specifies solution summary data per substep to be stored.
+SOLVE
+Starts a solution.
+SSTIF
+Activates stress stiffness effects in a nonlinear analysis.
+/STITLE
+Defines subtitles.
+SUBOPT
+Specifies options for subspace iteration eigenvalue extraction.
+/SYS
+Passes a command string to the operating system.
+TIME
+Sets the time for a load step.
+TIMINT
+Turns on transient effects.
+TINTP
+Defines transient integration parameters.
+/TITLE
+Defines a main title.
+TOFFST
+Specifies the temperature offset from absolute zero to zero.
+TOTAL
+Specifies automatic MDOF generation.
+TREF
+Defines the reference temperature for the thermal strain
+calculations.
+TRNOPT
+Specifies transient analysis options.
+TUNIF
+Assigns a uniform temperature to all nodes.
+/UNITS
+Annotates the database with the system of units used.
+UNSU_END
+UNSU_PREP7
+EXODUS
+Card
+Description
+OUTPUTS
+Determines which data will be written to the output file.
+PARAMETERS
+Input parameters that are independent of the solution method or
+solver.
+SOLUTION
+Solution method and options to be selected in the solution.
+LS-DYNA
+Card
+Description
+*CONTROL_ACCURACY
+Define control parameters that can improve the accuracy of the
+calculation.
+*CONTROL_ADAPSTEP
+Define control parameters for contact interface force update during each
+adaptive cycle.
+*CONTROL_ADAPTIVE
+Activate adaptive meshing.
+*CONTROL_ADAPTIVE_CURVE
+To refine the element mesh along a curve.
+*CONTROL_ALE
+Set global control parameters for the Arbitrary Lagrange-Eulerian and
+Eulerian calculations.
+*CONTROL_BULK_VISCOSITY
+Reset the default values of the bulk viscosity coefficients globally.
+*CONTROL_CHECK
+Check for various problems in the mesh.
+*CONTROL_COARSEN
+Adaptively de-refine (coarsen) a shell mesh by selectively merging four
+adjacent elements into one.
+*CONTROL_CONTACT
+Change defaults for computation with contact surfaces.
+*CONTROL_COUPLING
+Change defaults for MADYMO3D/CAL3D coupling.
+*CONTROL_CPM
+Global control parameters for CPM (Corpuscular Particle Method).
+*CONTROL_CPU
+Control CPU time.
+*CONTROL_DYNAMIC_RELAXATION
+Initialize stresses and deformation in a model to simulate a preload.
+*CONTROL_EFG
+Define controls for the mesh-free computation.
+*CONTROL_ENERGY
+Provide controls for energy dissipation options
+*CONTROL_EXPLOSIVE_SHADOW
+Compute detonation times in explosive elements for which there is no direct
+line of sight.
+*CONTROL_HOURGLASS
+Set the default values of the hourglass control to override the default
+values.
+*CONTROL_IMPLICIT_AUTO
+Define parameters for automatic time step control during implicit
+analysis.
+*CONTROL_IMPLICIT_BUCKLE
+Activate implicit buckling analysis when termination time is reached.
+*CONTROL_IMPLICIT_DYNAMICS
+Activate implicit dynamic analysis and define time integration
+constants.
+*CONTROL_IMPLICIT_EIGENVALUE
+Activate implicit eigenvalue analysis and define associated input
+parameters.
+*CONTROL_IMPLICIT_FORMING
+Activate implicit static analysis, primarily for metal forming processes.
+*CONTROL_IMPLICIT_GENERAL
+Activate implicit analysis and define associated control parameters.
+*CONTROL_IMPLICIT_INERTIA_RELIEF
+Allows analysis of linear static problems that have rigid body modes.
+*CONTROL_IMPLICIT_MODES
+Request calculation of constraint and/or attachment modes for later use in
+modal analysis using *PART_MODES.
+*CONTROL_IMPLICIT_SOLUTION
+Optional card that applies to implicit calculations.Used to specify whether a
+linear or nonlinear solution is desired.
+*CONTROL_IMPLICIT_SOLVER
+Optional card that applies to implicit calculations. The linear equation
+solver performs the CPU-intensive stiffness matrix inversion.
+*CONTROL_IMPLICIT_STABILIZATION
+Optional card that applies to implicit calculations. Artificial stabilization
+is required for multi-step unloading in implicit springback analysis.
+*CONTROL_IMPLICIT_TERMINATION
+Specify termination criteria for implicit transient simulations.
+*CONTROL_MPP_DECOMPOSITION_AUTOMATIC
+Instructs the program to apply a simple heuristic to try to determine the
+proper decomposition for the simulation.
+*CONTROL_MPP_DECOMPOSITION_CHECK_SPEED
+Modifies the decomposition depending on the relative speed of the processors
+involved.
+*CONTROL_MPP_DECOMPOSITION_CONTACT_DISTRIBUTE
+Ensures that the indicated contact interfaces are distributed across all
+processors, which can lead to better load balance for large contact
+interfaces.
+*CONTROL_MPP_DECOMPOSITION_CONTACT_ISOLATE
+Ensures that the indicated contact interferences are isolated on a single
+processor, which can lead to decreased communication.
+*CONTROL_MPP_DECOMPOSITION_FILE
+Allow for pre-decomposition and a subsequent run or runs without having to do
+the decomposition.
+*CONTROL_MPP_DECOMPOSITION_METHOD
+Specify the decomposition method to use.
+*CONTROL_MPP_DECOMPOSITION_NUMPROC
+Specify the number of processors for decomposition.
+*CONTROL_MPP_DECOMPOSITION_SHOW
+Allows display of the final decomposition.
+*CONTROL_MPP_DECOMPOSITION_TRANSFORMATION
+Specifies transformations to apply to modify the decomposition.
+*CONTROL_MPP_IO_LSTC_REDUCE
+Controls the decomposition of the model for solving in multiple
+CPU's.
+*CONTROL_MPP_IO_NOD3DUMP
+Suppress the output of all dump files.
+*CONTROL_MPP_IO_NODUMP
+Suppresses the output of all dump files and full deck restart files.
+*CONTROL_MPP_IO_NOFULL
+Suppresses the output of the full deck restart files.
+*CONTROL_MPP_IO_SWAPBYTES
+Swap bytes on some of the output files.
+*CONTROL_OUTPUT
+Set miscellaneous output parameters.
+*CONTROL_PARALLEL
+Control parallel processing usage for shared memory computers by defining the
+number of processors invoking the optional consistency of the global vector
+assembly.
+*CONTROL_REMESHING
+Provide control over the remeshing of solids which are meshed with the solid
+tetrahedron element type 13.
+*CONTROL_RIGID
+Special control options related to rigid bodies and the rigid-flexible
+bodies.
+*CONTROL_SHELL
+Provide controls for computing shell response.
+*CONTROL_SOLID
+Provide controls for solid element response.
+*CONTROL_SOLUTION
+Specify the analysis solution procedure if thermal only or coupled thermal
+analysis is performed.
+*CONTROL_SPH
+Provide controls for computing SPH particles.
+*CONTROL_SPOTWELD_BEAM
+Provides factors for scaling the failure force resultants of beam spot welds
+as a function of their parametric location on the contact segment and the size of
+the segment.
+*CONTROL_STRUCTURED
+Write out a LS-DYNA structured input deck for
+version 970.
+*CONTROL_STRUCTURED_TERM
+Write out a LS-DYNA structured input deck for
+version 970. Termination will occur after the structured input file is
+written.
+*CONTROL_SUBCYCLE
+Control time step subcycling.
+*CONTROL_TERMINATION
+Stop the job.
+*CONTROL_THERMAL_NONLINEAR
+Set parameters for a nonlinear thermal or coupled structural/thermal
+analysis.
+*CONTROL_THERMAL_SOLVER
+Set options for the thermal solution in a thermal only or coupled
+structural-thermal analysis.
+*CONTROL_THERMAL_TIMESTEP
+Set time step controls for the thermal solution in a thermal only or a
+coupled structural/thermal analysis.
+*CONTROL_TIMESTEP
+Set structural time step size control using different options.
+*DAMPING_FREQUENCY_RANGE
+Provides approximately constant damping over a range of frequencies.
+*DAMPING_GLOBAL
+Define mass weighted nodal damping that applies globally to the nodes of
+deformable bodies and to the mass center of rigid bodies.
+*DATABASE_ABSTAT
+Specify time interval and file type for Airbag statistics time history file
+output.
+*DATABASE_AVSFLT
+Specify time interval for AVS database output.
+*DATABASE_BINARY_D3PART
+Dt for partial output states.
+*DATABASE_BINARY_D3PLOT
+Dt for complete output states.
+*DATABASE_BINARY_D3DRLF
+Dynamic relaxation database.
+*DATABASE_BINARY_D3THDT
+Dt for time history data of element subsets.
+*DATABASE_BINARY_D3DUMP
+Binary output restart files. Define output frequency in cycles.
+*DATABASE_BINARY_FSIFOR
+ALE interface force database
+*DATABASE_BINARY_INTFOR
+Dt for output of contact interface data.
+*DATABASE_BINARY_RUNRSF
+Binary output restart file. Define output frequency in cycles.
+*DATABASE_BINARY_XTFILE
+Flag to specify output of extra time history data to XTFILE at same time as
+D3THDT file.
+*DATABASE_BNDOUT
+Specify time interval and file type for Boundary condition forces and energy
+time history file output.
+*DATABASE_DEFGEO
+Specify time interval deformed geometry file output.
+*DATABASE_DEFORC
+Specify time interval and file type for discrete element forces time history
+file output.
+*DATABASE_ELOUT
+Specify time interval and file type for element data time history file
+output.
+*DATABASE_EXTENT_AVS
+Specify output database to be written.
+*DATABASE_EXTENT_BINARY
+Specify output database to be written.
+*DATABASE_EXTENT_D3PART
+Controls, to some extent, the content of specific output databases.
+*DATABASE_EXTENT_MOVIE
+Specify output database to be written.
+*DATABASE_EXTENT_MPGS
+*DATABASE_EXTENT_SSSTAT
+*DATABASE_FORMAT
+*DATABASE_GCEOUT
+Specify time interval and file type for Geometric contact entities force time
+history file output
+*DATABASE_GLSTAT
+Specify time interval and file type for global model data time history file
+output.
+*DATABASE_JNTFORC
+Specify time interval and file type for joint force time history file
+output
+*DATABASE_MASSOUT
+Export nodal masses into ASCII file
+MASSOUT.
+*DATABASE_MATSUM
+Specify time interval and file type for material energies time history file
+output
+*DATABASE_MOVIE
+Specify time interval for movie output
+*DATABASE_MPGS
+Specify time interval for MPGS
+*DATABASE_NCFORC
+Specify time interval and file type for nodal interface forces time history
+file output
+*DATABASE_NODFOR
+Specify time interval and file type for nodal force groups time history file
+output
+*DATABASE_NODOUT
+Specify time interval and file type for nodal point data time history file
+output
+*DATABASE_OPTION
+Control cards for all ASCII output
+*DATABASE_RBDOUT
+Specify time interval and file type for rigid body data time history file
+output.
+*DATABASE_RCFORC
+Specify time interval and file type for resultant interface forces time
+history file output.
+*DATABASE_RWFORC
+Specify time interval and file type for rigid wall forces time history file
+output.
+*DATABASE_SBTOUT
+Specify time interval and file type for Seat belt time history file output.
+*DATABASE_SECFORC
+Specify time interval and file type for cross section forces time history
+file output
+*DATABASE_SLEOUT
+Specify time interval and file type for sliding interface energy time history
+file output
+*DATABASE_SPCFORC
+Specify time interval and file type for SPC reaction forces time history file
+output
+*DATABASE_SPHOUT
+Specify time interval and file type for SPH element data time history file
+output
+*DATABASE_SPRING_FORWARD
+Create spring forward nodal force file.
+*DATABASE_SSSTAT
+Specify time interval and file type for Subsystem data time history file
+output
+*DATABASE_SUPERPLASTIC_FORMING
+Specify the output intervals to the superelastic forming output
+files.
+*DATABASE_SWFORC
+Specify time interval and file type for nodal constraint reaction forces time
+history file output
+*DATABASE_TPRINT
+Specify time interval and file type for thermal time history file output.
+Thermal output from a coupled structural/thermal or thermal only analysis.
+*DATABASE_TRACER
+Tracer particles will save a history of either a material point or a spatial
+point into an ASCII file, TRHIST.
+*DATABASE_TRHIST
+Tracer particle history information
+*INTERFACE_COMPENSATION_NEW
+Calculate the deviation of the part from its intended design of the stamped
+part and automatically compensate the tool to minimize the deviation, modify the
+trimming curve after the die modification, and automatically detect the undercut
+problem
+*STRESS_INITIALIZATION
+Allows all or selected parts to be initialized on restart, using data from
+the d3dump or runrsf database.
+*STRESS_INITIALIZATION_DISCRETE
+Initializes all discrete parts from the old parts.
+*STRESS_INITIALIZATION_SEATBELT
+Initializes all seatbelt parts from the old parts.
+Nastran
+Card
+Description
+ACMODL
+Defines modeling parameters for the interface between the fluid and the
+structure.
+AERO
+Gives basic aerodynamic parameters for unsteady aerodynamics.
+AEROS
+Defines basic parameters for static aeroelasticity.
+AUTOSPC
+Constrains stiffness singularities via m-sets or s-sets.
+B2GG
+Selects direct input damping matrix or matrices.
+B2PP
+Selects direct input damping matrix or matrices.
+BEGIN BULK
+Designates the end of the Case Control Section and/or the beginning of a Bulk
+Data Section. Note: When the model is created from HyperMesh ,
+this card is on by default.
+BULK-UNSUPPORTED_CARD
+Note: On import, all unsupported bulk data will be written into this card. You can
+edit the card.
+CASE-UNSUPPORTED_CARD
+Note: If CEND and SUBCASE exist, on import, all unsupported cards between CEND and
+the first SUBCASE will be written into this card. You can edit the card. If
+SUBCASE does not exist and BEGIN BULK exists, all unsupported cards between CEND
+and BEGIN BULK will be written into this card.
+CEND
+Note: When the model is created from HyperMesh , this card is on
+by default.
+DIAG
+Requests diagnostic output or special options.
+ECHO
+Bulk Data Echo Request
+ENDDATA
+Designates the end of the Bulk Data Section. Note: When the model is created
+from HyperMesh , this card is on by default.
+EXEC_UNSUPPORTED_CARDS
+Note: If CEND exists in the imported deck, on import, all unsupported cards before
+CEND will be written into this card. You can edit the card. If CEND does not
+exist, on import, all unsupported cards before BEGIN BULK will be written into
+this card.
+ERP
+Equivalent Radiated Power Panel Participation Factor Output Request
+FLSPOUT
+Control for fluid-structure mode participation output.
+FLUX
+Request gradient and flux output for all heat transfer analysis subcases or
+individual heat transfer analysis subcases respectively.
+GLOBAL
+GLOBAL CASE CONTROL
+GLOBAL OUTPUT REQUEST
+GRDSET
+Defines default options for fields 3, 7, 8, and 9 of all
+GRID entries
+IC
+ID
+Specifies a comment.
+INCLUDE_BULK
+Inserts an external file into the input file
+INCLUDE_CTRL
+Inserts an external file into the input file
+INCLUDE_EXEC
+Inserts an external file into the input file
+K2GG
+K2PP
+Selects direct input stiffness matrices, which are not included in normal
+modes
+M2GG
+Selects direct input mass matrix or matrices.
+MAXLINES
+Sets the maximum number of output lines. Note: The maximum number of lines is
+999999999 ( Nastran default).
+MONITOR_POINTS
+Defines an integrated load monitor point.
+NLMOPTS
+Specifies nonlinear material optional schemes in SOL 400. Extends to material
+options, property options including property mapping, boundary condition
+options.
+OMIT_BEGIN_BULK
+Note: By selecting this control card, you are forcing HyperMesh
+to not write BEGIN BULK CARD.
+OMIT_CEND
+Note: By selecting this control card, you are forcing HyperMesh
+to not write the CEND card.
+OMIT_END_BULK
+Note: By selecting this card, you are forcing HyperMesh to not
+write the END_BULK card.
+P2G
+Selects direct input load matrices.
+PARAM
+Specifies values for parameters. Note: On import, all unsupported PARAM cards
+are written into the UNSUPPORTED PARAMS block within PARAM CARD in the Control
+Cards panel. You can edit this data block.
+PRESSURE
+Pressure output request
+RADSET
+Specifies which radiation cavities are to be included for radiation enclosure
+analysis.
+RESTART
+Requests that data stored in a previous run be used in the current
+run.
+RESVEC
+Controls residual vectors
+RIGID
+Rigid Element Method
+SET CARD
+Defines a set of element or grid point numbers to be plotted. Note: Only real
+number sets can be created using control cards.
+SOL
+Specifies the solution sequence or main subDMAP to be executed.
+SUBTITLE
+Defines a subtitle that will appear on the second heading line of each page
+of printer output.
+SWLDPRM
+Overrides default values of parameters for CFAST, CWELD, and CSEAM
+connectivity search.
+TIME
+Sets the maximum CPU and I/O time.
+TITLE
+Defines a character string that will appear on the first heading line of each
+page of NX Nastran printer output.
+TSTEPNL
+Defines parameters for geometric nonlinear implicit dynamic analysis
+strategy.
+OptiStruct
+I/O Option Entries are supported as control cards when appearing before the first SUBCASE
+statement. In many cases, information supplied on these entries is overridden by repeated
+definitions within subcases.
+Card
+Description
+ACCELERATION
+Requests acceleration vector output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+ACMODL
+Defines model parameters for the fluid-structure
+interface. Note: Bulk Data Entry
+ANALYSIS
+Used in the I/O Options section to request that only
+a finite element analysis be performed (optimization input is ignored). It may also
+be used in the I/O Options or Subcase Information sections to identify the solution
+sequence for all subcases or for individual subcases, respectively. Note: Subcase Information Entry Supported as an output option on the
+subcase definition when it appears within a subcase.
+ASSIGN
+Used in the I/O Options section to identify external files
+and their contents. Note: I/O Options and Subcase Information Entry Supported as an output
+option on the subcase definition when it appears within a
+subcase.
+AUTOSPC
+Used to automatically constrain stiffness singularities
+and near singularities with single point constraints. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_CASE_CONTROL .
+B2GG
+Selects a direct input viscous damping matrix.
+Note: Subcase Information Entry Global matrix selectors.
+BULK_UNSUPPORTED_CARDS
+Note: If a line (not a continuation line) occurs after the BEGIN BULK statement in
+an input file and starts with a keyword that is not recognized or supported,
+then the entire card gets written to BULK_UNSUPPORTED_CARDS. It is also
+possible to manually define an unsupported OptiStruct card using the BULK_UNSUPPORTED_CARDS.
+BULK_UNSUPPORTED_CARDS are exported near the bottom of the exported
+OptiStruct input file, just before the
+ENDDATA statement.
+CFAILURE
+Requests failure index output for elements referencing
+PCOMP , PCOMPP or PCOMPG
+properties for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CFAILURE is supported for
+static analysis only.
+CHECK
+Requests that only a model check be performed. Note: I/O Options and Subcase Information Entry
+CMDE
+Used above the first SUBCASE or within a
+SUBCASE definition to request component modal synthesis damping
+energy output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CMKE
+Used above the first SUBCASE or within a
+SUBCASE definition to request component modal synthesis kinetic
+energy output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CMSE
+Used above the first SUBCASE or within a
+SUBCASE definition to request component modal synthesis strain
+energy output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CONTF
+Requests contact results output for all Nonlinear Analysis
+subcases or individual nonlinear analysis subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CONTPRM
+Defines the default properties of all contacts and sets
+parameters that affect all contacts. The default values set here can be overridden
+by values explicitly specified on PCONT ,
+PCONTX , and CONTACT cards. Note: Bulk Data Entry
+CSTRAIN
+Requests ply strain output for elements referencing
+PCOMP , PCOMPP or PCOMPG
+properties for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CSTRESS
+Requests ply stress output for elements referencing
+PCOMP , PCOMPP or PCOMPG
+properties for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+CTRL_UNSUPPORTED_CARDS
+Note: If a line (not a continuation line) occurs before the BEGIN BULK statement
+and before the first SUBCASE statement and starts with a keyword that is not
+recognized or supported, then the entire card gets written to
+CTRL_UNSUPPORTED_CARDS. It is also possible to manually define data cards
+appearing above the first SUBCASE statement using the
+CTRL_UNSUPPORTED_CARDS.
+CTRL_UNSUPPORTED_CARDS are exported near the top
+of the exported OptiStruct input file, just before
+the first SUBCASE statement.
+DAMAGE
+Requests fatigue damage results output for all fatigue
+subcases or individual fatigue subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+DEBUG
+Supports internal issues for debugging purposes in HyperMesh . Note: I/O Options and Subcase Information Entry Some special or custom
+features can be accessed through the use of 'debug, <string>, <real>'
+statements.
+DENSITY
+Requests density output for a topology
+optimization. Note: I/O Options and Subcase Information Entry
+DENSRES
+Controls the frequency of output of design results
+(density, shape, or thickness). Note: I/O Options Entry
+DESHIS
+Controls the creation of the optimization history file
+.hgdata . Note: I/O Options and Subcase Information Entry
+DESVARG
+Defines an override for design variable
+settings. Note: Bulk Data Entry
+DGLOBAL
+Defines input parameters required for the Global Search
+Option (GSO). Note: Bulk Data Entry
+DISPLACEMENT
+Requests displacement vector output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+DMIGNAME
+Defines the name given to the reduced matrices written
+to an external data file. Note: I/O Options and Subcase Information Entry
+DSA
+Requests Design Sensitivity Analysis results in a Frequency
+Response Analysis. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+DTI_UNITS
+Defines units for multibody, component mode synthesis
+(flexible-body preparation), and geometric nonlinear solution sequences. Note: Bulk Data Entry
+ECHO
+Outputs the interpreted forms of Subcase Information and
+Bulk Data Entries to the .out file. Note: I/O Options and Subcase Information Entry
+EDE
+Requests element energy loss per cycle and element energy
+loss per cycle density output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+EIGVNAME
+Defines the prefix to be used for external eigenvalue
+data files ( .eigv ). Note: I/O Options and Subcase Information Entry
+EKE
+Requests kinetic energy and kinetic energy density output for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+ELFORCE
+Requests structural element force output and elemental
+fluid particle velocity output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+ENERGY
+Requests energy output for all geometric nonlinear
+analysis subcases or individual geometric nonlinear analysis subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+ERP
+Requests equivalent radiated power output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+ESE
+Requests strain energy and strain energy density output for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+FLUX
+Requests temperature gradient and flux output for all
+steady-state heat transfer analysis subcases, transient heat transfer analysis
+subcases or individual heat transfer analysis subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+FORMAT
+Indicates the format in which results are to be
+output. Note: I/O Options Entry Formats are: H3D (default), HM, FLX, OPTI, OUTPUT2,
+PUNCH, PATRAN, APATRAN, NONE.
+FOS
+Requests fatigue factor of safety, hydrostatic pressure, and
+shear stress output for all fatigue subcases or individual fatigue
+subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+GAPPRM
+Defines parameters that control connectivity and
+configuration checks for gap elements ( CGAP and
+CGAPG ). Most of these parameters also affect contact elements
+that are automatically created on CONTACT interfaces. Note: Bulk Data Entry
+GLOBAL_CASE_CONTROL
+Handles the data selectors FREQ, METHOD, MPC, SDAMPING and SPC appearing
+above the first SUBCASE statement. It also handles the data
+selector DESVAR , used to select a set of design variables for
+use in an optimization run.
+It also handles the output control
+OMODES , used to define a set of modes for output requests.
+Note: This control card OMODES is also supported as an output option on the
+subcase definition when it appears within a subcase.
+GPFORCE
+Requests grid point force balance output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+GPSTRAIN
+Requests grid point strain output for all or individual
+subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST
+GPSTRESS
+Requests grid point stresses output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+GRDSET
+Defines default options for fields 3, 7, and 8 of all
+GRID entries. Note: Bulk Data Entry
+HISOUT
+Controls the amount of data printed to the
+.hgdata file. Note: I/O Options and Subcase Information Entry
+INCLUDE_BULK
+Note: This control card is retained to support old database files.
+INCLUDE_CTRL
+Note: This control card is retained to support old database files.
+INFILE
+Identifies the file containing the Bulk Data
+Entries. Note: I/O Options Entry Its extension must be
+. fem .
+K2GG
+Selects a direct input stiffness matrix. Note: Subcase Information Entry Global matrix selectors
+K2PP
+Selects a direct input stiffness matrix, which is not
+included in normal modes. Note: Subcase Information Entry Global matrix selectors
+K42GG
+Selects a direct input stiffness matrix. Note: Subcase Information Entry Global matrix selectors
+LIFE
+Requests output of fatigue life results for all fatigue
+subcases or individual fatigue subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+LOADLIB
+Defines the external libraries and external files to be
+loaded into OptiStruct . External functions can be
+implemented within dynamic libraries ( .dll ) under Windows,
+shared libraries ( .so ) under Linux ,
+by using HyperMath ( .hml ) on
+Windows and Linux , and external files by using Microsoft
+Excel ( .xls or .xlsx ) on
+Windows. Note: I/O Options and Subcase Information Entry
+M2GG
+Selects a direct input mass matrix. Note: Subcase Information Entry Global matrix selectors
+MBFORCE
+Requests force output for a set of joints and/or force
+elements from multibody dynamics subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+MODALDE
+Used above the first SUBCASE or within a SUBCASE
+definition to request modal damping energy (the energy loss per cycle) output for
+all subcases or individual subcases, respectively. Note that this modal damping
+energy only includes the energy contribution from viscous dampers. Structural
+damping and modal damping are not included. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+MODALKE
+Used above the first SUBCASE or within
+a SUBCASE definition to request modal kinetic energy output for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+MODALSE
+Used above the first SUBCASE or within
+a SUBCASE definition to request modal strain energy output for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+MODEL
+Requests output of only a subset of the model and related
+results for H3D and OUTPUT results files as
+well as for CMS superelements. Note: I/O Options and Subcase Information Entry This option is intended for
+multi-body dynamics and transient solution sequences with which users often
+require results for only a subsection of a model, but it is applied to all
+solution sequences.
+Model Documentation
+Note: $HMBEGINDOC and $HMENDDOC indicate a section of comment cards which are
+supported on import and export. The comments are stored on control card Model
+Documentation. This information is exported at the top of the exported
+OptiStruct input file.
+MPCFORCE
+Requests multi-point force of constraint vector is
+output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+MSGLMT
+Limits the number of ERROR, WARNING and INFORMATION
+messages output, or to elevate a WARNING or INFORMATION message to an
+ERROR. Note: I/O Options and Subcase Information Entry
+NLLOAD
+Used to request nonlinear load output for Transient
+Response Analysis for each time step for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+OFREQUENCY
+Requests a set of frequencies for output requests for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+OLOAD
+Requests the form of applied load vector output and
+temperature load output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+OSDIAG
+Note: Some special diagnostic information can be processed through the use of
+'osdiag, <integer>, <integer>, <real>, <real>' statements.
+OTIME
+Requests a set of times for output requests for Transient
+Analysis for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+OUTFILE
+Defines the prefix for the results files
+output. Note: I/O Options and Subcase Information Entry
+OUTPUT
+Controls the format of results output and the creation of
+certain results files. Note: I/O Options Entry
+P2G
+Used before the first subcase to select a direct input
+load matrix. Note: Subcase Information Entry Global matrix selectors
+PARAM
+Defines values for parameters used during analysis and
+optimization. Note: Bulk Data Entry If an unsupported argument is encountered on
+importing a PARAM card, the data is stored as UNSUPPORTED_PARAMS on the PARAM
+card. It is also possible to create an unsupported PARAM card using the
+UNSUPPORTED_PARAMS option.
+PEAKOUT
+Defines criteria used for the automatic identification of
+loading frequencies at which result peaks occur. Other result output may then be
+requested at these "peak" loading frequencies. This feature is only supported for
+frequency response solution sequences. Note: Bulk Data Entry
+PFGRID
+Requests output of acoustic grid participation factors for
+all Modal Frequency Response subcases. The output will be in the
+.h3d file. Note: I/O Options and Subcase Information Entry
+PFMODE
+Requests output of modal participation factors for all
+modal frequency response subcases. Note: I/O Options and Subcase Information Entry
+PFPANEL
+Requests output of acoustic panel participation factors
+for all Modal Frequency Response subcases. Note: I/O Options and Subcase Information Entry
+POWERFLOW
+Requests output of the power flow field. Note: I/O Options Entry Found under GLOBAL_OUPUT_REQUEST.
+PRESSURE
+Requests the output of pressure results. Analogous to
+the DISPLACEMENT command. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+PRETBOLT
+Requests output of pretension force/adjustment values in
+the pretension bolts for all pretensioning and pretensioned subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST.
+PROPERTY
+Requests the output of the property definitions used in
+the final iteration of an optimization. Note: I/O Options and Subcase Information Entry
+REQUEST
+Selects a multibody request definition to be used in a
+multibody problem. Note: I/O Options and Subcase Information Entry
+RESPRINT
+Rorces all unretained responses of a certain type to be
+printed to the output file, provided they are referenced either as an objective or a
+constraint. This also applies to manufacturing constraints for composites. Note: I/O Options and Subcase Information Entry
+RESTART
+Indicates that the current optimization is to be
+restarted from the final iteration of a previous optimization. Note: I/O Options and Subcase Information Entry
+RESULTS
+Determines the frequency of output of analysis results
+for all subcases or for individual subcases, respectively. Note: I/O Options Entry
+SACCELERATION
+Requests the form and type of modal participation
+accelerations output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST . Supported as an output option on
+the subcase definition when it appears within a subcase.
+SCREEN
+Controls the output of model, analysis, and optimization
+information to the UNIX or DOS shell. Note: I/O Options and Subcase Information Entry
+SDISPLACEMENT
+Requests the form and type of modal participation
+displacements output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST . Supported as an output option on
+the subcase definition when it appears within a subcase.
+SENSITIVITY
+Requests the output of the responses and
+sensitivities for size and shape design variables to a Microsoft Excel
+spreadsheet. Note: I/O Options and Subcase Information Entry
+SENSOUT
+Controls the frequency of output of responses and
+sensitivities for size and shape design variables to a Microsoft Excel
+spreadsheet. Note: I/O Options and Subcase Information Entry
+SHAPE
+Requests altered shape output for a shape
+optimization. Note: I/O Options and Subcase Information Entry
+SHRES
+Controls the frequency of output of the state files
+( .#.sh file and the .#.grid
+file). Note: I/O Options Entry
+SINTENS
+Used in the I/O Options section to request Sound
+Intensity output for all frequency response subcases. The SINTENS
+command can be used in the I/O Options or Subcase Information sections to request
+Sound Intensity output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+SPCFORCE
+Requests single-point force of constraint vector output
+for all subcases or individual subcases, respectively. Note: SPCFORCE I/O Options and Subcase Information Entry
+Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+SPL
+Requests Sound Pressure output for all subcases or individual
+subcases, respectively. SPL can only be requested for frequency
+response subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+SPOWER
+Requests Sound Power output for all subcases or individual
+subcases, respectively. SPOWER can only be requested for
+frequency response subcases. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+STRAIN
+Requests strain output for all subcases or individual
+subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+STRESS
+Requests stress output for all subcases or individual
+subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+SUBTITLE
+Defines the subtitle for all subcases or for individual
+subcases, respectively. Note: I/O Options and Subcase Information Entry Individual subcases may
+have their own SUBTITLE definitions which are supported on the subcase
+definition. These will override the default subtitle.
+SVELOCITY
+Requests the form and type of modal participation
+velocities output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+SWLDPRM
+Defines values of parameters used during the
+CWELD and CSEAM connectivity
+search. Note: Bulk Data Entry
+SYSSETTING
+Alters system settings. Any setting defined here may
+be over-ridden by command line arguments (Run Options). Most of these options can
+also be specified in one of the config files (Configuration File). Note: I/O Options Entry
+THERMAL
+Requests temperature output for all heat transfer
+analysis subcases or individual heat transfer analysis subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+THICKNESS
+Requests thickness output for elements referencing a
+PSHELL , PCOMP or PCOMPP
+properties in size/free-size optimization and analysis runs. Note: I/O Options and Subcase Information Entry
+THIN
+Requests thinning and thickness output for all geometric
+nonlinear analysis subcases or individual geometric nonlinear analysis subcases,
+respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+TITLE
+Defines the title for the OptiStruct job. Note: I/O Options and Subcase Information Entry
+TMPDIR
+Chooses the directory in which the scratch files are to be
+written. Note: I/O Options and Subcase Information Entry OptiStruct allows multiple TMPDIR entries, but only one
+instance is currently supported.
+UNITS
+Defines a system of units for the model. Note: I/O Options and Subcase Information Entry
+VELOCITY
+Requests velocity vector output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Found under
+GLOBAL_OUPUT_REQUEST .
+Supported as an output option
+on the subcase definition when it appears within a subcase.
+XSHLPRM
+Defines default shell element parameters for geometric
+nonlinear analysis. Note: Bulk Data Entry
+XSOLPRM
+Defines default SOLID properties for
+geometric nonlinear analysis. Note: Bulk Data Entry
+PAM-CRASH 2G
+Card
+Description
+AIRBAGCHECK
+Airbag check option (Prime Control keywords) AIRBAGCHECK is executed by
+default to check the airbag’s closed volume.
+ANALYSIS
+Analysis definition (Prime Control keywords) If AUTOSLEEP is not present
+inside the input file or AUTOSLEEP is not set to YES, the solver stops if the
+license tokens are not available at the beginning of the
+computation.
+AUTOSLEEP
+Autosleep option (Prime Control keywords)
+CCTRL /
+Contact Control Cards (Standard Control keywords)
+CKCTRL/
+Check Control Cards (Standard Control keywords)
+COUPLING
+Coupling (Optional Control keywords)
+DATACHECK
+Data Check option (Prime Control keywords)
+DCOMP
+DMP Domain Decomposition Method option (Prime Control keywords)
+DEBUG
+Debug option (Prime Control keywords)
+DRAPP
+Draping Database Path Name Definition (Standard Control keywords)
+DRAPF /
+Import Composite Layer Draping File Definition (Standard Control
+keywords)
+ECTRL /
+Element Control Cards (Standard Control keywords)
+EIGEN /
+Eigenmode Extraction and Damping Matrix Generation Analyses (Standard Control
+keywords)
+EOCTRL/
+ERF Control Cards (Standard Control keywords)
+ENDDATA
+End of Data option (General Model setup) Note: Cards after the ENDDATA card
+are ignored. This card is not created during FE input process, but it will be
+exported automatically.
+FILE
+File Root Name option (Prime Control keywords)
+FPCTRL/
+FPM Control Definition (Standard Control keywords)
+HEAT /
+Heat Analysis Control (Standard Control keywords)
+ICTRL /
+Implicit General Control Cards Definition (Standard Control keywords)
+INPUTVERSION
+Input Version Definition (Prime Control keywords)
+MAXMEMORY
+Maximum Memory Check option (Prime Control keywords)
+MERGEGAP
+Common Node Merge option (Prime Control keywords)
+METRIC/
+Metric Input Definition (Standard Control keywords)
+METRICCHECK
+Metric Check option (Prime Control keywords)
+MSTRM /
+Mass Trimming Definition (Standard Control keywords)
+OCTRL /
+Output Parameters Control Cards (Standard Control keywords)
+ORTHF /
+Import Element Orientation Definition (Standard Control keywords)
+ORTHP
+Element Orientation File Path Name Definition (Standard Control
+keywords)
+PFLOW /
+Porous Flow Analysis Definition (Standard Control keywords)
+PIPE
+Process Independent Parallel Execution (PIPE) option (Optional Control
+keywords)
+PRCTRL/
+Print Control Definition (Standard Control keywords)
+PROFILE_DMP
+DMP Profile Guided Domain Decomposition option (Prime Control
+keywords)
+LCTRL /
+Load Control Definition (Standard Control keywords)
+MCTRL /
+Metric Control Definition (Standard Control keywords)
+RESTARTFILES
+Cyclic Restart File option (Prime Control keywords)
+RUNEND/
+End of Run Definition (Standard Control keywords)
+SHELLCHECK
+Shell Element Data Check option (Prime Control keywords)
+SIGNAL
+Job Signal option (Prime Control keywords)
+SOLIDCHECK
+Solid Element Data Check option (Prime Control keywords)
+SOLVER
+Solver Selection option (Prime Control keywords)
+SPCTRL/
+Smoothed Particle Hydrodynamics (SPH) Control Cards (Standard Control
+keywords)
+STOPRUN
+Stop Run option (Prime Control keywords)
+SUBRUN
+Substructure Run option (Prime Control keywords)
+TCTRL /
+Time Step Definition (Standard Control keywords)
+TITLE /
+Title Card or Header on Output Listing Card (Standard Control
+keywords)
+UNIT
+Unit System Definition (Prime Control keywords)
+SECURE_NODE_VISU
+Secured Nodes Visualization option (PAM­COMFORT) (Optional Control
+keywords)
+$HMUNSUPPORTED CARDS
+Unsupported cards Note: All unsupported information found in the input deck is
+imported in this card. You can edit this card.
+$HMBEGINDOC $HMENDDOC
+Imported model documentation Note: The input deck can contain model
+documentation text that is imported and exported via the comment lines. For
+decks not written by HyperMesh, all comment lines before the first non-comment
+line are treated as model documentation. For decks written by HyperMesh, the
+documentation lines must be placed in a block that begins with the line
+$HMBEGINDOC and ends with the line $HMENDDOC. This card is always overwritten by
+the current model documentation.
+$HMBEGINDOC $HMENDDOC
+Model documentation Note: This card is not created during FE input process.
+You can create this card, but once this card is defined, only this will be
+exported. You can access macros from the PAM-CRASH solver interface to append or
+overwrite the information from Imported Model Documentation to this
+card.
+Permas
+Card
+Description
+$COMPONENT
+Component input bracket header line.
+$ECHO
+Controls the echo print of Permas data input
+lines.
+$MODDAMP
+Definition of viscous or structural modal damping. Note: This option is
+available in the SYSTEM card as a separate checkbox.
+$SYSTEM
+Opens the bracket for input of system data.
+Radioss
+Card
+Description
+/@TFILE
+The time at which the time history file begins. Note: Engine Keyword
+/@TFILE/Keyword2
+The time at which the time history file
+begins. Note: Engine Keyword
+/ABF
+Describes the output of .abf files.
+( .abf [binary] files are optimized for fast plotting of very
+large data sets and is intended for creating 2D and 3D plots using HyperGraph and HyperGraph
+3D). Note: Engine Keyword
+/ADMESH/GLOBAL
+Defines the global parameters for adaptive
+meshing. This keyword is not available for SPMD computation. Note: Block Format Keyword
+/ALE
+Sets parameters for DONEA grid velocity formulation of
+ALE. Note: Engine Keyword
+/ALE/2
+Sets parameters for Radioss grid
+velocity formulation for ALE. Note: Engine Keyword
+/ALE/3
+When this keyword is used instead of /ALE
+or /ALE/2 , no grid calculation is performed. Grid does not move,
+unless constrained otherwise. Note: Engine Keyword
+/ALE/4
+Sets the Radioss standard
+formulation. Note: Engine Keyword
+/ALE/GRID/DISP
+The displacement of a grid node depends on the
+displacements of the neighboring grid nodes. Note: Block Format Keyword
+/ALE/GRID/DONEA
+Velocity of a given grid node depends on
+velocity and displacements of neighboring grid nodes. Note: Block Format Keyword
+/ALE/GRID/SPRING
+Grid nodes are connected with nonlinear
+springs (those springs have no effect on the material, only on the movement of the
+grid). Note: Block Format Keyword
+/ALE/GRID/STANDARD
+Describes the standard formulation for ALE
+grid velocity computation. It is an improved /ALE/GRID/SPRING
+formulation based on edge springs and anti-shear springs. Note: Block Format Keyword
+/ALE/GRID/ZERO
+Describes the Euler formulation. Note: Block Format Keyword
+/ALESUB
+Subcycling on Lagrangian parts. Note: Engine Keyword
+/AMS
+Describes the part group on which the advanced mass
+scaling is applied. Note: Block Format Keyword
+/ANALY
+Defines the type of analysis and sets analysis
+flags. Note: Block Format Keyword
+/ANIM
+Generates animation files containing results according to the
+keywords specified. The keywords are specified in the topics within Animation and
+Post-processing Output Files. Note: Engine Keyword
+/ANIM/BRICK/TENS
+Generates animation files containing tensor data (mean value or value in
+specified integration point) for brick elements, in global coordinate
+system. Note: Engine Keyword
+/ANIM/BRICK/TENS/STRAIN
+Generates animation files containing strain tensor for a specified integration
+point of a solid, in global coordinate system. Note: Engine Keyword
+/ANIM/BRICK/TENS/STRESS
+Generates animation files containing stress tensor for a specified integration
+point of a solid, in global coordinate system. Note: Engine Keyword
+/ANIM/CUT/1
+Defines a section cut on a deformed geometry. Note: Engine Keyword
+/ANIM/CUT/2
+Defines a section cut on the initial geometry. Note: Engine Keyword
+/ANIM/CUT/3
+Defines a section cut on a deformed geometry using three nodes. Note: Engine Keyword
+/ANIM/DT
+Write animation files (A-files) at a time frequency equal to
+T freq , the first file being
+written at time T .
+The animation file name will be RunnameAnnn , where
+Runname is the Run Name and nnn is the
+file number. Note: Engine Keyword
+/ANIM/Eltyp/FORC
+Generates animation files containing force and moment data for the specified
+element type. Note: Engine Keyword
+/ANIM/Eltyp/Restype
+Generates animation files containing element data for the specified
+result. Note: Engine Keyword
+/ANIM/GPS1
+Generates animation files containing simple average GPS data. The average value
+at node is calculated by the mean stress of all elements, which are connected to
+this node. Note: Engine Keyword
+/ANIM/GPS2
+Generates animation files containing volume based averaged GPS data, which is
+done by the relative element volumes (connected to same node use
+Vi/V_total). Note: Engine Keyword
+/ANIM/GZIP
+Generates animation files in GZIP format. Note: Engine Keyword
+/ANIM/KEEPD
+In animation files, keep deleted elements in their original part; otherwise
+group all deleted elements in an extra part (named "deleted elements"). Note: Engine Keyword
+/ANIM/LSENSOR
+Write additional animation files (Animation Output File
+(A-File)) at a time frequency equal to
+T freq , the first file being
+written at sensor activation time. The sensor activation time is given by the sensor
+property set sens_ID N . Note: Engine Keyword
+/ANIM/MASS
+Generates animation files containing nodal masses. Note: Engine Keyword
+/ANIM/MAT
+Generates animation files with one part for each material. Note: Engine Keyword
+/ANIM/NODA
+Generates animation files containing nodal scalar data. Note: Engine Keyword
+/ANIM/SENSOR
+Write additional animation files (Animation Output File
+(A-File)) with a time frequency equal to
+T freq , the first file being
+written once sensor activated. (The activation of sensor will be defined in
+/SENSOR ). Note: Engine Keyword
+/ANIM/SHELL/EPSP
+Generates animation files containing plastic strain as function of a shell
+element integration point. Note: Engine Keyword
+/ANIM/SHELL/PHI/ALL
+Animation output of the angle between the element
+skew and direction 1 orthotropy for all layers. Note: Engine Keyword
+/ANIM/SHELL/PHI/N
+Animation output of the angle between the element
+skew and direction 1 orthotropy for layer N. Note: Engine Keyword
+/ANIM/SHELL/TENS
+Generates animation files containing shell tensor data for a specified
+result. Note: Engine Keyword
+/ANIM/SHELL/USRi
+Generates animation files containing shell element data for variables of user
+law on each integration point. Note: Engine Keyword
+/ANIM/VECT
+Generates animation files containing vectorial data for the specified
+variable. Note: Engine Keyword
+/ANIM/VECT/FREAC
+Generates animation files containing vectorial data for reaction forces of
+imposed velocities, displacements, accelerations and boundary conditions. Note: Engine Keyword
+/ANIM/VERS
+Generates animation files in Radioss environment post-processing formats 41 and
+44. Note: Engine Keyword
+/ARCH
+Describes the architecture flag. Note: Block Format Keyword
+/ATFILE
+Defines the frequency of writing additional time history file
+of T-file " RunnameTnnx ". Note: Engine Keyword
+/BCS/ALE
+Given node numbers will be constrained in specified
+directions X, Y or Z for grid DOF: Ω = 0. Note: Engine Keyword
+/BCS/LAG
+Given node numbers will be lagrangian in specified
+directions X, Y or Z: V = W. Note: Engine Keyword
+/BCS/ROT
+Given node numbers will be constrained in specified
+directions X, Y or Z for rotational DOF: Ω = 0. Note: Engine Keyword
+/BCS/TRA
+Given node numbers will be constrained in specified
+directions X, Y or Z for material translational DOF: V = 0. Note: Engine Keyword
+/BCSR/ALE
+Given node numbers will be released in specified directions
+X, Y or Z for grid DOF. Note: Engine Keyword
+/BCSR/LAG
+Given node numbers will no longer be lagrangian in
+specified directions X, Y or Z. Note: Engine Keyword
+/BCSR/ROT
+Given node numbers will be released in specified directions
+X, Y or Z for material translational DOF. Note: Engine Keyword
+/BCSR/TRA
+Given node numbers will be released in specified directions
+X, Y or Z for material translational DOF. Note: Engine Keyword
+/BEGIN
+Sets the run name, the version of the input manual, the
+number of starter run and input and work unit systems. Note: Block Format Keyword
+/CAA
+Describes the computation Aero-Acoustic formulation for
+Eulerian or quasi-Eulerian simulations. Internal forces are computed with finite
+volume formulation. It improves results for under integrated elements. By default
+artificial viscosity is canceled, (qa,qb) default values are zero. Note: Block Format Keyword
+/DAMP
+Defines the Rayleigh mass and stiffness damping
+coefficients applied to a set of nodes. The damping can be applied to any nodal DOF
+either in local or global coordinate system. Note: Block Format Keyword
+/DEF_SHELL
+Sets default values for certain parameters in shell
+property ( /PROP/SHELL ). Note: Block Format Keyword
+/DEF_SOLID
+Sets default values for certain parameters in solid
+property ( /PROP/TYPE14 (SOLID) and /PROP/TYPE20
+(TSHELL)) . Note: Block Format Keyword
+/DEL
+Delete element numbers N 1 , N 2 , . . .,
+N N . Note: Engine Keyword
+/DEL/Eltyp/1
+Delete element numbers N 1 first to
+N 1 last , . . ., N I first to
+N I last . Note: Engine Keyword
+/DEL/INTER
+Delete interface numbers N 1 , N 2 , . . .,
+N N . Note: Engine Keyword
+/DELINT
+If a slave node is only connected to 2D solid elements that are all deleted, the
+node is deactivated from the interface. Note: Engine Keyword
+/DT
+Time step defaults for all elements. Note: Engine Keyword
+/DT/AMS
+Elementary time step for Advanced Mass Scaling. Note: Engine Keyword
+/DT/Eltyp/Iflag
+Time step for select entities. Note: Engine Keyword
+/DT/Eltyp/Keyword3/Iflag
+Element time step control. Note: Engine Keyword
+/DT/NODA/Keyword3
+Nodal time step control. Note: Engine Keyword
+/DT/SHELL
+The time step for shell elements using
+/DT1 is lower but more accurate. Otherwise, this option is
+identical to /DT1/SHELL . Note: Engine Keyword
+/DT/SHNOD or /DT/SHNOD/CST
+Time step for shells. Note: Engine Keyword
+/DT/SPHCEL
+Generates the SPH cells time step. Note: Engine Keyword
+/DT/SPHCEL/Keyword3
+Generates the SPH cells time step control type. Note: Engine Keyword
+/DT/THERM
+Time step for thermal modeling. Note: Engine Keyword
+/DT1/SHELL
+The time step for shell elements using /DT1 is lower, but
+more accurate. Otherwise, this option is identical to
+/DT/SHELL . Note: Engine Keyword
+/DTIX
+Sets initial and maximum time step for this run. Note: Engine Keyword
+/DTSDE
+The time step for degenerated or PENTA6 solid elements using this option is
+higher (almost factor 2). Note: Engine Keyword
+/DYREL
+Dynamic relaxation. Note: Engine Keyword
+/DYREL/1
+Dynamic relaxation applied to node group identifier grnd_ID . Note: Engine Keyword
+/END/ENGINE
+This keyword has to be set at the end of the Engine input deck when using Single
+File Input. Note: Engine Keyword
+/FVMBAG/MODIF
+Activates FVM airbag merging parameter modifications in Engine file. Note: Engine Keyword
+/FXINP
+Generates input files for flexible bodies from eigenmodes and static modes
+computation. Note: Engine Keyword
+/IMPL
+Keywords used for implicit solution. Different implicit solver methods (linear,
+nonlinear, buckling or quasi-static), different options to control the implicit
+computation, different implicit time step method and implicit output messages are
+introduced. Note: Engine Keyword
+/IMPL/AUTOSPC
+A zero stiffness DOF will be constrained automatically. Note: Engine Keyword
+/IMPL/BUCKL/1
+Euler buckling modes will be computed. Note: Engine Keyword
+/IMPL/BUCKL/2
+Euler buckling modes will be computed based on actual pre-stress stat. Note: Engine Keyword
+/IMPL/CHECK
+Implicit model checking will be run. Note: Engine Keyword
+/IMPL/DIVERG/n
+Divergence criterion with successive increasing residual number for nonlinear
+analysis. Note: Engine Keyword
+/IMPL/DT/1
+Implicit time step control method 1. Note: Engine Keyword
+/IMPL/DT/2
+Implicit automatic time step control method 2. Note: Engine Keyword
+/IMPL/DT/3
+Implicit automatic time step control with Riks method. Note: Engine Keyword
+/IMPL/DT/FIXPOINT
+Users' input fix time points where implicit nonlinear computation will not miss
+with automatic time step control. Note: Engine Keyword
+/IMPL/DT/STOP
+The computation will be stopped, if
+DT_min is reached. If DT_max is reached, the
+computation will continue with constant time step set as
+DT_max . Note: Engine Keyword
+/IMPL/DTINI
+Initial time step for nonlinear implicit analysis. Note: Engine Keyword
+/IMPL/DYNA/1
+Describes the implicit dynamics with α-HHT method. Note: Engine Keyword
+/IMPL/DYNA/2
+Describes the implicit dynamics with a general Newmark method. Note: Engine Keyword
+/IMPL/DYNA/DAMP
+Rayleigh structure damping with dynamic implicit analysis. Note: Engine Keyword
+/IMPL/DYNA/FSI
+Defines the settings for Fluid Structure Interaction Analysis with AcuSolve . Note: Engine Keyword
+/IMPL/GSTIF/OFF
+Geometrical stiffness matrix will not be used for implicit nonlinear
+calculation. Note: Engine Keyword
+/IMPL/INTER/KCOMP
+Describes the stiffness matrix; due to contact
+interfaces will be assembled completely. Note: Engine Keyword
+/IMPL/INTER/KNONL
+Defines including some contact nonlinearities in PCG linear solver. Note: Engine Keyword
+/IMPL/LBFGS/L
+Change the maximum number of BFGS quasi-Newton method for implicit
+nonlinear. Note: Engine Keyword
+/IMPL/LINEAR
+Linear implicit solution will be computed. Note: Engine Keyword
+/IMPL/LINEAR/INTER
+Implicit linear analysis will take into account contact interfaces. Note: Engine Keyword
+/IMPL/LRIGROT
+Due to some linearization used in geometrical nonlinear analysis, small time
+step has to be chosen to avoid accumulated errors under large rotation. In this
+case, this option improves the accuracy using usual time step. Note: Engine Keyword
+/IMPL/LSEARCH/n
+Line search methods for nonlinear analysis. Note: Engine Keyword
+/IMPL/LSEARCH/OFF
+Deactivating line search for nonlinear analysis. Note: Engine Keyword
+/IMPL/MONVOL/OFF
+Describes the stiffness of gas in monitored volume type 3 (tire
+modeling). Note: Engine Keyword
+/IMPL/NCYCLE/STOP
+The computation will be stopped, if
+Ncy_max is reached. Note: Engine Keyword
+/IMPL/NONLIN
+Nonlinear implicit methods. Note: Engine Keyword
+/IMPL/NONLIN/SMDISP
+Only small displacement effects will be considered with this option. Note: Engine Keyword
+/IMPL/PREPAT
+Describes the implicit option for pre-conditioning. Note: Engine Keyword
+/IMPL/PRINT/LINEAR
+Printout frequency for linear solvers. Note: Engine Keyword
+/IMPL/PRINT/NONLIN
+Printout frequency for nonlinear implicit iterations. Note: Engine Keyword
+/IMPL/PSTIF/OFF
+Deactivating load (pressure) stiffness matrix. Note: Engine Keyword
+/IMPL/QSTAT
+Quasi-static implicit solution will be computed. Note: Engine Keyword
+/IMPL/QSTAT/DTSCAL
+Quasi-static implicit solution with a factor for inertia stiffness
+matrix. Note: Engine Keyword
+/IMPL/RREF/INTERF/n
+Different reference force residual computations used for stop criteria on
+nonlinear analysis with contact. Note: Engine Keyword
+/IMPL/RREF/LIMIT
+Define reference force residual limit values used in stop criteria for implicit
+nonlinear. Note: Engine Keyword
+/IMPL/RREF/OFF
+Deactivation reference residual option and using the previous one in stop
+criteria for implicit nonlinear analysis. Note: Engine Keyword
+/IMPL/SBCS/MSGLV
+Describes the message level for BCS (Boeing) solver. Note: Engine Keyword
+/IMPL/SBCS/ORDER
+Reordering method definition for BCS. Note: Engine Keyword
+/IMPL/SBCS/OUTCORE
+BCS solver will use minimum in-core memory. Note: Engine Keyword
+/IMPL/SHPOFF
+The full projection of QEPH shell element for warped elements will be
+deactivated to keep consistency between the stiffness matrix and the internal force
+computations. Note: Engine Keyword
+/IMPL/SHPON
+The full projection of QEPH shell element for warped elements will be activated
+for stiffness matrix to keep consistency with the internal force
+computations. Note: Engine Keyword
+/IMPL/SINIT
+Describes the initial stresses that will be imposed gradually. Note: Engine Keyword
+/IMPL/SOLVER
+Selects linear solver. Note: Engine Keyword
+/IMPL/SPRBACK
+Implicit spring-back will be run in this session. Note: Engine Keyword
+/IMPL/SPRING
+Describes the linear or nonlinear stiffness choices for nonlinear spring in
+implicit nonlinear analysis. Note: Engine Keyword
+/IMPLICIT
+Allows different default values which are suitable
+for implicit calculations. Note: Block Format Keyword
+/INCMP
+Quasi-incompressible formulation for fluid material
+(compatible with /MAT/LAW6 and
+/MAT/LAW11 ). Note: Engine Keyword
+/INISTA
+Describes the initial state file. Note: Block Format Keyword
+/INIV/AXIS/Keyword3
+Initialize rotational velocity about an axis and
+translational velocity. Note: Engine Keyword
+/INIV/AXIS/Keyword3/1
+Initialize rotational velocity about an axis
+and translational velocity. Note: Engine Keyword
+/INIV/ROT
+Initialize rotational velocity in the specified direction
+X, Y or Z. Note: Engine Keyword
+/INIV/ROT/Keyword3/1
+Initialize rotational velocity in the specified
+direction X, Y or Z. Note: Engine Keyword
+/INIV/TRA
+Initialize translational velocity in the specified
+direction X, Y or Z. Note: Engine Keyword
+/INIV/TRA/Keyword3/1
+Initialize translational velocity in the
+specified direction X, Y or Z. Note: Engine Keyword
+/INTER
+Describes an interface. Note: Engine Keyword
+/IOFLAG
+Describes the input-output flags. Note: Block Format Keyword
+/KEREL
+Kinetic energy relaxation. Note: Engine Keyword
+/KEREL/1
+Kinetic energy relaxation applied to node group grnd_ID . Note: Engine Keyword
+/KILL
+The Engine is stopped if one of the following criteria is
+exceeded. Note: Engine Keyword
+/MADYMO
+Activates MADYMO - Radioss coupling. Note: Engine Keyword
+/MEMORY
+Describes the memory request. Note: Engine Keyword
+/MON
+Provides an estimation of the CPU time spent for each
+processor. Note: Engine Keyword
+/OUTP
+Write ASCII formatted output
+files. Note: Engine Keyword
+/OUTP/LSENSOR
+An outp file is written each time
+a sensor in the defined list is activated. Note: Engine Keyword
+/PARITH
+Turns the parallel arithmetic ON/OFF. Note: Engine Keyword
+/PRINT
+Sets printout frequency for output file. Note: Engine Keyword
+/RAD2RAD/ON
+To activate Multi-Domain coupling, Radioss Engine Input file must contain the following
+directive. Note: Engine Keyword
+/RANDOM
+Describes the nodal random noise to check stability of
+model by introducing random noise on nodal coordinates. Note: Block Format Keyword
+/RBODY
+Listed rigid bodies will be activated or
+deactivated. Note: Engine Keyword
+/RERUN
+Permits to continue a previous Radioss run. Note: Engine Keyword
+/RFILE
+Writes a Restart R-File. Note: Engine Keyword
+/RFILE/n
+Rewrites a Restart R-File. Note: Engine Keyword
+/RUN
+Identifies the run number. Note: Engine Keyword
+/RUN/Run Name/Run Number/Restart Letter
+Identifies the run
+number. Note: Engine Keyword
+/SHSUB
+Enables you to activate new sub-cycling option, for which
+I subcycle = 2 in
+the /ANALY
+Radioss Starter option should be specified. Note: Engine Keyword
+/SHVER/V51
+The new large rotational body motion formulation for QEPH,
+QBAT and DKT18 will be deactivated. Note: Engine Keyword
+/SPHGLO
+Describes the SPH global parameters. Note: Block Format Keyword
+/SPMD
+Sets SPMD parameters for Hybrid Massively Parallel
+Program (HMPP) computation. Note: Block Format Keyword
+/STAMPING
+Allows adapting error messages to stamping
+applications. Note: Block Format Keyword
+/STATE/BRICK/AUX/FULL
+Describes the internal variable state for solid. Note: Engine Keyword
+/STATE/BRICK/ORTHO
+Describes orthotropy direction for orthotropic solid or thick shells. Note: Engine Keyword
+/STATE/BRICK/STAIN/FULL
+Describes the strain state for solid. Note: Engine Keyword
+/STATE/BRICK/STRAIN/GLOBFULL
+Describes the strain state for solid in global reference system. Note: Engine Keyword
+/STATE/BRICK/STRES/FULL
+Describes the stress state for solid. Note: Engine Keyword
+/STATE/BRICK/STRESS/GLOBFULL
+Describes the stress state for solid in global reference system. Note: Engine Keyword
+/STATE/DT
+Writes the state file. Note: Engine Keyword
+/STATE/NODE/TEMP
+Describes the temperature for nodes. Note: Engine Keyword
+/STATE/LSENSOR
+A state file is written each time a sensor in the defined list is
+activated. Note: Engine Keyword
+/STATE/SHELL/AUX/FULL
+Describes the internal variable state for solid. Note: Engine Keyword
+/STATE/SHELL/EPSP/FULL
+Describes the Epsilon plastic state for shell. Note: Engine Keyword
+/STATE/SHELL/ORTHL
+Describes the orthotropy direction for shell. Note: Engine Keyword
+/STATE/SHELL/STRAIN/FULL
+Describes the strain state for shell. Note: Engine Keyword
+/STATE/SHELL/STRESS/FULL
+Describes the stress state for shell. Note: Engine Keyword
+/STATE/STR_FILE
+When writing the state file, /INISHE ,
+/INISH3 and /INIBRI will be written in a
+separate file which can be asked for being compressed (using GZIP) or not. The state
+file will then resume to the nodes coordinates and element connectivity. Note: Engine Keyword
+/STOP
+The Engine is stopped, due to reached energy error ratio criteria, total mass
+ratio criteria or nodal mass ratio criteria. Note: Engine Keyword
+/TFILE
+Defines the frequency of writing the time history file of
+T-file " RunnameTnn ".
+/TH/VERS
+Generates the Time History files in Radioss
+environment post-processing format "Version Number". Note: Engine Keyword
+/TITLE
+Input a title. Note: Engine Keyword
+/UNIT
+Defines a local unit system for the keywords listed
+below. Note: Block Format Keyword
+/UPWIND
+Describes the upwind coefficient. Note: Block Format Keyword
+/UPWM/SUPG
+Streamline Upwind Petrov Galerkin formulation. Note: Engine Keyword
+/UPWM/TG
+Describes the Taylor Galerkin method for momentum advection.
+This method is not available with multi-material LAW51
+( /MAT/MULTIMAT ). Note: Engine Keyword
+/VEL/ALE
+With ALE links on grid velocities, given nodes are linked to the given master
+grid velocities. You can specify direction or a combination of directions. Note: Engine Keyword
+/VEL/ROT
+Given node numbers have the same rotational velocity in a specified direction X,
+Y or Z. Note: Engine Keyword
+/VEL/TRA
+Given node numbers have the same velocity in a specified direction X, Y or Z for
+material translational DOF. Note: Engine Keyword
+/VERS
+Identifies the input data version number. Note: Engine Keyword
+Samcef
+Card
+Description
+BOLT_OUTPUT
+Defines the output code definitions for all .BOLT defined in the
+model.
+UNIT
+Defines the unit used to set up the model. Note: This control card is
+mandatory when beams are being defined in a model.
+UNSUPPORTED_CARDS
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

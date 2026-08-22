@@ -1,0 +1,230 @@
+Symmetries
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Symmetries
+Symmetry entities define planes of symmetry within a model so that morphs can be applied in a symmetric fashion.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Domains
+Domain entities divide the model into different domains during morphing.
+Handles
+Handle entities control the shape of domains during morphing.
+Morph Constraints
+Morph constraint entities restrict the movements of nodes or force compliance with dimensional requirements during morphing.
+Morph Volumes
+Morph volume entities are highly deformable six-sided prisms which surround a portion of the FE mesh, and can be used
+to manipulate a mesh by manipulating the shape of the morph volume.
+Shapes
+Shape entities are collections of handle and/or node perturbations from the initial configuration of the FE mesh before
+morphing.
+Symmetries
+Symmetry entities define planes of symmetry within a model so that morphs can be applied in a symmetric fashion.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Symmetries
+Symmetry entities define planes of symmetry within a model so that morphs can be applied in a symmetric fashion.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Symmetries
+Symmetry entities define planes of symmetry within a model so that morphs can be
+applied in a symmetric fashion.
+Symmetries do not have an active or export state.
+There are two basic symmetry groups: reflective and non-reflective. Symmetries can be
+combined, but you must be careful not to create confusing symmetrical arrangements.
+Symmetries can also be applied to unconnected domains. In this case, the symmetric handle
+linking works the same as that for connected domains, but the influences between handles and
+nodes for non-reflective symmetries do not extend across to all domains.
+Reflelctive Symmetires
+Reflective symmetries link handles in a symmetric fashion so that the movements of one
+handle will be reflected and applied to the symmetric handles. You can also use reflective
+symmetries to reflect morphs performed on domains when using the alter dimensions.
+Reflective symmetries are one plane, two plane, three plane, and cyclical.
+One Plane
+A mirror is placed at the origin perpendicular to the selected axis (default =
+x-axis).
+Two Plane
+Two mirrors are placed at the origin perpendicular to the selected axis and the
+subsequent axis (that is x and y, y and z, z and x) (default = x and y-axis).
+Three Plane
+Three mirrors are placed at the origin perpendicular to all three axes.
+Cyclical
+Two mirrors are placed along the selected axis (default = z-axis) and running
+through the origin with a given angle in between that is a factor of 360. The result
+is a wedge that is reflected a certain number of times about the selected axis.
+Reflective symmetries can be defined as either unilateral or multilateral and either
+approximate or enforced.
+Unilateral Symmetries
+One side governs the other, but not vice versa.
+For example, handles created and morphs applied to handles on the positive side of
+the symmetry are reflected onto the other side or sides of the symmetry, but handles
+created or morphs applied to handles on the other side or sides of the symmetry are
+not reflected.
+Multilateral Symmetries
+All sides govern all other sides.
+For example, a handle created or a morph applied to a handle on any side is
+reflected to all the other sides.
+Approximate Symmetries
+Contain handles that are not symmetric to other handles. This option is best for
+asymmetrical, but similar, domains or for a cyclical symmetry applied to a mesh that
+sweeps through an arc but not a full circle.
+For example, handles created on any side of the symmetry are not reflected to the
+other sides.
+Enforced Symmetries
+Cannot contain handles that are not symmetric on all other sides.
+For example, handles created or deleted on any side of the symmetry are created or
+deleted on the other sides so that the symmetry is maintained. When a reflective
+symmetry is created with the enforced option, additional handles may also be created
+to meet the enforcement requirements.
+Note: Handles created due to the enforced symmety may not be located on any mesh,
+however, they will always be assigned to the nearest domain and will affect nodes in
+that domain.
+Non-Reflective Symmetries
+Non-reflective symmetries change the way that handles influence nodes as well as link the
+symmetric handles so that the movement of one affects the others.
+The handles for a domain with non-reflective symmetry will act as if they are the shape of
+the symmetry type. For instance, a domain with linear symmetry causes handle movements to
+act on the domain as if the handle was a line in the direction of the x-axis. A domain with
+circular symmetry causes handle movements to act on the domain as if the handle was a circle
+centered around the z-axis. The edges of a domain affect how influences between handles and
+nodes are calculated. Non-reflective symmetries work best for domains that are shaped like
+the symmetry type and have a regular mesh. For example, a circular symmetry works best for a
+round domain with a concentric mesh.
+Non-reflective symmetries are linear, circular, planar, radial 2D, cylindrical, radial +
+linear, radial 3D, and spherical.
+Linear
+Handle acts as a line drawn through the handle location parallel to the selected
+axis (default = x-axis).
+Circular
+Handle acts as a circle drawn through the handle position about the selected axis
+(default = z-axis).
+Planar
+Handle acts as a plane drawn through the handle location perpendicular to the
+selected axis (default = x-axis).
+Radial 2D
+Handle acts as a ray drawn through the handle position originating from and
+extending perpendicular to the selected axis (default = z-axis).
+Cylindrical
+Handle acts as a cylinder drawn through the handle position about the selected axis
+(default = z-axis).
+Radial + Linear
+Handle acts as a plane drawn through the handle position extending from the selected
+axis (default = z-axis).
+Radial 3D
+Handle acts as a ray drawn through the handle position originating from origin.
+Spherical
+Handle acts as a sphere drawn through the handle position centered on the
+origin.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

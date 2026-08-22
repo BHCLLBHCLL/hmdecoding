@@ -1,0 +1,200 @@
+Supported AcuSolve Entities
+HyperMesh Help Manual
+Home
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+AcuSolve Interface
+Overview of the AcuSolve interface.
+Supported AcuSolve Entities
+Entities used to set up a case to run a CFD analysis using AcuSolve .
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Current Supported Versions
+Currently supported solver interface versions.
+Change Solver Interfaces
+Load a different solver interface in HyperMesh .
+Types of Interfacing
+HyperMesh uses three types of external interfacing.
+Abaqus Interface
+Overview of the Abaqus Interface.
+Actran Interface
+Overview of the Actran interface.
+AcuSolve Interface
+Overview of the AcuSolve interface.
+Supported AcuSolve Entities
+Entities used to set up a case to run a CFD analysis using AcuSolve .
+Solver Job Launcher
+The Solver Job Launcher enables you to execute AcuSolve jobs directly from Engineering Solutions.
+AcuSolve Set Up Features
+The following AcuSolve set up features are supported in Engineering Solutions via the Solver Browser .
+Set Up an AcuSolve Input Deck
+The following section describes the set up of an AcuSolve input deck within Engineering Solutions.
+ANSYS Interface
+Overview of the ANSYS interface.
+EXODUS Interface
+Overview of the EXODUS interface.
+Feko Interface
+The Feko interface provides a pre-processing environment for preparing and editing Feko mesh element and material data.
+LS-DYNA Interface
+Overview of the LS-DYNA interface.
+MADYMO Interface
+Overview of the MADYMO interface.
+Marc Interface
+Overview of the Marc interface.
+Nastran Interface
+Overview of the Nastran interface.
+PAM-CRASH 2G Interface
+Overview of the PAM-CRASH 2G interface.
+Permas Solver Interface
+Overview of the Permas interface.
+OptiStruct Interface
+Overview of the OptiStruct interface.
+Radioss Interface
+Overview of the Radioss interface.
+Samcef Interface
+Overview of the Samcef interface.
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+AcuSolve Interface
+Overview of the AcuSolve interface.
+Supported AcuSolve Entities
+Entities used to set up a case to run a CFD analysis using AcuSolve .
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Supported AcuSolve Entities
+Entities used to set up a case to run a CFD analysis using AcuSolve .
+Global
+Contains the physical description of the case, for example,
+laminar/turbulent and numerical parameters, such as convergence
+tolerance.
+Output
+Define the frequency of different outputs: Derived Quantity Output,
+Nodal Output and Restart Output.
+Volumes
+Components with Fluid and Solid card images are grouped in this folder.
+Surfaces
+Components with Inflow, Outflow, Wall, Slip, Symmetry and Far Field card
+images are grouped in this folder.
+Components With No Card Image
+Components with no card image will not be
+exported with the solver deck. By default, all of the components will
+not have a card image . You have to choose the
+appropriate card image for the component and the
+component will be moved to the Surfaces or Volumes folder accordingly.
+Nodal Boundary Condition
+Define boundary conditions on nodes apart from surface boundary
+conditions.
+Materials
+Contains material definitions.
+Body Force
+Define gravity and heat source for volume components.
+Periodic Boundary Condition
+Define periodic or axisymmetric boundaries along with the transformation
+definition.
+Reference Frame
+Define rotational reference frame for the model.
+Mesh Motion
+Define translation and rotation for the mesh.
+Emissivity Model
+Define emissivity model for radiation surface.
+Multiplier Function
+Define multiplier functions (Constant, Piecewise Linear, Cubic Spline,
+Piecewise Log Linear) and utilize multiplier functions to ramp up
+supported parameters, for example angular velocities of reference
+frame.
+Parameters
+Parameters can be utilized to run solver parameter based studies.
+For example, if you want to run a series of simulations with inlet
+velocity values of 0.5 m/s, 0.75 m/s, 1 m/s respectively, you can define
+a parameter on inlet velocity with the desired values. Using the
+HyperStudy Job Launcher DOE studies can be
+performed.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

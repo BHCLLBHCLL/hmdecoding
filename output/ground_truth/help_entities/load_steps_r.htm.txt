@@ -1,0 +1,627 @@
+Load Steps
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Load steps are defined by selecting associated load collectors and output blocks.
+Abaqus Cards
+A load step corresponds to a *STEP definition in Abaqus model
+history. Load collectors, output blocks and groups within a load step are exported under the
+corresponding *STEP block in the Abaqus input deck.
+Card
+Description
+*ADAPTIVE MESH
+Defines an adaptive mesh domain and specifies the frequency and intensity of
+adaptive meshing for that domain. Note: Defined in the load step card image .
+*BUCKLE
+Obtain eigenvalue buckling estimates. Note: Defined in the load step card image .
+*BULK VISCOSITY (Explicit)
+Modify bulk viscosity parameters. Note: History data.
+*COUPLED TEMP-DISPLACEMENT
+Analyze problems where the simultaneous solution of the temperature and
+stress/displacement fields are necessary. Note: Defined in the load step card image .
+*DYNAMIC (Explicit)
+Dynamic stress/displacement analysis. Note: Defined in the load step card image .
+*DYNAMIC (Standard)
+Dynamic stress/displacement analysis. Note: Defined in the load step card image .
+*FILE FORMAT
+Specify format for results file output and invoke zero-increment results file
+output. Note: Defined in the load step card image .
+*FREQUENCY
+Extract natural frequencies and modal vectors. Note: Defined in the load step
+card image .
+*GEOSTATIC
+Verify that the geostatic stress field is in equilibrium with the applied
+loads and boundary conditions on the model and to iterate, if needed, to obtain
+equilibrium.
+*HEAT TRANSFER
+Transient or steady-state uncoupled heat transfer analysis. Note: Defined in
+the load step card image .
+*LOAD CASE
+Begin a load case definition for multiple load case analysis. Note: Defined in
+the load step card image .
+*MODAL DYNAMIC
+Dynamic time history analysis using modal superposition Note: Defined in the
+load step card image .
+*MONITOR
+Define a degree of freedom to monitor. Note: Defined in the load step card image .
+*PRINT
+Request or suppress output to the message file in an Abaqus /Standard analysis or to the status file in an Abaqus /Explicit analysis. Note: Defined in the load step
+card image .
+*RADIATION_ VIEWFACTOR
+Control the calculation of viewfactors during a cavity radiation
+analysis. Note: Defined in the load step card image ;
+visible in *Heat Transfer analysis procedure.
+*RESPONSE SPECTRUM
+Calculates estimates of peak values of nodal and element
+responses. Note: Defined in the load step card image .
+*RESTART WRITE
+Save and reuse data and analysis results. Note: Defined in the load step
+card image .
+*STATIC
+Static stress/displacement analysis. Note: Defined in the load step card image .
+*STEADY STATE DYNAMICS
+Steady-state dynamic response based on harmonic excitation. Note: Defined in
+the load step card image .
+*STEP
+Begin a step. Note: Parameters are defined in the load step card image .
+*VISCO
+Transient, static, stress/displacement analysis with time-dependent material
+response (creep, swelling, and viscoelasticity) Note: Defined in the load step
+card image .
+ANSYS Cards
+Card
+Description
+ACEL
+Specifies the linear acceleration of the structure.
+ANTYPE
+Specifies the analysis type and restart status.
+CECMOD
+CMACEL
+Specifies the translational acceleration of an element component.
+CMDOMEGA
+Specifies the rotational acceleration of an element component about a
+user-defined rotational axis.
+CMOMEGA
+Specifies the rotational velocity of an element component about a
+user-defined rotational axis.
+EQSLV
+Specifies the type of equation solver.
+LSSOLVE
+Reads and solves multiple load steps.
+NLGEOM
+Includes large-deflection effects in a static or full transient
+analysis.
+NSUBST
+Specifies the number of substeps to be taken this load step.
+OMEGA
+Specifies the rotational velocity of the structure.
+OUTRES
+Controls the solution data written to the database.
+TIME
+Sets the time for a load step.
+Nastran Cards
+Load step entities directly correspond to Nastran subcase
+definitions.
+Load steps can reference constraint (SPC), static load (LOAD), multi-point constraint
+(MPC), fictitious support (SUPORT1), non-linear parameters (NLPARM), eigenvalue extraction
+data (METHOD), frequency range (FREQ), damping (SDAMPING), dynamic load (DLOAD), thermal
+loading (TEMP), and so on subcase definitions. Other input data is automatically generated
+(the SUBCASE header) or may be added to the subcase definition.
+Card
+Description
+NLSTEP
+Describes the control parameters for mechanical, thermal and coupled analysis
+in SOL 400 and for linear contact analysis in SOL 101.
+SUBCASE
+Delimits and identifies a subcase.
+SUBCOM
+Defines a combination subcase. Note: Automatically created when a new load
+step of type “Combination Subcase Delimiter” is created. The SUBCOM ID matches
+the ID of the HyperMesh load step entity.
+SUBSEQ
+Subcase sequence coefficients. Note: Only available for Combination Subcase
+Delimiter load steps. Enable SUBSEQ to input combination
+coefficients.
+TSTEPNL
+Defines parametric controls and data for nonlinear transient structural or
+heat transfer analysis.
+OptiStruct Cards
+Loadsteps directly correspond to OptiStruct subcases. Load
+steps can reference static loads (LOAD), constraints (SPC), and dynamic loads (DLOAD).
+Supported card parameters are dependent upon the selected analysis type (solution
+sequence).
+Card
+Description
+ACCELERATION
+Requests acceleration vector output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select ACCELERATION.
+ANALYSIS
+Used in the I/O Options section to request that only
+a finite element analysis be performed (optimization input is ignored). It may also
+be used in the I/O Options or Subcase Information sections to identify the solution
+sequence for all subcases or for individual subcases, respectively. Note: Subcase Information Entry Enable the subcase option ANALYSIS and then
+select an analysis type.
+CMSMETH
+Requests that only a component mode synthesis solution
+be performed and to select a component mode synthesis method definition to be
+used. Note: Subcase Information Entry
+CSTRAIN
+Requests ply strain output for elements referencing
+PCOMP , PCOMPP or PCOMPG
+properties for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select CSTRAIN.
+CSTRESS
+Requests ply stress output for elements referencing
+PCOMP , PCOMPP or PCOMPG
+properties for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select CSTRESS.
+DESOBJ
+Selects a single response definition as the objective
+function of an optimization, or to select system response definitions when the
+objective function is the least squares sum of these definitions. The
+DESOBJ command also indicates if this response is to be
+minimized or maximized. Note: Subcase Information Entry Part of the optimization problem setup,
+created when you define an objective.
+DESSUB
+Used within a subcase definition, to select a
+constraint set that is subcase dependent. Note: Subcase Information Entry Part of the optimization problem setup,
+created when you define a dconstraint.
+DISPLACEMENT
+Requests displacement vector output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select DISPLACEMENT.
+DLOAD
+Selects a dynamic load to be applied in a transient and
+frequency response analysis subcase. The DLOAD command can also
+be used to select a user-defined loading curve to be applied in a nonlinear static
+analysis subcase. Note: Subcase Information Entry Enable the subcase definition DLOAD and
+select load collectors with dynamic loading information (DLOAD, RLOAD1,
+RLOAD2, TLOAD1, TLOAD2).
+EIGVRETRIEVE
+Retrieves eigenvalue and eigenvector results of a
+Normal Modes Analysis from an external data file
+( .eigv ). Note: Subcase Information Entry
+EIGVSAVE
+Outputs eigenvalue and eigenvector results of a
+Normal Modes Analysis to an external data file
+( .eigv ). Note: Subcase Information Entry
+ELFORCE
+Requests structural element force output and elemental
+fluid particle velocity output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select ELFORCE.
+ERP
+Requests equivalent radiated power output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select ERP.
+ESE
+Requests strain energy and strain energy density output for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select ESE.
+EXCLUDE
+Selects a set of elements to be excluded from a Linear
+Buckling Analysis. Note: Subcase Information Entry Enable the subcase option
+OUTPUT to select EXCLUDE, then select a SET
+definition.
+FATDEF
+Selects a FATDEF Bulk Data Entry
+that will define the elements, and their associated fatigue properties, to be
+considered for Fatigue Analysis. Note: Subcase Information Entry
+FATPARM
+Selects a FATPARM Bulk Data Entry
+that will define the parameters to be used for a Fatigue Analysis. Note: Subcase Information Entry
+FATSEQ
+Indicates that a subcase is a fatigue analysis subcase
+and to select a FATSEQ Bulk Data Entry that will define the
+loading sequence for the Fatigue Analysis. Note: Subcase Information Entry
+FREQUENCY
+Selects the set of forcing frequencies to be solved
+in a frequency response problem. Note: Subcase Information Entry Enables you to select load collectors with
+frequency information (FREQ, FREQ1, FREQ2, FREQ3, FREQ4,
+FREQ5).
+GLOBSUB
+Selects a subcase that references the global structure
+for Local-Global Analysis and a set of grid points in the local structure that
+defines the cut surface for displacement. Note: Subcase Information Entry
+GPFORCE
+Requests grid point force balance output for all subcases
+or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select GPFORCE.
+GPSTRESS
+Requests grid point stresses output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select GPSTRESS.
+IC
+Selects initial conditions for Transient and Explicit
+Analysis. Note: Subcase Information Entry
+INVEL
+Selects a multibody initial velocity set to be applied
+in a multibody problem. Note: Subcase Information Entry
+LABEL
+Provides a subcase with a label. Note: Subcase Information Entry
+LOAD
+Selects a static load set to be applied in linear static
+solutions. Note: Subcase Information Entry Enables you to select load collectors with
+static load information (FORCE, MOMENT, PLOAD, PLOAD2, PLOAD4, LOAD), or
+inertial loading information (GRAV, RFORCE).
+MBSIM
+Selects a Multibody simulation definition to be applied
+in a Multibody problem. Note: Subcase Information Entry
+METHOD
+Selects a method for real eigenvalue
+extraction. Note: Subcase Information Entry Select load collectors with an EIGRL card
+image for METHOD(STRUCT) or METHOD(FLUID).
+MLOAD
+Selects a Multibody load set to be applied in a
+Multibody problem. Note: Subcase Information Entry Enables you to select load collectors with
+multi-body dynamic load information (GRAV, MBFRC, MBFRCC, MBMNT, MBMNTC,
+MLOAD).
+MODEWEIGHT
+Defines a multiplier for computed eigenvalues that
+are to be used in the calculation of the "weighted reciprocal eigenvalue" and
+"combined compliance index" optimization responses. Note: Subcase Information Entry Part of the optimization problem setup,
+created when you define a response.
+MOTION
+Selects a Multibody motion set to be applied in a
+multibody problem. Note: Subcase Information Entry Enables you to select load collectors with
+multi-body dynamic motion information (MOTION, MOTNG,
+MOTNGC).
+MPC
+Selects a multi-point constraint set. Note: Subcase Information Entry
+MPCFORCE
+Requests multi-point force of constraint vector is
+output for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry
+NLPARM
+Activates nonlinear solution methods for this subcase
+and to select the parameters used for Nonlinear Quasi-static Analysis, Geometric
+Nonlinear Implicit Analysis, and Nonlinear Direct Transient Analysis. Note: Subcase Information Entry
+NSM
+Selects a non-structural mass set for mass generation. The
+selector command must appear before the first SUBCASE
+statement. Note: Subcase Information Entry
+OFREQUENCY
+Requests a set of frequencies for output requests for
+all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select OFREQUENCY.
+OLOAD
+Requests the form of applied load vector output and
+temperature load output for all subcases or individual subcases,
+respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select OLOAD.
+OMODES
+Requests a set of modes for output requests for all
+subcases or for individual subcases, respectively. This command is applicable for
+normal modes and linear buckling solution sequences only. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select OMODES.
+RESVEC
+Controls the calculation of residual vectors. Note: Subcase Information Entry
+RSPEC
+References combination rules, excitation
+degrees-of-freedom, and input spectra for use in response spectrum
+analysis. Note: Subcase Information Entry
+RWALL
+Selects rigid walls for geometric nonlinear
+analysis. Note: Subcase Information Entry
+SDAMPING
+Applies modal damping as a function of natural
+frequency in modal solutions. Note: Subcase Information Entry
+SOLVTYP
+Defines the solver type to be used for static, dynamic
+analysis and geometric nonlinear implicit analysis. Note: Bulk Data Entry
+SPC
+Selects a single-point constraint set. Note: Subcase Information Entry
+SPCFORCES
+Requests single-point force of constraint vector output
+for all subcases or individual subcases, respectively. Note: I/O Options and Subcase Information Entry
+STATSUB
+Selects a static solution subcase. Note: Subcase Information Entry
+STRAIN
+Requests strain output for all subcases or individual
+subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select STRAIN.
+STRESS
+Requests stress output for all subcases or individual
+subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select STRESS.
+SUBCASE
+Indicates the start of a new subcase
+definition. Note: Subcase Information Entry
+SUBCOM
+Delimits and identifies a combination
+subcase. Note: Subcase Information Entry
+SUBMODEL
+Selects a submodel as a set of elements. Subcase
+entries specific to the selected element set can be used to solve the submodel
+without affecting the rest of the structure. Note: Subcase Information Entry
+SUBSEQ
+Gives the coefficients for forming a linear combination
+of the previous static subcases. Note: Subcase Information Entry
+SUBTITLE
+Defines the subtitle for all subcases or for individual
+subcases, respectively.
+SUPORT1
+Selects a fictitious support set to be applied to the
+model. Note: Subcase Information Entry
+TEMP
+Defines temperature at grid points or a
+SET of grid points for determination of Thermal Loading and
+Stress recovery.
+TSTEP
+Selects integration for transient analysis. Note: Subcase Information Entry
+TTERM
+Used in a geometric nonlinear subcase to define the
+termination time. Note: I/O Options and Subcase Information Entry
+VELOCITY
+Requests velocity vector output for all subcases or
+individual subcases, respectively. Note: I/O Options and Subcase Information Entry Enable the subcase option
+OUTPUT to select VELOCITY.
+WEIGHT
+Defines a weighting factor (multiplier) for the
+compliances of individual linear static solution subcases, which are used in the
+calculation of the "weighted compliance" and "combined compliance index"
+optimization responses. Note: Subcase Information Entry
+XHIST
+Selects time history output for geometric nonlinear
+analysis. Note: Subcase Information Entry
+Permas Cards
+Card
+Description
+$CONSTRAINTS
+Constraint variant bracket header line. Note: Set AnalysisProcedure to
+CONSTRAINTS.
+$FREQLOAD
+Definition of frequency dependent dynamic loads for use in frequency response
+analysis. Note: Only available when AnalysisProcedure is set to
+LOADING.
+$LOADING
+Loading variant bracket header line. Note: Set AnalysisProcedure to
+LOADING.
+$NLLOAD
+Define a nonlinear static load history. Note: Only available when
+AnalysisProcedure is set to LOADING.
+$SITUATION
+Situation definition header line. Note: Set AnalysisProcedure to
+SITUATION.
+$TRANSLOAD
+Definition of time dependent dynamic loads for use in transient response
+analysis. Note: TRANSLOAD cards and FREQLOAD cards are mutually
+exclusive.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

@@ -1,0 +1,92 @@
+Load Configurations
+HyperMesh Help Manual
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Load Configurations
+Load entities have an associated load configuration. A load configuration determines
+how to draw, store, and work with a load.
+Accelerations
+Configuration 9 - Acceleration loads allow for an
+acceleration (length/time 2 ) to be defined on the model.
+Accelerations are displayed as a vector with the
+letter A at the tail end in the modeling window .
+Constraints
+Configuration 3 - Constraints allow for constrained degrees of freedom to be defined on the
+model.
+Constraints are displayed with a triangle that connects to the node, with the dof numbers
+that apply to the node beside the triangle in the modeling window .
+Fluxes
+Configuration 6 - Flux loads are defined as an amount that flows through a unit area per
+unit time (amount/length 2 /time). Fluxes are typically used in modeling transport
+phenomena such as heat transfer, mass transfer, fluid dynamics, and electromagnetism.
+Fluxes are displayed as a thick arrow labeled with the word "flux" in the modeling window .
+Forces
+Configuration 1 - Force loads allow for a concentrated force (mass*length/time 2 )
+to be applied to the model.
+Forces are displayed as a vector with the letter F at the tail end in the modeling window .
+Moments
+Configuration 2 - Moment loads allow for a concentrated moment (length*force) to be applied
+to the model.
+Moments are displayed with a double-headed vector with the letter M at the tail end in the
+modeling window .
+Pressures
+Configuration 4 - Pressure loads allow for a pressure (force*length 2 ) to be
+applied to the model.
+For most solvers, the pressure load is considered as force/area, therefore the magnitude of
+the pressure is multiplied by the calculated area of the elements to which it is applied and
+resolved as concentrated force loads at the associated nodes.
+Pressures are displayed as a vector with the letter P at the tail end in the modeling window .
+Temperatures
+Configuration 5 - Temperature loads allow for a concentrated temperature to be applied to
+the model.
+Temperatures are displayed as a vertical line with the letter T at the top in the modeling window .
+Velocities
+Configuration 8 - Velocity loads allow for a velocity (length/time) to be applied to the
+model.
+Velocities are displayed as a vector with the letter V at the tail end in the modeling window .
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

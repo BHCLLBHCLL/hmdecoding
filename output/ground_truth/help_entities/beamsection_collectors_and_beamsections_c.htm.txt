@@ -1,0 +1,183 @@
+Beamsection Collectors and Beamsection
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Beamsection Collectors and Beamsection
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Beamsection Collectors and Beamsection
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Beamsection Collectors and Beamsection
+Beamsection Collectors
+Beamsection collectors collect and organize beamsections and are used in HyperBeam to organize 1D beam section data.
+Nastran Cards
+Card
+Description
+BELTS /
+Output activation and format/file selection for kinematic animation
+output.
+Beamsections
+Beamsection entities store 1D beam cross-section data.
+Beamsections can be created from geometry, elements, or from solver standard sections, that
+is, I-Sections, H-Sections, and so on.
+All sections can be created and modified in HyperBeam . Generic
+sections and Standard sections can also be created in the Model Browser
+and modified in the Property Editor .
+The default section type and attribute values assigned to beam section vary based on solver
+interface.
+On import, each 1D beam property card within a solver deck is automatically imported as a
+beamsection entity and a property entity with associated beamsection. The beamsection entity
+holds the 1D beam section data (A, I, and so on..., and/or Dimensions) and is associated to
+the property entity which has a 1D property card image. The beamsection association to a
+property is what transfers the 1D section data to the 1D property solver card for export.
+Editing of all 1D beam section data is accomplished through HyperBeam .
+Generic Sections
+Generic sections define sections without defining actual cross-section geometry. Areas,
+inertias, centroids, and other coefficients are supported directly through spreadsheet data
+entry of values.
+Shell Sections
+Shell sections define thin cross-sections with geometric lines or 1D elements. Once the
+cross-section is created, it can be further edited in HyperBeam .
+Figure 1.
+Solid Sections
+Solid sections to define solid cross-sections with surfaces, lines that form a closed loop,
+or 2D elements. Once the cross-section is created it can be further edited in HyperBeam .
+Figure 2.
+Standard Sections
+Standard sections to define solver supported cross-sections. Each supported solver
+interface has a library of supported solver cross-sections. For standards sections, only the
+dimensions of the section are necessary as input.
+Figure 3.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

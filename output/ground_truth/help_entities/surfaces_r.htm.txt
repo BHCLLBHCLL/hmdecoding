@@ -1,0 +1,289 @@
+Surfaces
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Geometry Settings
+Overview of settings used when creating and editing geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Points
+A point is a zero-dimensional geometric entity.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity. It has a separate underlying
+mathematical definition, specified when it was created.
+Dimensioning
+Change the dimensions of existing geometry, thus changing the basic shape of solids and other enclosed volumes.
+Extract and Edit Midsurfaces
+Extract the midsurface of thin solids, and review and edit midsurface plates.
+Match Topology
+Fix gaps between stitched edges and vertices to make the actual geometry of the surfaces consistent with the model
+topology.
+Find Intersections and Penetrations
+Find intersections and penetrations between geometric surfaces and solids.
+Setup CAD Models with Metadata
+Use metadata generated as part of the CAD import process to setup CAE models.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a
+two-dimensional geometric entity that may be used in automatic mesh generation.
+The color of a surface is determined by the component collector to which it belongs.
+A surface is comprised of one or more faces. Each face contains a mathematical surface and
+edges to trim the surface, if required. When a surface has several faces, all of the faces
+are maintained as a single surface entity. Operations performed on the surface affect all
+the faces that comprise the surface. In general, HyperMesh
+automatically uses the appropriate number of and type of surface faces to represent the
+geometry.
+The perimeter of a surface is defined by edges. There are four types of surface edges.
+Surface edges are different from lines and are sometimes handled differently for certain
+operations.
+The connectivity of surface edges constitutes the geometric topology.
+Free Edges
+A free edge is an edge that is owned by only one surface.
+Free edges are colored red by default.
+On a clean model consisting of surfaces, free edges appear only along the outer
+perimeter of the part and around any interior holes. Free edges that appear between
+two adjacent surfaces indicate the existence of a gap between the two surfaces. The
+automesher will leave a gap in the mesh wherever there is a gap between two
+surfaces.
+Shared Edges
+A shared edge is an edge that is owned, or shared, by two adjacent surfaces.
+Shared edges are colored green by default.
+When the edge between two surfaces is a shared edge, there is no gap or overlap
+between the two surfaces - they are geometrically continuous. The automesher always
+places seed nodes along the length a shared edge and will produce a continuous mesh
+without any gaps along that edge. The automesher will not construct any individual
+elements that cross over a shared edge.
+Suppressed Edges
+A suppressed edge is shared by two surfaces but it is ignored by the
+automesher.
+Suppressed edges are colored blue by default.
+Like a shared edge, a suppressed edge indicates geometric continuity between two
+surfaces but, unlike a shared edge, the automesher will mesh across a suppressed edge
+as if it were not even there. The automesher does not place seed nodes along the
+length of a suppressed edge and, consequently, individual elements will span across
+it. By suppressing undesirable edges you are effectively combining surfaces into
+larger logical meshable regions.
+Non-Manifold Edges
+A non-manifold edge is owned by three or more surfaces.
+Non-manifold edges are colored yellow by default.
+They typically occur at "T" intersections between surfaces or when two or more
+duplicate surfaces exist. The automesher always places seed nodes along their length
+and will produce a continuous mesh without any gaps along that edge. The automesher
+will not construct any individual elements that cross over a T-joint edge. These edges
+cannot be suppressed.
+Create Surfaces
+square - Creates two-dimensional square surface primitives (Surfaces panel,
+Planes panel).
+cylinder full - Creates three-dimensional full cylinder surface primitives
+(Surfaces panel, Cones panel).
+cylinder partial - Creates three-dimensional partial cylinder surface
+primitives (Surfaces panel, Cones panel).
+cone full - Creates three-dimensional full cone surface primitives (Surfaces
+panel, Cones panel).
+cone partial - Creates three-dimensional partial cone surface primitives
+(Surfaces panel, Cones panel).
+sphere center and radius - Creates three-dimensional sphere surface primitives
+by specifying the center and radius (Surfaces panel, Spheres panel).
+sphere four nodes - Creates three-dimensional sphere surface primitives by
+specifying four nodes (Surfaces panel, Spheres panel).
+sphere partial - Creates three-dimensional partial sphere surface primitives
+(Surfaces panel, Spheres panel).
+torus center and radius - Creates three-dimensional torus surface primitives by
+specifying the center, normal direction, minor radius and major radius (Surfaces
+panel, Torus panel).
+torus three nodes - Creates three-dimensional torus surface primitives by
+specifying three nodes (Surfaces panel, Torus panel).
+torus partial - Creates three-dimensional partial torus surface primitives
+(Surfaces panel, Torus panel).
+spin - Creates surfaces by spinning lines or a node list around an axis
+Surfaces panel, Spin panel).
+drag along vector- Creates surfaces by dragging lines or a node list along a
+vector (Surfaces panel, Drag panel).
+drag along line - Creates surfaces by dragging lines or a node list along a
+line (Surfaces panel, Line Drag panel).
+drag along normal - Creates surfaces by dragging lines along their normal
+(Surfaces panel).
+ribs - Creates and modifies simple ribs between two surfaces (Ribs panel).
+ruled - Creates surfaces by interpolating linearly between lines or nodes
+(Surfaces panel, Ruled panel).
+spline/filler - Creates surfaces by filling in gaps, such as a hole in an
+existing surface (Surfaces panel, Spline panel, Quick Edit panel).
+skin - Creates surfaces by skinning lines (Surfaces panel, Skin panel).
+fillet - Creates constant radius fillet surfaces across surface edges (Surfaces
+panel).
+from FE - Creates surfaces that closely fit a selection of shell elements
+(Surfaces panel).
+meshlines - A toolkit for creating lines associated to shell elements for
+advanced selection or surface creation (Surfaces panel).
+auto midsurface - Creates midsurface geometry automatically from multiple
+surfaces or solids (Midsurface panel).
+surface pair - Creates midsurface geometry from one surface pair (Midsurface
+panel).
+duplicate - Creates surfaces by duplicating existing surfaces. This is
+available in many panels when the "duplicate" advanced entity selector is
+available on a surfaces collector.
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire.
+Edit Surfaces
+delete - Deletes surfaces (Delete panel, Quick Edit panel).
+trim - Trims surfaces using nodes, lines, surfaces and planes (Surface Edit
+panel, Quick Edit panel).
+untrim/unsplit - Removes various trim/split lines from surfaces (Surface Edit
+panel, Edge Edit panel, Quick Edit panel).
+offset - Offsets surfaces along their normal directions while maintaining
+topological connectivity (Surface Edit panel).
+extend - Extends the edges of surfaces to meet or intersect other surfaces
+(Surface Edit panel, Midsurface panel).
+shrink - Shrinks surfaces by drawing in all surfaces edges (Surface Edit
+panel).
+defeature - Removes pinholes, surface fillets, edge fillets and duplicate
+surfaces (Defeature panel, Edge Edit panel).
+midsurfaces - Modifies and edits extracted midsurfaces (Midsurface panel).
+surface edges - Toggles, suppresses, unsuppresses and equivalences surface
+edges (Edge Edit panel, Quick Edit panel).
+washer - Trims surfaces using free edge closed loop or shared edge offsets
+(Quick Edit panel).
+autocleanup - Performs basic automatic geometry cleanup functions in
+preparation for meshing (Autocleanup panel).
+dimensioning - Modifies dimensions of or between surfaces (Dimensioning panel).
+morphing - Morphs surfaces that have had associated nodes morphed away from
+them (Morph panel).
+translate - Moves surfaces along a vector direction (Translate panel).
+rotate - Rotates surfaces about a vector axis (Rotate panel).
+scale - Scales the dimensions of surfaces either proportionally or uniformly
+(Scale panel).
+reflect - Reflects surfaces about a plane to create a mirror image (Reflect
+panel).
+position - Translates and rotate surfaces into new positions (Position panel).
+permute - Switches the coordinates of surfaces (Permute panel).
+renumber - Renumbers surface edges and surfaces (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire.
+Query Surfaces
+shortest distance - Finds the shortest distance between entities
+( Shortest Distance dialog).
+interference check - Finds penetrations/intersections between geometries
+( Geometry Interference Check dialog).
+normal - Reviews the normal direction of surfaces (Normals panel).
+organize - Moves surfaces into different component collectors (Organize panel).
+numbers - Displays the IDs of surface edges and surfaces (Numbers panel).
+count - Counts the total or displayed surfaces (Count panel).
+area - Queries the total area of the selected surfaces (Mass Calc panel).
+dimensioning - Queries dimensions of or between surfaces (Dimensioning panel).
+Misc. API commands that do not have an associated panel.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

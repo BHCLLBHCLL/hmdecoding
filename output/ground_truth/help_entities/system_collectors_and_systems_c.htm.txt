@@ -1,0 +1,417 @@
+System Collectors and Systems
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+System Collectors and Systems
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+System Collectors and Systems
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+System Collectors and Systems
+System Collectors
+System collectors collect and organize systems.
+LS-DYNA Cards
+System collector cards can be previewed, but not edited.
+Card
+Description
+*DEFINE_TRANSFORMATION
+Define a transformation for the INCLUDE_TRANSFORM keyword
+option. Note: Transformations can be created using the Transformation
+Manager.
+*INCLUDE_PATH
+Defines path for the include file location. Note: Card Edit is not available.
+Keyword details can be accessed from the Include file options in the Include
+browser.
+*INCLUDE_STAMPED_PART
+Attaches a file that has stamping results for a part in the model as an
+include file. Note: Card Edit is not available. Keyword details can be accessed
+from the Include file options in the Include browser.
+*INCLUDE_STAMPED_PART_SET
+Attaches a file that has stamping results for a collection of parts (set) in
+the model as an include file. Note: Card Edit is not available. Keyword details can
+be accessed from the Include file options in the Include browser.
+*INCLUDE_TRANSFORM
+Include file that supports offset on its content IDs and transforms on its
+contents. Note: HyperMesh support offset on the
+entity ID's. During import, offsets are applied on to the ID's of the
+corresponding include_transform file contents. During export, offset is
+subtracted from the ID's. The current release only supports Input and output
+therefore the offsets cannot be changed.
+*NODE_TRANSFORM
+Transformation defined on node set. Note: Transformations can be created using
+the Transformation Manager.
+PAM-CRASH Cards
+Card
+Description
+TRANSFORMATION /
+Radioss Cards
+Card
+Description
+/TRANSFORM/ROT
+Defines a rotation for a node group around a
+defined axis, center of rotation and rotation angle. Note: Block
+Format Keyword
+/TRANSFORM/TRA
+Defines a translation for a node group with a
+defined vector. Note: Block
+Format Keyword
+/TRANSFORM/SCA
+Defines a scale for a node group with defined
+scale center and scale factor. Note: Block
+Format Keyword
+/TRANSFORM/SYM
+Defines a symmetry for a node group normal to
+the plane defined by a vector. Note: Block
+Format Keyword
+Systems
+System entities, commonly called coordinate systems, can be defined as rectangular,
+cylindrical, or spherical coordinate systems.
+Every system must be organized into one system collector, and therefore are mutually
+exclusive to a system collector.
+Several systems may be nested. There are two types of system assignments to entities; as a
+reference system, or as a displacement system. A system may be a reference system, a
+displacement system, or both.
+Reference System
+Defines the geometric positions of entities.
+Entities that can be assigned a reference system include systems, nodes, and loads.
+By default, each of these entities is defined in the global system with an ID of zero.
+Entity data is always displayed and reviewed transformed into the global system. When
+a reference system is deleted, the position of the entity assigned that reference
+system is maintained relative to the global system in the transformation process. For
+example, if you define the nodes of a cylindrical structure in a cylindrical reference
+coordinate system, and then delete the cylindrical reference coordinate system in
+which the nodes are defined, the model retains its cylindrical shape and also its
+location in space but is now referenced to the global system.
+Displacement System
+Defines the nodal degree of freedom coordinate system assigned to a node.
+The only entity that may be assigned a displacement system is a node. When you
+delete a displacement system, the nodal degrees of freedom are not transformed to the
+global system, so all degree of freedom definitions after the deletion of the
+displacement system are now simply in the global system.
+Abaqus Cards
+A system can be exported as a *SYSTEM or *TRANSFORM card depending on the nodal assignment
+of the system. To export an *ORIENTATION card it is required to enable the option in the
+card image of the system card.
+Card
+Description
+*ORIENTATION
+Define a local axis system for material or element property definition, for
+kinematic coupling constraints, for free directions for inertia relief loads, or
+for connectors. Note: The *ORIENTATION card needs a name in Abaqus . Since systems do not have a name, a name needs to
+be entered in the system card image. The restriction of one system per system
+collector has been removed with version 10.0 – SA1-130. DEFINITION = NODES
+option with only two nodes is converted to DEFINITION=COORDINATES upon import
+from an input file.
+*ORIENTATION with SYSTEM = Z RECTANGULAR is
+converted to RECTANGULAR upon import from an input file.
+*SYSTEM
+Specify a local coordinate system in which to define nodes. Note: Whenever a
+system is assigned to nodes with the set reference option from the Systems panel
+activated, a *SYSTEM card is exported before the node block of its
+assignment.
+*TRANSFORM
+Specify a local coordinate system at nodes. Note: If assigned to individual
+nodes, on export each *TRANSFORM card creates references to an automatically
+generated *NSET card. This *NSET card is followed by the list of the nodes that
+are assigned to the coordinate system with the set displacement
+option. Systems can be assigned to node sets with the same assignment
+procedure.
+ANSYS Cards
+Card
+Description
+LOCAL
+Defines a local coordinate system by location and orientation. Note: Even if
+KCN>10, 10 is added to the current value.
+LOCAL
+Defines a local coordinate system by location and orientation. Note: Type =
+PRM not supported
+EXODUS Cards
+Card
+Description
+Coordinate Frame
+Defined for reference to materials and boundary conditions.
+LS-DYNA Cards
+Systems cards can be previewed, but not edited.
+Card
+Description
+*DEFINE_COORDINATE_NODES
+Define a local coordinate system with three nodes.
+*DEFINE_COORDINATE_SYSTEM
+Define a local coordinate system with three points.
+*DEFINE_COORDINATE_VECTOR
+Define a local coordinate system with two vectors.
+Nastran Cards
+Card
+Description
+CORD1R
+Defines a rectangular coordinate system using three grid points.
+CORD2R
+Defines a rectangular coordinate system using the coordinates of three
+points.
+CORD1C
+Defines a cylindrical coordinate system using three grid points.
+CORD2C
+Defines a cylindrical coordinate system using the coordinates of three
+points.
+CORD1S
+Defines a spherical coordinate system by reference to three grid
+points.
+CORD2S
+Defines a spherical coordinate system using the coordinates of three
+points.
+OptiStruct Cards
+Card
+Description
+CORD1C
+Defines a cylindrical coordinate system using three grid
+points. The first point is the origin, the second lies on the Z-axis, and the third
+lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by node reference subpanel when cylindrical is the chosen
+type.
+CORD1R
+Defines a rectangular coordinate system using three grid
+points. The first point is the origin, the second lies on the Z-axis, and the third
+lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by node reference subpanel when rectangular is the chosen
+type.
+CORD1S
+Defines a spherical coordinate system using three grid
+points. The first point is the origin, the second lies on the Z-axis, and the third
+lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by node reference subpanel when spherical is the chosen
+type.
+CORD2C
+Defines a cylindrical coordinate system using three grid
+points specified with respect to a reference coordinate system. The coordinates of
+the three non-collinear grid points are used to uniquely define the coordinate
+system. The first point is the origin, the second lies on the Z-axis, and the third
+lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by axis direction subpanel when cylindrical is the chosen type.
+Various
+combinations of axes and planes are allowed to be indicated in the create by
+axis direction subpanel, but will write out the appropriate coordinates to
+define the z- axis and the x-z plane.
+CORD2R
+Defines a rectangular coordinate system by using three
+grid points. The coordinates of the three non-collinear grid points are used to
+uniquely define the coordinate system. The first point is the origin, the second
+lies on the Z-axis, and the third lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by axis direction subpanel when rectangular is the chosen type.
+Various
+combinations of axes and planes are allowed to be indicated in the create by
+axis direction subpanel, but will write out the appropriate coordinates to
+define the z- axis and the x-z plane.
+CORD2S
+Defines a spherical coordinate system three grid points.
+The coordinates of the three non-collinear grid points are used to uniquely define
+the coordinate system. The first point is the origin, the second lies on the Z-axis,
+and the third lies in the X-Z plane. Note: Bulk Data Entry Created from the create
+by axis direction subpanel when spherical is the chosen type.
+Various
+combinations of axes and planes are allowed to be indicated in the create by
+axis direction subpanel, but will write out the appropriate coordinates to
+define the z- axis and the x-z plane.
+CORD3R
+Defines a rectangular coordinate system using three grid
+points. The first point is the origin, the second lies on the X-axis, and the third
+lies in the X-Y plane. Note: Bulk Data Entry Created from the create
+by node reference subpanel when rectangular is the chosen
+type.
+CORD4R
+Defines a rectangular coordinate system using three grid
+points specified with respect to the basic coordinate system. The coordinates of the
+three non-collinear grid points are used to uniquely define the coordinate system.
+The first point is the origin, the second lies on the X-axis, and the third lies in
+the X-Y plane. Note: Bulk Data Entry Created from the create
+by axis direction subpanel when rectangular is the chosen type.
+Various
+combinations of axes and planes are allowed to be indicated in the create by
+axis direction subpanel, but will write out the appropriate coordinates to
+define the z- axis and the x-z plane.
+Editing the card image for a
+CORD2R will allow you to define a CORD4R.
+PAM-CRASH Cards
+Card
+Description
+FRAME /
+Local frame definition - system collectors Note: If there is a $HMMOVE
+directive found for a system and that system collector exists in the model, the
+system is placed in that collector. Otherwise, a separate system collector is
+made for the frame.
+FRAME /
+Local frame definition - systems Note: If a base node is not given, system is
+created at the global origin 0, 0, 0. In case of frame definition with nodes,
+system is created at the first node.
+TRSFM /
+Select elements and nodes subject to transformation.
+Permas Cards
+Card
+Description
+$RSYS
+Reference system Note: Assign the system to nodes to write the RSYS parameter
+in to the nodal coordinates card $COORD.
+$ROTB
+Analysis or displacement system assigned to nodes. Note: Assign a system as
+displacement system to nodes to receive this card.
+Radioss Cards
+Card
+Description
+/FRAME/FIX
+Describes the frames. Note: Block Format Keyword
+/FRAME/MOV
+Describes moving frames. Relative motion with
+respect to a reference frame. Note: Block Format Keyword
+/FRAME/MOV2
+Describes moving frames. Relative motion with
+respect to a reference frame. Moving frame definition differs from
+/FRAME/MOV . Note: Block Format Keyword
+/FRAME/NOD
+Describes the node defined moving frame. Note: Block Format Keyword
+/SKEW/FIX
+Describes the fixed skew frames. Note: Block Format Keyword
+/SKEW/MOV
+Describes a moving local coordinate system. Note: Block Format Keyword
+/SKEW/MOV2
+Describes a moving local coordinate
+system. Note: Block Format Keyword
+Samcef Cards
+Card
+Description
+.FRA
+Coordinate system definition Note:
+I frame_nr TYPE chosen_frame_type
+ORIGIN frame_origin
+V1 axis_definition V2 axis_definition V3 axis_definition
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

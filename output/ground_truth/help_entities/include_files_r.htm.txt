@@ -1,0 +1,235 @@
+Include Files
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Include Files
+Include files enable solver decks to be split into separate files for organizational purposes, and provide a mechanism
+to include these files in a master solver beck, typically using an include statement.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Include Files
+Include files enable solver decks to be split into separate files for organizational purposes, and provide a mechanism
+to include these files in a master solver beck, typically using an include statement.
+SolverSubmodels
+SolverSubmodels allow you to manage ID offsets as well as define transformations on solver entities or Include files.
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Include Files
+Include files enable solver decks to be split into separate files for organizational purposes, and provide a mechanism
+to include these files in a master solver beck, typically using an include statement.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Include Files
+Include files enable solver decks to be split into separate files for organizational
+purposes, and provide a mechanism to include these files in a master solver beck, typically
+using an include statement.
+Solver include files can generally have any solver card defined within them, therefore the
+include file entity has the capability to store and organize all entities. Every entity is
+stored and organized into an include file. There is a special include file called the Master
+Model which corresponds to the master solver deck and is automatically created for every
+HyperMesh model. New entities are automatically stored and organized
+into the current include file. If there are no include files defined then entities are
+automatically stored and organized into the Master Model.
+The contents of the Master Model can be observed by changing the entity view in the
+Model Browser to Include View.
+Every include file has a name and a location with a full or relative path.
+Include file structures can be imported and exported with solver decks. By default, the
+solver include file structure is preserved during import. Include files are generated to
+match and organize all data within the solver include files into the appropriate include
+file. Solver include file references are also preserved in the Master Model. During export,
+all entities are written into their corresponding solver include files along with their
+references in the master solver deck. Change this functionality by selecting a different
+setting from the Include export option in the File Options dialog that
+opens when you export a solver deck.
+Abaqus
+Complete information is required for each keyword. A keyword and its data lines must
+be part of the same file.
+Complete information is required for cards that contain multiple sub-keywords. For
+example, all sub-keywords and their data lines in a *Material card must be part of the
+same include file.
+Complete information is required for *Step cards. All history keywords and their data
+lines must be a part of the same file.
+The Abaqus solver interface is comprised of four types of
+include files, which define the sequence of the *Include keywords in the model.
+Model (start) is written at the beginning of the deck, after the *Node block.
+Model (middle) is written in the middle of the deck, after the *Material
+block.
+Model is written at the end of the model definition.
+History keywords are written after the model definition.
+Include file names are sorted according to their names in the browser. The sequence in
+the exported model is primarily determined by include file type. Within each type the
+sequence is determined by the order in which they are created.
+Include file path syntax.
+File names can include a full or relative path name. Relative path names must be
+in relation to the directory from which the job was started. If a path is not
+specified, it is assumed that the file is located in the same directory from which
+the job was submitted.
+From HyperMesh , it is, however, not always possible to predict
+the directory from which the job will finally be submitted. Therefore a relative
+path must be defined. This relative path should be defined with respect to the
+folder where the corresponding *Include keyword appears. If you run the job from a
+different folder in subsequent runs, you must also update the path name.
+LS-DYNA
+The LS-DYNA keywords *INCLUDE, *INCLUDE_STAMPED_PART,
+*INCLUDE_STAMPED_PART_SET, *INCLUDE_TRANSFORM, *INCLUDE_COMPENSATION_OPTION are mapped
+to include files.
+You can switch to different types of includes (with the exception of
+*INCLUDE_TRANSFORM and *INCLUDE_STAMPED_PART, *INCLUDE_STAMPED_PART_SET) using the
+context menu Include File option in the Model Browser .
+INCLUDE_TRANSFORM is managed using the Transformation Manager.
+During import, if the same include file is referenced more than once using
+*INCLUDE_TRANSFORM, then it is imported, but appended with .#, where # = 1…n and is
+shown in the Model Browser . These will not be exported unless you
+clear the Instance checkbox.
+During import, *INCLUDE_STAMPED_PART and *INCLUDE_STAMPED_PART_SET are imported, by
+default, as read only to preserve the associativity.
+During import, an include file can be read when *INCLUDE comes after
+*INCLUDE_TRANSFORM.
+In the solver options of the Import browser, an option to choose the type of the
+Include file is available at the time of importing a file as include to the file in
+session. This allows you to set the include file type as one of the following: INCLUDE,
+INCLUDE_STAMPED_PART, INCLUDE_STAMPED_PART_SET, INCLUDE_COMPENSATION_options. This is
+the only option to attach any file of type INCLUDE_STAMPED_PART,
+INCLUDE_STAMPED_PART_SET.
+Radioss
+Radioss Keyword #include is mapped to the Include
+files.
+A solver deck can be directly imported as an Include file, when the import option
+Import as include is enabled in the Import browser.
+The order of the include files in the Model browser is dependent from their appearance
+order in the solver deck.
+During import, if the same Include file is referred more than once, then it is
+imported but appended with .# where # = 1…n and shown in the Model browser. These will
+not be exported unless you clear the Instance checkbox.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

@@ -1,0 +1,238 @@
+Lines
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Geometry Settings
+Overview of settings used when creating and editing geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Points
+A point is a zero-dimensional geometric entity.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity. It has a separate underlying
+mathematical definition, specified when it was created.
+Dimensioning
+Change the dimensions of existing geometry, thus changing the basic shape of solids and other enclosed volumes.
+Extract and Edit Midsurfaces
+Extract the midsurface of thin solids, and review and edit midsurface plates.
+Match Topology
+Fix gaps between stitched edges and vertices to make the actual geometry of the surfaces consistent with the model
+topology.
+Find Intersections and Penetrations
+Find intersections and penetrations between geometric surfaces and solids.
+Setup CAD Models with Metadata
+Use metadata generated as part of the CAD import process to setup CAE models.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line
+is a one-dimensional geometric entity.
+The color of a line is determined by the component collector to which it belongs.
+A line can be composed of one or more line types. Each line type in a line is referred to
+as a segment. The end point of each line segment is connected to the first point of the next
+segment. A joint is the common point between two line segments. Line segments are maintained
+as a single line entity, so operations performed on the line affect each segment of the
+line. In general, HyperMesh automatically uses the appropriate number and
+type of line segments to represent the geometry.
+All lines in HyperMesh are represented mathematically with the following
+formulations:
+straight
+elliptical
+NURBS
+Lines are different from surface edges and are sometimes handled differently for certain
+operations.
+Create Lines
+xyz - Create lines by specifying (x,y,z) coordinates (Lines panel).
+linear nodes - Creates linear lines between nodes (Lines panel).
+standard nodes - Creates standard lines between nodes (Lines panel).
+smooth nodes - Creates smooth lines between nodes (Lines panel).
+controlled nodes - Creates controlled lines between nodes (Lines panel).
+drag along vector - Creates lines by dragging nodes a specified distance along
+a vector (Lines panel).
+arc center and radius - Creates arcs by specifying the center and radius (Lines
+panel).
+arc nodes and vector - Creates arcs by specifying two nodes and a vector (Lines
+panel).
+arc three nodes - Creates arcs by specifying three nodes on the circumference
+(Lines panel).
+circle center and radius - Creates circles by specifying the center and radius
+(Lines panel).
+circle nodes and vector - Creates circles by specifying two nodes and a vector
+(Lines panel).
+circle three nodes - Creates circles by specifying three nodes on the
+circumference (Lines panel).
+conic - Creates conic lines by specifying the start, end and tangent locations
+(Lines panel).
+extract edge - Creates lines as copies of surface edges (Lines panel).
+extract parametric - Creates lines at parametric locations on surfaces (Lines
+panel).
+intersect - Creates lines at the intersection of geometric entities:
+plane/lines, plane/surfaces, plane/elements, plane/plane and surfaces/surfaces
+(Lines panel).
+manifold - Creates linear and smooth lines on surfaces using nodes (Lines
+panel).
+offset - Creates lines by offsetting lines a uniform or variable distance
+(Lines panel).
+midline - Creates lines by interpolating between existing lines (Lines panel).
+fillet - Creates fillet lines between free lines (Lines panel).
+tangent - Creates tangent lines between a line and a node list or line (Lines
+panel).
+normal to geometry - Creates lines perpendicular to lines, surfaces and solids
+from node or point locations (Lines panel).
+normal from geometry - Creates lines perpendicular from node or point locations
+on lines, surfaces and solids (Lines panel).
+normal 2D on plane - Creates lines that lie on a plane, are perpendicular to a
+line, and are defined from node or point locations (Lines panel).
+features - Creates lines from element features (Lines panel).
+duplicate - Creates lines by duplicating existing lines. This is available in
+many panels when the "duplicate" advanced entity selector is available on a
+lines collector.
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire.
+Edit Lines
+delete - Deletes lines (Delete panel, Lines panel).
+combine - Combines two lines into one (Line Edit panel).
+split at point - Splits lines at graphically selected locations (Line Edit
+panel).
+split at joint - Splits lines at segment end points (Line Edit panel).
+split at line - Splits lines by using a cut line (Line Edit panel).
+split at plane - Splits lines at plane intersection locations (Line Edit
+panel).
+smooth - Smooths segmented lines (Line Edit panel).
+extend - Extends lines by either a specified distance, or to meet an existing
+node, point, line/surface edge or surface (Line Edit panel).
+translate - Moves lines along a vector direction (Translate panel).
+rotate - Rotates lines about a vector axis (Rotate panel).
+scale - Scales the dimensions of lines either proportionally or uniformly
+(Scale panel).
+reflect - Reflects lines about a plane to create a mirror image (Reflect
+panel).
+project - Projects lines onto a plane, vector or surface (Project panel).
+position - Translates and rotate lines into new positions (Position panel).
+permute - Switches the coordinates of lines (Permute panel).
+renumber - Renumbers lines (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Additional capabilities are available in solidThinking and solidThinking Inspire.
+Query Lines
+shortest distance - Finds the shortest distance between entities
+( Shortest Distance dialog).
+length - Finds the total length of selected lines/surface edges (Lines panel).
+organize - Moves lines into different component collectors (Organize panel).
+numbers - Displays the IDs of lines/surface edges (Numbers panel).
+count - Counts the total or displayed line/surface edges (Count panel).
+Misc. API commands that do not have an associated panel.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

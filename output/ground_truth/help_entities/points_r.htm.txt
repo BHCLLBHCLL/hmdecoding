@@ -1,0 +1,224 @@
+Points
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Points
+A point is a zero-dimensional geometric entity.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Geometry Settings
+Overview of settings used when creating and editing geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Nodes
+Nodes are the most basic finite element entity. A node represents a physical position on the structure being modeled.
+Points
+A point is a zero-dimensional geometric entity.
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a one-dimensional geometric
+entity.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a two-dimensional geometric entity that
+may be used in automatic mesh generation.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional entities that can be used in
+automatic tetra and solid meshing.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity. It has a separate underlying
+mathematical definition, specified when it was created.
+Dimensioning
+Change the dimensions of existing geometry, thus changing the basic shape of solids and other enclosed volumes.
+Extract and Edit Midsurfaces
+Extract the midsurface of thin solids, and review and edit midsurface plates.
+Match Topology
+Fix gaps between stitched edges and vertices to make the actual geometry of the surfaces consistent with the model
+topology.
+Find Intersections and Penetrations
+Find intersections and penetrations between geometric surfaces and solids.
+Setup CAD Models with Metadata
+Use metadata generated as part of the CAD import process to setup CAE models.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Geometry
+Create and edit geometry.
+Create, Edit, Query Geometry
+Create, edit, and query various geometric features, such as nodes, points, line, and surfaces.
+Points
+A point is a zero-dimensional geometric entity.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Points
+A point is a zero-dimensional geometric entity.
+A free point is a zero-dimensional geometry entity in space that is not associated with a
+surface. It is displayed as a small "x", and its color is determined by the component
+collector to which it belongs. These types of points are typically used for weld locations
+and connectors.
+A fixed point is a zero-dimensional geometry entity that is associated with a surface. It
+is displayed as a small "o", and its color is determined by the surface to which it is
+associated. The automesher places a node at each fixed point on the surface being meshed. A
+fixed point that is placed at the junction of three or more non-suppressed edges is called a
+vertex or vertex point. Such vertices cannot be suppressed (removed).
+Create Points
+Create Free Points
+xyz - Creates free points by specifying (x,y,z) coordinates (Points panel).
+arc center - Creates at the center of the arc that best approximates the input
+set of nodes, points or lines (Points panel).
+extract parametric - Creates free points at parametric locations on lines and
+surfaces (Points panel).
+intersect - Creates free points at the intersection of geometric entities:
+lines/lines, lines/surfaces, lines/solids, lines/planes, vector/lines,
+vector/surfaces, vector/solids and vector/plane (Points panel).
+suppressed fixed points - Creates free points at suppressed fixed point
+locations (Point Edit panel).
+circle center - Creates free points at the center of the circle defined by
+three free or fixed points (Distance panel).
+duplicate - Creates free points by duplicating existing free or fixed points.
+This is available in many panels when the "duplicate" advanced entity selector
+is available on a points collector.
+Misc. API commands that do not have an associated panel.
+Create Fixed Points
+by cursor - Creates fixed points at cursor locations on surfaces and surface
+edges (Point Edit panel, Quick Edit panel).
+on edge - Creates fixed points at uniform locations on a surface edge (Point
+Edit panel, Quick Edit panel).
+on surface - Creates fixed points at existing node/free point locations on/near
+a surface (Point Edit panel).
+project - Creates fixed points on surface edges by projecting existing free or
+fixed points (Point Edit panel, Quick Edit panel).
+defeature pinholes - When defeaturing pinholes, fixed points are created at the
+center of the each removed pinhole (Defeature panel).
+Misc. API commands that do not have an associated panel.
+Edit Points
+Edit Free Points
+delete - Deletes free points (Delete panel).
+translate - Moves free points along a vector direction (Translate panel).
+rotate - Rotates free points about a vector axis (Rotate panel).
+scale - Scales the dimensions of free points either proportionally or uniformly
+(Scale panel).
+reflect - Reflects free points about a plane to create a mirror image (Reflect
+panel).
+project - Projects free points onto a plane, vector, line/surface edge or
+surface (Project panel).
+position - Translates and rotate free points into new positions (Position
+panel).
+permute - Switches the coordinates of free points (Permute panel).
+renumber - Renumbers free points (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Edit Fixed Points
+suppress/remove - Suppresses non-vertex fixed points (Point Edit panel, Quick
+Edit panel).
+replace - Combines multiple fixed points by moving them to one fixed point
+location (Point Edit panel, Quick Edit panel).
+release - Releases fixed point vertices such that any shared edges attached to
+the point become free edges (Point Edit panel, Quick Edit panel).
+renumber - Renumbers fixed points (Renumber panel).
+Misc. API commands that do not have an associated panel.
+Query Points
+Query Free Points
+distance - Finds the distance between two free points (Distance panel).
+shortest distance - Finds the shortest distance between entities
+( Shortest Distance dialog).
+angle - Finds the angle between three free points (Distance panel).
+organize - Moves free points into different component collectors (Organize
+panel).
+numbers - Displays the IDs of free points (Numbers panel).
+count - Counts the total or displayed free points (Count panel).
+Misc. API commands that do not have an associated panel.
+Query Fixed Points
+distance - Finds the distance between two fixed points (Distance panel).
+shortest distance - Finds the shortest distance between entities
+( Shortest Distance dialog).
+angle - Finds the angle between three fixed points (Distance panel).
+numbers - Displays the IDs of fixed points (Numbers panel).
+count - Counts the total or displayed fixed points (Count panel).
+Misc. API commands that do not have an associated panel.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

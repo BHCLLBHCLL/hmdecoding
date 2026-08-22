@@ -1,0 +1,181 @@
+2D Elements
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Surface Meshing
+A surface mesh or "shell mesh" represents model parts that are relatively two-dimensional, such as sheet metal or
+a hollow plastic cowl or case.
+2D Elements
+Supported 2D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Elements
+Elements are FE idealizations for a portion of a physical part.
+Criteria and Parameter Settings
+Configure criteria and parameter settings.
+SPH Meshing
+Smooth Particle Hydrodynamics (SPH), Finite Point Method (FPM) is a technique used to analyze bodies that do not have
+high cohesive forces among themselves and undergo large deformation, such as liquids and gases.
+Line Meshing
+1D mesh that allows accurate testing of connectors, such as bolts, and similar rod-like or bar-like objects that can
+be modeled as a simple line for FEA purposes.
+Surface Meshing
+A surface mesh or "shell mesh" represents model parts that are relatively two-dimensional, such as sheet metal or
+a hollow plastic cowl or case.
+2D Elements
+Supported 2D elements.
+Automatic Meshing
+Automatic meshing generates a mesh of plate elements according to your specifications using surface geometry or existing
+shell elements.
+Create Midsurface Mesh
+Create a midsurface mesh with a thickness from 3D geometry.
+Generate Midmesh
+Automatically generate a mesh at the midplane location, directly from the input geometry (components, elements, solids
+or surfaces), without first creating a midsurface.
+Assign Thickness to Midsurface
+Assign a thickness to shell elements that represent the middle surface of a solid part.
+Shrink Wrap Meshing
+Shrink wrap meshing is a method to create a simplified mesh of a complex model when high-precision models are not
+necessary, as is the case for powertrain components during crash analysis.
+EM Lattice Meshing
+EM Lattice meshing is a method to create an axis-parallel mesh for 2D and 1D geometry input.
+2D BL Meshing
+2D BL meshing is a method to create a 2D mesh with or without boundary layers on planar sections defined by sets/groups
+of edges defining closed loops.
+Periodic Meshing
+Periodic meshing is a method to create a grid containing rotational and/or translational symmetric boundaries, for
+example rotating machinery.
+Volume Meshing
+Volume mesh or "solid meshing" uses three-dimensional elements to represent fully 3D objects, such as solid parts
+or sheets of material that have enough thickness and surface variety that solid meshing makes more sense than 2D shell
+meshing.
+Mesh Controls
+Mesh controls are used to automate and streamline the meshing process.
+Check Mesh Quality
+Evaluate the overall quality of a mesh, and resolve criteria violations.
+Edit Mesh
+Modify your mesh by detect holes, locating edges or features, refining mesh pattern, and so on.
+Batchmesher
+Batchmesher is a tool that performs geometry feature recognition, cleanup and automatic meshing in batch mode for given CAD files.
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Surface Meshing
+A surface mesh or "shell mesh" represents model parts that are relatively two-dimensional, such as sheet metal or
+a hollow plastic cowl or case.
+2D Elements
+Supported 2D elements.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+2D Elements
+Supported 2D elements.
+Tria Elements
+2D triangular elements.
+Tria3
+Configuration 103 - 2D (1st order) triangular elements with 3 nodes
+ordered in HyperMesh .
+Figure 1. Element Configuration 103, 3-Noded Tria
+Tria6
+Configuration 106 - 2D (2nd order) triangular elements with 6 nodes
+ordered in HyperMesh .
+Figure 2. Element Configuration 106, 6-Noded Tria
+Quad Elements
+2D quadrilateral elements.
+Types of pyramid elements include:
+Quad4
+Configuration 104 - 2D (1st order) quadrilateral elements with 4 nodes
+ordered in HyperMesh .
+Figure 3. Element Configuration 104, 4-Noded Quad
+Quad8
+Configuration 108 - 2D (2nd order) quadrilateral elements with 8 nodes
+ordered in HyperMesh .
+Figure 4. Element Configuration 108, 8-Noded Quad
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

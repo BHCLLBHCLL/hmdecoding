@@ -1,0 +1,1393 @@
+Load Collectors
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Load Collectors, Loads and Equations
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Loads
+Equations
+Equation entities contain mathematical equations that define more complex loads. They are used to define linear constraints
+in local and global coordinate systems.
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Load Collectors, Loads and Equations
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Load Collectors
+Load collectors collect and organize loads, constraints, and equations.
+Abaqus Cards
+Loads or constraints that are to be used as history data
+(under *STEP) should be collected into load collectors with the HISTORY card image. These
+load collectors also need to be added to the corresponding load steps (*STEP). In contrast,
+loads or constraints for model data should be collected into load collectors with
+INITIAL_CONDITION card image. They will automatically be written out in the model portion of
+the Abaqus input deck. Note: All loads and boundary conditions on
+sets can be expanded to individual nodes and elements by selecting the Expand
+load on sets option in the File Options dialog, which
+is invoked upon importing a solver deck. If a **HMLOAD_SETS_EXPAND comment is found in the
+input file, all loads and boundary conditions on sets are expanded to individual nodes and
+elements.
+Card
+Description
+*CFILM
+Defines film coefficients and associated sink temperatures at one or more
+nodes or vertices. Note: Only in HISTORY card image.
+*CONNECTOR HARDENING
+*CONNECTOR LOAD
+Specifies loads for available components of relative motion in connector
+elements. Note: Only in HISTORY card image.
+*CONNECTOR MOTION
+Specifies the motion of available components of relative motion in connector
+elements. Note: In both HISTORY and INTIAL_CONDITION card image.
+*DSLOAD
+Specifies distributed surface loads. Note:
+Only in HISTORY card
+image.
+*INERTIA RELIEF
+Applies inertia-based load balancing. Note:
+Only in HISTORY card image of
+Standard template.
+*INITIAL_CONDITION_FLUID_PRESSURE
+Specifies initial pressures for hydrostatic fluid filled cavities.
+*INITIAL_CONDITION_TEMPERATURE
+Specifies initial temperatures for heat transfer analysis.
+*INITIAL_CONDITION_TYPE_STRESS
+Specifies initial stresses.
+*INITIAL_CONDITION_VELOCITY
+Specifies initial velocities for dynamic analysis.
+*SFILM
+Define film coefficients and associated sink temperatures over a surface for
+heat transfer analysis. Note:
+Only in HISTORY card image.
+EXODUS Cards
+Card
+Description
+Acceleration
+Boundary
+Force
+Flux
+Moment
+Thermal
+Velocity
+LS-DYNA Cards
+Load collector information is specified with a required $HMNAME comment card and an
+optional $HMCOLOR comment card. If an input translator encounters one of these comments
+while reading a load card, a new load collector is created. For the comments to be valid,
+they must follow a load keyword or the last line of the previous Structured block. The loads
+that follow a $HMNAME LOADCOLS comment are read into that collector. If there is a new
+keyword or structured block, the previous load collector information is ignored.
+For non- HyperMesh generated input decks, loads are divided into
+collectors based on classification. The following load collectors are created:
+Mechanical loads for forces and moments
+Constraints/Displacements
+Velocities
+Accelerations
+Pressures
+If translational or rotational constraints are defined in the input model, they are placed
+in a separate load collector named Nodal Constraints.
+Load collectors are not used by LS-DYNA , but are useful for
+visualization. Additional load collectors can be defined to describe other entities.
+Card
+Description
+*BOUNDARY_CONVECTION_SET
+Define convection boundary conditions for a thermal or coupled
+thermal/structural analysis. Two cards are defined for each option.
+*BOUNDARY_NON_REFLECTING
+Define a non-reflecting boundary.
+*BOUNDARY_NON_REFLECTING_2D
+Define a non-reflecting boundary.
+*BOUNDARY_RADIATION_SET
+Defines surface segment sets that transfer energy by radiation to the
+environment.
+*BOUNDARY_SPC_SET
+Define nodal single point constraints.
+*BOUNDARY_SPC_SET_ID
+*BOUNDARY_TEMPERATURE_SET
+Define temperature boundary conditions for a thermal or coupled
+thermal/structural analysis.
+*CONSTRAINED_RIGID_BODY_STOPPERS
+Stops the motion based on a time dependent constraint. The stopper overrides
+prescribed motion boundary conditions (except relative displacement) operating in
+the same direction for both the master and slaved rigid bodies.
+*DEFINE_CURVE_FEEDBACK
+Define information that is used as the solution evolves to scale the ordinate
+values of the specified load curve ID.
+*DEFINE_CURVE_FEEDBACK_TITLE
+*DEFORMABLE_TO_RIGID
+Define materials to be switched to rigid at the start of the
+calculation. Note: Select an arraycount for the PSID and MRB
+pairs.
+*DEFORMABLE_TO_RIGID_AUTOMATIC
+Define materials to be switched to rigid or to deformable at some stage in
+the calculation. Note: Change the option to automatic and card edit. In the D2R
+fields enter the number of PIDs that need to be converted to Rigid. Create an
+entity set of comps of the slave PIDs and select the set.
+*DEFORMABLE_TO_RIGID_INERTIA
+Inertial properties can be defined for the new rigid bodies that are created
+when the deformable parts are switched. These can only be defined in the initial
+input if they are needed in a later restart.
+*INITIAL_AXIAL_FORCE_BEAM
+Initialize axial force in the beam for modeling bolt
+*INITIAL_DETONATION
+Define points to initiate the location of high explosive detonations in part
+IDs which use the material (type 8) *MAT_HIGH_EXPLOSIVE_BURN.
+*INITIAL_STRESS_SECTION
+Initialize stress in solid sections
+*INITIAL_TEMPERATURE_SET
+Define initial nodal point temperatures using nodal set IDs or node
+numbers.
+*INITIAL_VEHICLE_KINEMATICS
+Define initial kinematical information for a vehicle.
+*INITIAL_VELOCITY
+Define initial nodal point translational velocities using nodal set IDs. This
+may also be used for sets in which some nodes have other
+velocities. Note: InitialVel This card changes the INITV definition on
+Control Card 11. Only the first card defined is valid for
+Structured.
+*INITIAL_VELOCITY_GENERATION
+Define initial velocities for rotating and translating bodies.
+*INITIAL_VELOCITY_GENERATION_START_TIME
+Define a time to initialize velocities after time zero.
+*INITIAL_VELOCITY_RIGID_BODY
+Define the initial translational and rotational velocities at the center of
+gravity for a rigid body or a nodal rigid body.
+*INTERFACE_SPRINGBACK
+Define a material subset for an implicit springback calculation in LS-DYNA and any nodal constraint to eliminate rigid body
+degrees-of-freedom.
+*INTERFACE_SPRINGBACK_LSDYNA
+*INTERFACE_SPRINGBACK_LSDYNA_NOTHICKNESS
+Define a material subset for an implicit springback calculation in LS-DYNA and any nodal constraints to eliminate rigid body
+degrees-of-freedom.
+*INTERFACE_SPRINGBACK_LSDYNA_THICKNESS
+*INTERFACE_SPRINGBACK_NASTRAN
+*INTERFACE_SPRINGBACK_NASTRAN_NOTHICKNESS
+*INTERFACE_SPRINGBACK_NASTRAN_THICKNESS
+*INTERFACE_SPRINGBACK_SEAMLESS
+*INTERFACE_SPRINGBACK_SEAMLESS_NOTHICKNESS
+*INTERFACE_SPRINGBACK_SEAMLESS_THICKNESS
+*LOAD_BEAM_SET
+Defines load on beam element set
+*LOAD_BLAST
+Define an airblast function for the application of pressure loads due to
+explosives in conventional weapons.
+*LOAD_BODY_GENERALIZED
+Define body force loads due to a prescribed base acceleration or prescribed
+angular velocity over a subset of the complete problem.
+*LOAD_BODY_PARTS
+Define body force loads due to a prescribed base acceleration or angular
+velocity using global axes directions. Note: Select component set.
+*LOAD_BODY_X
+Define body force loads due to a prescribed base acceleration using global
+axes directions. Note: Activate the proper option and enter the data. Only the
+first card defined is valid for Structured.
+*LOAD_BODY_Y
+Note: Activate the proper option and enter the data. Only the first card defined
+is valid for Structured.
+*LOAD_BODY_Z
+Note: Activate the proper option and enter the data. Only the first card defined
+is valid for Structured.
+*LOAD_BODY_RX
+Define body force loads due to a prescribed angular velocity using global
+axes directions. Note: Activate the proper option and enter the data. Only the
+first card defined is valid for Structured.
+*LOAD_BODY_RY
+Note: Activate the proper option and enter the data. Only the first card defined
+is valid for Structured.
+*LOAD_BODY_RZ
+Note: Activate the proper option and enter the data. Only the first card defined
+is valid for Structured.
+*LOAD_BRODE
+Define Brode function for application of pressure loads due to
+explosion.
+*LOAD_MASK
+Apply a distributed pressure load over a three-dimensional shell
+part.
+*LOAD_NODE_SET
+Apply a concentrated nodal force to a node or a set of nodes.
+*LOAD_RIGID_BODY
+*LOAD_SEGMENT_SET
+Apply the distributed pressure load over each segment in a segment
+set.
+*LOAD_SHELL_SET
+Apply the distributed pressure load over one shell element or shell element
+set.
+*LOAD_SUPERELASTIC_FORMING
+*LOAD_THERMAL_CONSTANT
+Define nodal sets giving the temperature that remains constant for the
+duration of the calculation.
+*LOAD_THERMAL_LOAD_CURVE
+*LOAD_THERMAL_VARIABLE
+Define nodal sets giving the temperature that is variable in the duration of
+the calculation.
+Nastran Cards
+Nastran supports specific and generic load collectors. Specific load collectors
+have a card image which can be edited to group other load collectors together for
+simultaneous application in a single subcase, or to provide special information for a
+specific analysis type (such as modal analysis). Use specific load
+collectors for specialized loading cards, such as SPCADD, MPCADD, EIGRL, EIGB, EIGC, EIGP,
+EIGR, FREQ, FREQ1, LOAD, GRAV, RFORCE, and TEMPD. Generic load collectors
+do not have a card image. Use generic load collectors to collect loads and constraints for
+display purposes and to assign an ID to the loads.
+General boundary conditions,
+such as loads and constraints, should not be collected into specific load collectors.
+Organizing loads and constraints into a specific load collector may result in an error
+termination.
+When a Nastran deck is imported into HyperMesh , loads that have the same SID are collected into the same load collector. If a load
+collector already exists in the database with the same SID, one of the following can
+occur:
+If overwrite is off (default), the new load collector’s ID is offset and all loads in
+that collector will have a new SID upon export.
+If overwrite is on, the new load collector replaces the existing load collector. The
+original load collector and the loads it contains are deleted.
+Card
+Description
+ACSRCE
+Defines the power versus frequency curve for a simple acoustic
+source.
+AEFACT
+Defines real numbers for aeroelastic analysis.
+AEPARM
+Defines a general aerodynamic trim variable degree-of-freedom (aerodynamic
+extra point).
+AESTAT
+Specifies rigid body motions to be used as trim variables in static
+aeroelasticity.
+AEFORCE
+Defines a vector of absolute or “per unit dynamic pressure” forces associated
+with a particular control vector.
+BCPARA
+Defines contact parameters.
+BCRPARA
+BMFACE
+DAMPING
+Defines a parameter and hybrid damping specification.
+DELAY
+Defines the time delay term in the equations of the dynamic loading
+function. Note: Supported as constraints.
+DLOAD
+Defines a dynamic loading condition for frequency response or transient
+response problems as a linear combination of load sets defined via RLOAD1 or
+RLOAD2 entries for frequency response or TLOAD1 or TLOAD2 entries for transient
+response
+DTI SPECSEL
+Defines table data blocks
+EIGB
+Defines data needed to perform buckling analysis
+EIGC
+Defines data needed to perform complex eigenvalue analysis
+EIGP
+Defines poles that are used in complex eigenvalue extraction by the
+Determinant method
+EIGR
+Defines data needed to perform real eigenvalue analysis
+EIGRL
+Defines data needed to perform real eigenvalue (vibration or buckling)
+analysis with the Lanczos method
+FLFACT
+Used to specify density ratios, Mach numbers, reduced frequencies, and
+velocities for flutter analysis.
+FLUTTER
+Defines data needed to perform flutter analysis.
+FREQ
+Defines a set of frequencies to be used in the solution of frequency response
+problems. Note: Defined using FREQi.
+FREQ1
+Defines a set of frequencies to be used in the solution of frequency response
+problems by specification of a starting frequency, frequency increment, and the
+number of increments desired. Note: Defined using FREQi.
+FREQ2
+Alternative form of frequency list. Defines a set of frequencies to be used
+in the solution of frequency response problems by specification of a starting
+frequency, final frequency, and the number of logarithmic increments
+desired. Note: Defined using FREQi.
+FREQ3
+Frequency List, Alternate Form 3. Defines a set of frequencies for the modal
+method of frequency response analysis by specifying the number of frequencies
+between modal frequencies. Note: Defined using FREQi.
+FREQ4
+Frequency List, Alternate Form 4. Defines a set of frequencies for the modal
+method of frequency response analysis by specifying the amount of "spread" around
+each modal frequency and the number of equally spaced frequencies within the
+spread. Note: Defined using FREQi.
+FREQ5
+Frequency List, Alternate Form 5. Defines a set of frequencies for the modal
+method of frequency response analysis by specification of a frequency range and
+fractions of the natural frequencies within that range. Note: Defined using
+FREQi.
+GRAV
+Defines acceleration vectors for gravity or other acceleration
+loading
+GUST
+Selects the gust field in an aeroelastic response problem.
+HYBDAMP
+Defines a hybrid modal damping for direct dynamic solutions.
+LOAD
+Defines a static load as a linear combination of load sets defined via FORCE,
+MOMENT, FORCE1, MOMENT1, FORCE2, MOMENT2, PLOAD, PLOAD1, PLOAD2, PLOAD4, PLOADX1,
+SLOAD, RFORCE, and GRAV entries.
+LSEQ
+Defines a sequence of static load sets.
+MARCOUT
+Selects output to be saved on the Marc t16 end/or t19 file(s) used in SOL 600
+only.
+MFLUID
+Defines the properties of an incompressible fluid volume for the purpose of
+generating a virtual mass matrix
+MKAERO1
+Provides a table of Mach numbers (m) and reduced frequencies (k) for
+aerodynamic matrix calculation.
+MPCADD
+Defines a multipoint constraint set as a union of multipoint constraint sets
+defined via MPC entries.
+NLAUTO
+Defines parameters for automatic or fixed load/time stepping used in SOL 600
+only.
+NLDAMP
+Defines damping constants for nonlinear analysis when Marc is executed from
+SOL 600 only.
+NLPARM
+Defines a set of parameters for nonlinear static analysis iteration
+strategy
+NLRGAP
+Defines a nonlinear radial (circular) gap for transient response or nonlinear
+harmonic response.
+NLSTEP
+Describes the control parameters for Mechanical, Thermal and Coupled Analysis
+in SOL 400 and for Linear Contact Analysis in SOL 101.
+NLSTRAT
+Defines strategy parameters for nonlinear structural analysis used in SOL 600
+only.
+NOLIN1
+Defines a forcing function for transient responses or nonlinear harmonic
+responses.
+NSMADD
+Defines non structural mass as the sum of the sets listed.
+NTHICK
+Defines nodal thickness values for beams, plates and/or shells.
+RADCAV
+Identifies the characteristics of each radiant enclosure.
+RANDPS
+Defines load set power spectral density factors for use in random analysis
+having the frequency dependent form:
+S
+j
+k
+(
+F
+)
+=
+(
+X
++
+i
+Y
+)
+G
+(
+F
+)
+RFORCE
+Defines a static loading condition due to an angular velocity and/or
+acceleration
+RLOAD1
+Defines a frequency-dependent dynamic load of the form:
+{
+P
+(
+f
+)
+}
+=
+{
+A
+}
+[
+C
+(
+f
+)
++
+i
+D
+(
+f
+)
+]
+e
+i
+{
+0
+−
+2
+π
+f
+τ
+}
+for use in frequency response problems
+RLOAD2
+Defines a frequency-dependent dynamic excitation of the form:
+{
+P
+(
+f
+)
+}
+=
+{
+A
+}
+⋅
+B
+(
+f
+)
+e
+i
+{
+ϕ
+(
+f
+)
++
+0
+−
+2
+π
+f
+τ
+}
+for use in frequency response problems
+RSPEC
+Defines a directional combination method, modal combination method,
+excitation direction(s), response spectra and scale factors for response spectrum
+analysis.
+SPC1
+Defines a single-point constraint, alternate form.
+SPCADD
+Defines a single-point constraint set as a union of single-point constraint
+sets defined on SPC or SPC1 entries
+SPCR
+Defines an enforced relative displacement value for a load step in SOL 400
+and SOL 600.
+TABDMP1
+Defines modal damping as a tabular function of natural frequency
+TABLED1
+Defines a tabular function for use in generating frequency-dependent and
+time-dependent dynamic loads
+TABLED2
+Defines a tabular function for use in generating frequency-dependent and
+time-dependent dynamic loads. Also contains parametric data for use with the
+table
+TABLED3
+Defines a tabular function for use in generating frequency-dependent and
+time-dependent dynamic loads. Also contains parametric data for use with the
+table
+TABLED4
+Defines the coefficients of a power series for use in generating
+frequency-dependent and time-dependent dynamic loads. Also contains parametric
+data for use with the table
+TABLEM1
+Defines a tabular function for use in generating temperature-dependent
+material properties.
+TABLEM2
+Defines a tabular function for use in generating temperature-dependent
+material properties. Also contains parametric data for use with the table.
+TABLEM3
+Defines a tabular function for use in generating temperature-dependent
+material properties. Also contains parametric data for use with the table.
+TABLEM4
+Defines coefficients of a power series for use in generating
+temperature-dependent material properties. Also contains parametric data for use
+with the table.
+TABLES1
+Defines a tabular function for stress-dependent material properties such as
+the stress-strain curve (MATS1 entry), creep parameters (CREEP entry) and
+hyperelastic material parameters (MATHP entry).
+TABLEST
+Specifies the material property tables for nonlinear elastic
+temperature-dependent materials
+TABRND1
+Defines power spectral density as a tabular function of frequency for use in
+random analysis. Referenced by the RANDPS entry.
+TEMPD
+Defines a temperature value for all grid points of the structural model that
+have not been given a temperature on a TEMP entry.
+TIC
+Defines values for the initial conditions of variables used in structural
+transient analysis. Both displacement and velocity values may be specified at
+independent degrees-of-freedom. This entry may not be used for heat transfer
+analysis.
+TLOAD1
+Defines a time-dependent dynamic load or enforced motion of the form:
+{
+P
+(
+t
+)
+}
+=
+{
+A
+⋅
+F
+(
+t
+−
+τ
+)
+}
+for use in transient response analysis
+TLOAD2
+Defines a time-dependent dynamic excitation or enforced motion of the form:
+{
+P
+(
+t
+)
+}
+=
+{
+0
+{
+A
+}
+t
+˜
+B
+e
+C
+t
+˜
+cos
+(
+2
+π
+F
+t
+˜
++
+P
+)
+,
+,
+t
+<
+(
+T
+1
++
+τ
+)
+or
+t
+>
+(
+T
+2
++
+τ
+)
+(
+T
+1
++
+τ
+)
+≤
+t
+≤
+(
+T
+2
++
+τ
+)
+for use in a transient response problem, where:
+t
+˜
+=
+t
+−
+T
+1
+−
+τ
+TRIM
+Specifies constraints for aeroelastic trim variables. The SPLINE1 and SPLINE4
+entries need to be here for the finite plate spline.
+TSTEP
+Defines time step intervals at which a solution will be generated and output
+in transient analysis
+TSTEPNL
+Defines parametric controls and data for nonlinear transient structural or
+heat transfer analysis. TSTEPNL is intended for SOLs 129, 159, and 99.
+UXVEC
+Specification of a vector of aerodynamic control point (extra point)
+values.
+VIEW
+Defines radiation cavity and shadowing for radiation view factor
+calculations.
+VIEW3D
+Defines parameters to control and/or request the Gaussian Integration method
+of view factor calculation for a specified cavity.
+OptiStruct Cards
+Specific load collectors are used for specialized loading cards, such as EIGRL, SPCADD,
+GRAV, RLOAD and DTABLEi. Specific load collectors
+have a card image which can be edited to group other load collectors together for
+simultaneous application in a single subcase, or to provide special information for a
+specific analysis type (such as modal analysis).
+General boundary conditions,
+such as loads and constraints, should not be collected into specific load collectors.
+Organizing loads and constraints into a specific load collector may result in an error
+termination.
+Card
+Description
+ACSRCE
+Defines acoustic source as a function of power vs.
+frequency. Note: Bulk
+Data Entry
+CDSMETH
+Can be used in the component dynamic synthesis method for
+generating component dynamic matrices at each loading frequency. Note: Bulk Data
+Entry
+CMSMETH
+Defines the CMS (Component Mode Synthesis) method,
+frequency upper limit, number of modes, and starting SPOINT ID to
+be used in a CMS solution. The eigenvalue solver is also specified. In addition,
+preload as well as loads for reduction and residual vector generation can be
+defined. Also, an ASCII file containing
+CELAS4 and CDAMP3 element data and/or their
+corresponding design variable definitions can be generated for
+DMIG to allow the use of the component modes in optimization
+runs. Note: Bulk
+Data Entry
+CNTSTB
+Defines parameters for stabilization control of
+surface-to-surface contact and large displacement node-to-surface contact. A
+CNTSTB Bulk Data Entry should be referenced by a
+CNTSTB Subcase Information entry to be applied in a particular
+subcase. Note: Bulk
+Data Entry A CNTSTB Bulk Data Entry should be referenced by
+a CNTSTB Subcase Information entry to be applied in a
+particular subcase.
+DLOAD
+Defines a dynamic loading condition for frequency response
+problems as a linear combination of load sets defined via RLOAD1
+and RLOAD2 entries, or for transient problems as a linear
+combination of load sets defined via TLOAD1 and
+TLOAD2 entries, or acoustic source ACSRCE
+entries. Note: Bulk
+Data Entry
+DTI, SPECSEL
+Correlates spectra lines specified on
+TABLED1 entries with damping values. Note: Bulk
+Data Entry
+EIGC
+Defines data required to perform complex eigenvalue
+analysis. Note: Bulk
+Data Entry
+EIGRA
+Defines the data required to perform real eigenvalue
+analysis with the Automated Multi-Level Sub-structuring technique. Note: Bulk
+Data Entry
+EIGRL
+Defines data required to perform real eigenvalue analysis
+(vibration or buckling) with the Lanczos Method. Note: Bulk
+Data Entry
+FATDEF
+Defines elements, and associated fatigue properties, for
+consideration in a fatigue analysis. Note: Bulk
+Data Entry
+FATEVNT
+Defines loading events for fatigue analysis. Note: Bulk
+Data Entry
+FATLOAD
+Defines fatigue loading parameters. Note: Bulk
+Data Entry
+FATPARM
+Used to define parameters required for a Fatigue
+Analysis. Note: Bulk
+Data Entry
+FATSEQ
+Defines a loading sequence for a Fatigue
+Analysis. Note: Bulk
+Data Entry
+FLLWER
+Define parameters for the calculation of loads dependent
+on deformation. Two type of loads, pressure load (only PLOAD4
+Bulk Data Entries) and concentrated force (only
+FORCE1 / FORCE2 Bulk Data Entries) can use
+this entry to control the options for Follower Loads. Note: Bulk
+Data Entry
+FREQ
+Defines a set of frequencies to be used in the solution of
+frequency response problems. Note: Bulk
+Data Entry
+FREQ1
+Defines a set of frequencies to be used in the solution of
+frequency response problems by specification of a starting frequency, frequency
+increment, and the number of increments desired. Note: Bulk
+Data Entry Defined using FREQi.
+FREQ2
+Defines a set of frequencies to be used in the solution of
+frequency response problems by specification of a starting frequency, final
+frequency, and the number of logarithmic increments desired. Note: Bulk
+Data Entry Defined using FREQi.
+FREQ3
+Defines a set of frequencies for the modal method of
+frequency response analysis by specifying the number of frequencies between modal
+frequencies. Note: Bulk
+Data Entry Defined using FREQi.
+FREQ4
+Defines a set of frequencies for the modal method of
+frequency response analysis by specifying the amount of "spread" around each modal
+frequency and the number of equally spaced frequencies within the spread. Note: Bulk
+Data Entry Defined using FREQi.
+FREQ5
+Defines a set of frequencies for the modal method of
+frequency response analysis by specification of a frequency range and fractions of
+the natural frequencies within that range. Note: Bulk
+Data Entry Defined using FREQi.
+FSI
+Defines the settings for Fluid-Structure Interaction Analysis
+with AcuSolve . Note: Bulk
+Data Entry
+GRAV
+Defines the gravity vectors for use in determining gravity
+loading for the static structural model. It can also be used to define the
+EXCITEID field (Amplitude "A") of dynamic loads in
+RLOAD1 , RLOAD2 , TLOAD1 ,
+TLOAD2 and NLOAD1 Bulk Data Entries for
+dynamic solution sequences. Note: Bulk
+Data Entry
+HYBDAMP
+This Bulk Data Entry defines the application of modal
+damping to the residual structure in a Direct Transient or Frequency Response
+analysis. Note: Bulk
+Data Entry
+INVELB
+Defines initial velocity in a multibody
+situation. Note: Bulk
+Data Entry
+LOAD
+The LOAD is equivalent to the
+LOADADD . Note: Bulk
+Data Entry
+MBACT
+Defines the entity/set that needs to be activated in the
+multibody system for the subsequent simulation. Note: Bulk
+Data Entry
+MBDEACT
+Defines the entity/set that needs to be deactivated in
+the multibody system for the subsequent simulation. Note: Bulk
+Data Entry
+MBLIN
+Defines the parameters for a multibody system linear
+analysis. Note: Bulk
+Data Entry
+MBREQ
+Defines a multibody as a combination of request sets
+defined via MBREQE and MBREQM . Note: Bulk
+Data Entry
+MBREQE
+Defines a multibody solver output request to output the
+results of a set of expressions. Note: Bulk
+Data Entry
+MBREQM
+Defines a multibody solver output request to output
+displacement, velocity, acceleration, or force with respect to markers. Note: Bulk
+Data Entry
+MBSEQ
+Defines the simulation sequence for the multibody
+solver. Note: Bulk
+Data Entry
+MBSIM
+Defines the parameters for a multibody
+simulation. Note: Bulk
+Data Entry
+MBSIMP
+Defines the simulation parameters for subsequent multibody
+simulation. Note: Bulk
+Data Entry
+MBVAR
+Defines a multibody solver variable which can be referred
+to by multiple expressions. Note: Bulk
+Data Entry
+MFLUID
+Defines the parameters and damp shell elements for a fluid
+volume. Note: Bulk
+Data Entry
+MLOAD
+Defines a multibody as a linear combination of load sets
+defined via GRAV , MBFRC ,
+MBFRCC , MBFRCE , MBMNT ,
+MBMNTC , MBMNTE , MBSFRC ,
+MBSFRCC , MBSFRCE , MBSMNT ,
+MBSMNTC , and MBSMNTE . Note: Bulk
+Data Entry
+MOTION
+Defines a multibody as a combination of motion sets
+defined via MOTNJ , MOTNJC ,
+MOTNJE , MOTNG , MOTNGC ,
+and MOTNGE . Note: Bulk
+Data Entry
+MPCADD
+Defines a multipoint constraint set as a union of
+multipoint constraint sets defined via MPC entries. Note: Bulk
+Data Entry
+NLADAPT
+The NLADAPT Bulk Data Entry defines
+parameters for time-stepping and convergence criteria in Nonlinear
+Analysis. Note: Bulk
+Data Entry Refers to Subcase information entry
+NLADAPT .
+NLOAD
+Defines a loading condition for nonlinear problems as a
+linear combination of load sets defined via NLOAD1 . Note: Bulk
+Data Entry
+NLOAD1
+Defines a time-dependent load or enforced motion for use
+in geometric nonlinear analysis. Note: Bulk
+Data Entry
+NLOUT
+Defines incremental result output parameters for small
+displacement nonlinear analysis and large displacement analysis. Note: Bulk
+Data Entry Refers to Subcase information entry
+NLOUT .
+NLPARM
+Defines parameters for Nonlinear Static Analysis,
+Nonlinear Direct Transient Analysis, and Heat Transfer Analysis solution
+control. Note: Bulk
+Data Entry
+NLPARMX
+Defines additional parameters for geometric nonlinear
+implicit static analysis. Note: Bulk
+Data Entry
+NSMADD
+Defines non-structural mass as the sum of the sets
+listed. Note: Bulk
+Data Entry
+PEAKOUT
+Defines criteria used for the automatic identification of
+loading frequencies at which result peaks occur. Other result output may then be
+requested at these "peak" loading frequencies. This feature is only supported for
+frequency response solution sequences. Note: Bulk
+Data Entry
+PFAT
+Defines element properties for fatigue analysis. Note: Bulk
+Data Entry
+PFPATH
+Defines a one-step transfer path analysis. Note: Bulk
+Data Entry
+PTADD
+Defines a pretension load as a linear combination of load
+sets defined via PTFORCE , PTFORC1 ,
+PTADJST and PTADJS1 entries. Note: Bulk
+Data Entry
+RANDPS
+Defines load set power spectral density factors for use in
+random analysis having the frequency dependent form S jk
+(F) = (X + iY) G(F) . Note: Bulk
+Data Entry
+RFORCE
+Defines a static loading condition due to a centrifugal
+force field. It can also be used to define the EXCITEID field
+(Amplitude "A") of dynamic loads in RLOAD1 ,
+RLOAD2 , TLOAD1 and TLOAD2
+Bulk Data Entries. RFORCE is used as a linear dead-load in Large
+Displacement Nonlinear Analysis. Note: Bulk
+Data Entry
+RGYRO
+Includes data required to perform Rotor Dynamics analysis
+in Modal Frequency Response Analysis and/or Modal Complex Eigenvalue Analysis. The
+RGYRO Bulk Data Entry is referenced by a corresponding
+RGYRO Subcase Information Entry in a specific
+subcase. Note: Bulk
+Data Entry
+RLOAD1
+Defines a frequency-dependent dynamic load of the form:
+f
+(
+Ω
+)
+=
+A
+(
+C
+(
+Ω
+)
++
+i
+D
+(
+Ω
+)
+)
+e
+i
+(
+θ
+−
+2
+π
+Ω
+τ
+)
+for use in frequency response problems.
+RLOAD1 (Form 1) can be used when the frequency-dependent
+dynamic load input is available in real/imaginary number format. Note: Bulk
+Data Entry
+RLOAD2
+Defines a frequency-dependent dynamic load of the form
+f
+(
+Ω
+)
+=
+A
+*
+B
+(
+Ω
+)
+e
+i
+(
+ϕ
+(
+Ω
+)
++
+θ
+−
+2
+π
+Ω
+τ
+)
+for use in frequency response problems.
+RLOAD2 (Form 2) can be used when the frequency-dependent
+dynamic load input is available in magnitude/phase number format. Note: Bulk
+Data Entry
+RSPEC
+Specifies directional combination method, modal combination
+method, excitation direction(s), response spectra and scale factors. Note: Bulk
+Data Entry
+RSPEED
+Specifies a set of reference rotor speed values for
+asynchronous analysis in Rotor Dynamics. Note: Bulk
+Data Entry
+SOLVTYP
+Defines the solver type to be used for static, dynamic
+analysis and geometric nonlinear implicit analysis. Note: Bulk
+Data Entry
+SPCADD
+Defines a single-point constraint set as a union of
+single-point constraint sets defined via SPC or
+SPC1 entries. Note: Bulk
+Data Entry
+TABDMP1
+Defines modal damping as a tabular function of natural
+frequency. Note: Bulk
+Data Entry
+TABFAT
+Defines y values of each point on the loading time
+history. Note: Bulk
+Data Entry
+TABLED1
+Defines a tabular function for use in generating
+frequency-dependent and time-dependent dynamic loads. Note: Bulk
+Data Entry
+TABLED2
+Defines a tabular function for use in generating
+frequency-dependent and time-dependent dynamic loads. Also contains parametric data
+for use with the table. Note: Bulk
+Data Entry
+TABLED3
+Defines a tabular function for use in generating
+frequency-dependent and time-dependent dynamic loads. Also contains parametric data
+for use with the table. Note: Bulk
+Data Entry
+TABLED4
+Defines the coefficients of a power series for use in
+generating frequency-dependent and time-dependent dynamic loads. Also contains
+parametric data for use with the table. Note: Bulk
+Data Entry
+TABLEM1
+Defines a tabular function for use in generating
+temperature-dependent material properties. Note: Bulk
+Data Entry
+TABLEM2
+Defines a tabular function for use in generating
+temperature-dependent material properties. Also contains parametric data for use
+with the table. Note: Bulk
+Data Entry
+TABLEM3
+Defines a tabular function for use in generating
+temperature-dependent material properties. Also contains parametric data for use
+with the table. Note: Bulk
+Data Entry
+TABLEM4
+Defines coefficients of a power series for use in
+generating temperature-dependent material properties. Also contains parametric data
+for use with the table. Note: Bulk
+Data Entry
+TABLES1
+Defines a tabular function for use as stress-strain curve
+in elasto-plastic material properties MATS1 ,
+MATX33 , MATX65 , MATHF , as
+well as material curve in nonlinear material properties MATX36 ,
+MATX42 , and MATX70 . The
+TABLES1 entry can also be used to define the corresponding
+material curves on the MATHE Bulk Data Entry. Note: Bulk
+Data Entry
+TABLEST
+Specifies the material property tables for
+elasto-plastic, temperature-dependent materials. Note: Bulk
+Data Entry
+TABRND1
+Defines power spectral density as a tabular function of
+frequency for use in random analysis. Referenced on the RANDPS
+entry. Note: Bulk
+Data Entry
+TEMPD
+Defines a temperature value for all grid points of the
+structural model that have not been given a temperature on a TEMP
+entry. Note: Bulk
+Data Entry
+TICA
+Defines values for the initial velocity of a set of grids
+along and about an axis for explicit analysis. Note: Bulk
+Data Entry
+TLOAD1
+Defines a time-dependent dynamic load or enforced motion.
+Note: Bulk
+Data Entry
+TLOAD2
+Defines a time-dependent dynamic excitation or enforced
+motion. Note: Bulk
+Data Entry
+TSTEP
+Defines time step parameters for control and intervals at
+which a solution will be generated and output in transient analysis. Note: Bulk
+Data Entry
+TSTEPNL
+Defines parameters for geometric nonlinear implicit
+dynamic analysis strategy. Note: Bulk
+Data Entry
+TSTEPNX
+Defines additional parameters for geometric nonlinear
+implicit dynamic analysis. Note: Bulk
+Data Entry
+UNBALNC
+Defines the unbalanced rotating load during a rotor
+dynamic analysis in Frequency Response solution sequences. The unbalanced load is
+specified in a cylindrical system where the rotor rotation axis is the
+Z-axis. Note: Bulk
+Data Entry
+XHISADD
+Defines a time history output set as a union of time
+history outputs defined via XHIST entries. Note: Bulk
+Data Entry
+XSTEP
+Defines explicit analysis control. Note: Bulk
+Data Entry
+PAM-CRASH Cards
+Card
+Description
+ACC3D /
+Imposed accelerations Note: Keyword input
+ACFLD /
+Acceleration field Note: Keyword input
+BDFOR /
+Body force constraints Note: Keyword input
+BOUNC /
+Specify boundary conditions on the base body Note: Keyword
+input
+CONLO /
+Concentrated nodal load Note: Keyword input
+DAMP /
+Nodal damping group cards Note: Keyword input
+DIS3D /
+Imposed displacement Note: Keyword input
+DIS3DM /
+Imposed minimum displacement Note: Keyword input
+DIS3DX /
+Imposed maximum displacement Note: Keyword input
+INVEL /
+Specify the initial velocity of the base body Note: Keyword
+input
+PREFA /
+Pressure on shells Note: Keyword input
+PREBM /
+Pressure on beams Note: Keyword input
+RAC3D /
+Imposed rotational acceleration Note: Keyword input
+RAN3D /
+Imposed angular rotations Note: Keyword input
+RDA3D /
+Radial 3D boundary conditions Note: Keyword input
+RDD3D /
+Radial 3D boundary conditions Note: Keyword input
+RDV3D /
+Radial 3D boundary conditions Note: Keyword input
+RVE3D /
+Imposed rotational velocities Note: Keyword input
+VEL3D /
+Imposed velocities Note: Keyword input
+Permas Cards
+Card
+Description
+$ADDMODES
+Definition of static mode shapes to be added to the set of eigenmodes used
+for transformation to modal space. Note: Available as a load collector when the
+source = loads. To change the LPAT = field, set the AddmodeLoads toggle to
+LOADSELECT, which ensures that each data line will define different
+ADDMODES.
+In the NoOfLoads_AddMode = field, enter the number of load
+patterns to assign the ADDMODES to.
+$CONTVAL
+Assignment of properties to contacts referenced by contact identifier or
+name. Note: Supported as a load collector (card image LOADS). To create a card,
+use an existing load collector or create a new one with card image LOADS and
+select the CONTVAL check box. A maximum number of 5 keywords are allowed per
+load collector (load pattern).
+$PRETENSION LOAD
+Assignment of load properties to pretension threads/areas referenced by
+identifier or name. Note: Supported as a load collector (card image LOADS). To
+create a card, use an existing load collector or create a new one with card
+image LOADS and select the PRETENSION checkbox.
+$SUPPRESS
+Definition of suppressed degrees of freedom. The degrees of freedom given on
+the header line are suppressed for all nodes listed within the data block.
+Radioss Cards
+Assign loads to a collector by creating individual loads, all of the same type and degree
+of freedom, and storing them in the appropriate load collector, or by identifying the nodes
+on which loads/BCs act by selecting them through a set. The selection of the set is possible
+by editing the card image of the load collector.
+Card
+Description
+/ACTIV
+Describes the deactivation/activation of element
+groups. Note: Block
+Format Keyword
+/ALE/BCS
+Describes the ALE boundary conditions. Note: Block
+Format Keyword
+/BCS
+Defines boundary conditions on node groups for
+translational and rotational motion. Note: Block
+Format Keyword
+/CLOAD
+Defines a concentrated force or moment applied to each
+node of a prescribed nodal group. Note: Block
+Format Keyword
+/CONVEC
+Describes the free or forced convective flux. Note: Block
+Format Keyword
+/DFS/DETLINE
+Enable explosive material ignition from a
+detonation line [A,B]. Note: Block
+Format Keyword
+/DFS/DETPOINT
+Locates the detonation point and set lighting
+time for an explosive material law. Note: Block
+Format Keyword
+/DFS/LASER
+Enable to model laser impact taking into account
+laser-matter interaction. Note: Block
+Format Keyword
+/DFS/WAV_SHA
+Enables to shape detonation wave to take into
+account obstacles. Note: Block
+Format Keyword
+/EBCS
+Describes the elementary boundary condition
+sets. Note: Block
+Format Keyword
+/GRAV
+Defines gravity load on node group. Note: Block
+Format Keyword
+/IMPACC
+Defines imposed accelerations on a group of
+nodes. Note: Block
+Format Keyword
+/IMPDISP
+Defines imposed displacements on a group of
+nodes. Note: Block
+Format Keyword
+/IMPTEMP
+Defines imposed temperatures on a group of
+nodes. Note: Block
+Format Keyword
+/IMPVEL
+Defines imposed velocities on a group of
+nodes. Note: Block
+Format Keyword
+/INITEMP
+Describes the initial nodal temperature. Note: Block
+Format Keyword
+/INIVEL
+Defines initial velocity on a group of nodes. Note: Block
+Format Keyword
+/INIVEL/AXIS
+Initialize both translational and rotational
+velocities on a group of nodes in a given coordinate system. Note: Block
+Format Keyword
+/LOAD/CENTRI
+Computes a load according to the rotational
+velocity around an axis. Note: Block
+Format Keyword
+/LOAD/PFLUID
+Simulates hydrodynamic fluid pressure on a
+structure. The fluid pressure is calculated according to the specified fluid
+velocity, orientation of the structural surface against the fluid vector and the
+height of the fluid column above the surface of the structure. Note: Block
+Format Keyword
+/PLOAD
+Defines pressure load on a surface. Note: Block
+Format Keyword
+/SPHBCS
+Describes the SPH symmetry conditions. Note: Block
+Format Keyword
+/SPH/INOUT
+Describes the SPH inlet/outlet conditions. Note: Block
+Format Keyword
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

@@ -1,0 +1,952 @@
+Groups
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Accelerometers
+Accelerometer entities measure acceleration in the simulation.
+Ale Fsi Projection
+Ale Fsi Projection entities provide a coupling method for simulating the interaction between a Lagrangian material
+set (structure) and ALE material set (fluid).
+Ale Reference System Curve
+Ale Reference System Curve entities defines a motion and/or a deformation prescribed for a geometric entity, where
+a geometric entity may be any part, part set, node set, or segment set.
+Ale Reference System Group
+Ale Reference System Group entities used to associate a geometric entity to a reference system type.
+Ale Reference System Node
+Ale Reference System Node entities defines a group of nodes that control the motion of an ALE mesh.
+Ale Reference System Switch
+Ale Reference System Switch entities allows for the time-dependent switches between different types of reference systems,
+that is, switching to multiple PRTYPEs at different times during the simulation.
+Ale Smoothing
+Ale Smoothing entities constraint keeps an ALE slave node at its initial parametric location along a line between
+two other ALE nodes.
+Ale Tank Test
+Ale Tank Test keyword provides curve through an engineering approximation when control volume airbags only require
+two engineering curves to define gas inflator and those two curves can be experimentally measured but the ALE inflator
+needs one additional state variable - the inlet gas velocity which is impractical to obtain.
+Blocks
+Block entities are enclosed volumes represented by a "box" or block.
+Bodies
+Body entities define a kinematic assembly made of FE parts or nodes.
+Boxes
+Box entities are enclosed volumes, which are represented by a box.
+Constrained Extra Nodes
+Constrained extra node entities define and store the keywords *CONSTRAINED_EXTRA_NODES_NODE and *CONSTRAINED_EXTRA _NODES_SET.
+Constraints
+Constraint entities define kinematical constraints on a body at a specified node or point location.
+Contact Surfaces
+Contact surface entities define and store contact definitions typically used in contact analysis.
+Control Volumes
+Control volume entities define and store control volumes typically used in safety analysis.
+Cross Sections
+Cross section entities store cross section definitions used in a crash analysis.
+Curves
+Curve entities define and store xy data and are associated with a plot entity.
+Dummy
+Dummy entities are defined by bodies representing the different kinematic assemblies of the dummy.
+Element Clusters
+Element clusters are used to describe an assembly of elements for post-processing and failure control.
+Failures
+Failures describe material failure criteria to be coupled to material models.
+Features
+Feature entities track and manage certain geometric features.
+Fields
+Field entities store spatially varying values, which can later be realized (mapped) to the element and node data of a
+new target mesh.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Hourglass
+Hourglass entities define hourglass and bulk viscosity properties which are referenced via HGID in the *PART command.
+Interface Component
+Interface Component entities create an interface in interface file for use in subsequent linking calculations.
+Interface Linking
+Interface Linking Discrete keyword link node(s) to an interface in an existing interface file.
+Joints
+Joint entities define the kinematic relationship between two bodies (for Ball, Cylinder, Revolute, Slider joints) or three
+bodies (for DoubleSlider joints).
+Laminates
+Laminate entities define laminates, which make up a laminated structure by defining the stacking sequence of ply entities
+that make up the laminated structure.
+Load Steps
+Load step entities define and store load cases for a given analysis.
+Materials
+Material entities define and store material definitions for a model.
+Mechanisms
+Mechanism entities are the root of the hierarchy in the Mechanism Browser .
+Output Blocks
+Output block entities define and store solver output requests.
+Parameters
+Parameter entities parameterize FE entity and geometric entity attributes.
+Plies
+Ply entities define a FEA ply which is the FEA correlation to a physical ply.
+Plots
+Plot entities associate and organize curve entities within a xy plot window.
+Positions
+Position entities allow you to apply a Transformation sequence on set of nodes or SolverSubmodels.
+Pretensioner
+Pretensioner entities define pretensioners.
+Properties
+Property entities define and store 1D, 2D, and 3D property definitions for a model.
+Regions
+Region entities store information used to facilitate and automate modeling practices and processes. It enables a selection
+which can be common across design changes or other models, provided region data is the same.
+Retractors
+Retractor entities define retractors.
+Rigid Walls
+Rigid wall entities provide a method for treating a contact between a rigid surface and nodal points of a deformable body.
+In the LS-DYNA and Radioss user profiles, rigid walls can be created in the Model and Solver browsers.
+Sensors
+Sensor entities define and store sensors typically used in safety analysis.
+Sets
+Set entities define and store lists of entity IDs for entities, sets of sets, or lists of set IDs.
+Slip Rings
+Slip ring entities define sliprings.
+Solver Masses
+Solver masses are used to model lumped mass finite element mesh.
+Tables
+Table entities collect data points.
+Tags
+Tag entities tag a piece of information, called the body, onto a node, element, line, surface, point, or solid within
+the model.
+Terminations
+Termination entities provides an alternative way to stop the calculation before the termination time is reached.
+Titles
+Title entities attach a title box with text to the modeling window , or to a node, element, load, or system.
+Transformations
+Transformation entities define solver transformations, and are used to define a transformation sequence in a Position
+entity, to be applied on a set of nodes or on a SolverSubmodel.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact analysis.
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Groups
+Group entities define and store interfaces and rigid walls typically used in contact
+analysis.
+Interfaces
+Configurations 1 - 4: Define contact interactions between various parts of the
+model.
+Rigid Walls
+Configuration 5: Define a contact or sliding rigid wall in an analysis code.
+In all solver interfaces except for LS-DYNA , rigid walls
+are created as group entities with configuration 5. In the LS-DYNA solver interface, a rigid wall is created as a rigid wall
+entity.
+ALE Setup
+Configuration 6: Define input data pertaining to the Arbitrary-Lagrangian-Eulerian
+LS-DYNA capability.
+Abaqus Cards
+Card
+Description
+*BLOCKAGE
+Control contacting surfaces for blockage. Note: Must be used in conjunction
+with the *SURFACE INTERACTION card.
+*CHANGE FRICTION
+Change friction properties. Note: The Standard template only. It must be
+added to a load step (*STEP).
+*CLEARANCE
+Specify a particular initial clearance value and a contact direction for the
+slave nodes on a surface. Note: Must be added to a load step (*STEP) in explicit
+template.
+*COHESIVE BEHAVIOR
+Used to define surface-based cohesive behavior in a mechanical contact
+analysis. Note: It must be used in conjunction with the *SURFACE
+INTERACTION option.
+*CONTACT(General Contact)
+Begin the definition of general contact.
+*CONTACT CLEARANCE
+Define contact clearance properties.
+*CONTACT CLEARANCE ASSIGNMENT
+Assign contact clearances between surfaces in the general contact
+domain.
+*CONTACT CONTROLS
+Specify additional controls for contact. Note: Must be added to a load step
+(*STEP).
+*CONTACT CONTROLS ASSIGNMENT
+Assign contact controls for the general contact algorithm. Note: This card is
+a sub-option in the *CONTACT card image.
+*CONTACT DAMPING
+Define viscous damping between contacting surfaces. Note: This card is a
+sub-option in the *SURFACE INTERACTION card image.
+*CONTACT EXCLUSIONS
+Specify self-contact surfaces or surface pairings to exclude from the general
+contact domain. Note: This card is a sub-option in the *CONTACT card
+image.
+*CONTACT FORMULATION
+Specify a nondefault contact formulation for the general contact
+algorithm. Note: This card is a sub-option in the * CONTACT card
+image.
+*CONTACT INCLUSIONS
+Specify self-contact surfaces or surface pairings to include in the general
+contact domain. Note: This card is a sub-option in the *CONTACT card
+image.
+*CONTACT INTERFERENCE
+Prescribe time-dependent allowable interferences of contact pairs and contact
+elements. Note: The Standard template only. Must be added to a load step
+(*STEP).
+*CONTACT PAIR
+Define surfaces that contact each other.
+*CONTACT PROPERTY ASSIGNMENT
+Assign contact properties for the general contact algorithm. Note: This card
+is a sub-option in the *CONTACT card image.
+*CONTROLS
+Reset solution controls. Note: The Standard template only.
+*CONTROLS
+Reset solution controls. Note: The Standard template only.
+*COUPLING
+Define a surface-based coupling constraint where the *SURFACE card points to
+elements. Note: The *COUPLING is also supported as rigid elements (COUP_KIN) and
+RBE3 (COUP_DIS) when *SURFACE points to nodes.
+*DEBOND
+Used to specify that crack propagation may occur between two surfaces that
+are initially partially bonded. Note: The Standard template only. The
+*FRACTURE CRITERION option must appear immediately
+following this option.
+*DIAGNOSTICS
+Control diagnostic messages. Note:
+Explicit template only. Must be added
+to a load step (*STEP).
+*DISTRIBUTING
+Define a distributing coupling constraint. Note: This card is a sub-option in
+the *COUPLING card image. It is also supported as COUP_DIS type rbe3
+elements.
+*FASTENER (SPOT WELD)
+Define mesh-independent fasteners. Note:
+*FILTER
+Define a filter for output filtering. Note: Explicit template
+only
+*FIXED MASS SCALING
+Specify mass scaling at the beginning of the step. Note: Explicit template
+only. Must be added to a load step (*STEP).
+*FRACTURE CRITERION
+Used to specify the criterion for crack propagation along initially partially
+bonded surfaces. Note: It must appear immediately following the
+*DEBOND option in Abaqus /Standard
+and after the *COHESIVE BEHAVIOR option in Abaqus /Explicit.
+*FRICTION
+Specify a friction model. Note: This card is a sub-option in the *SURFACE
+INTERACTION card image.
+*FRICTION
+Specify a friction model. Note:
+This card is a sub-option in the *CHANGE
+FRICTION card image.
+*INITIAL CONDITIONS
+Prescribe initial conditions for an analysis.
+*INTEGRATED OUTPUT SECTION
+Define an integrated output section over a surface with a local coordinate
+system and a reference point.
+*KINEMATIC
+Define a kinematic coupling constraint. Note: This card is a sub-option in the
+*COUPLING card image. It is also supported as COUP_KIN type rigid
+elements.
+*MODEL CHANGE
+Remove or reactivate elements and contact pairs. Note: The Standard template
+only. Must be added to a load step (*STEP).
+*PRE-TENSION SECTION
+Associate a pre-tension node with a pre-tension section.
+*SHELL TO SOLID COUPLING
+Define a surface-based coupling between a shell edge and a solid face. Note:
+*SURFACE
+Define a surface or region in a model. Note:
+*SURFACE BEHAVIOR
+Define alternative pressure-overclosure relationships for contact. Note: This
+card is a sub-option in the *SURFACE INTERACTION card image.
+*SURFACE INTERACTION
+Define surface interaction properties. Note: Explicit template only. This
+card is defined from the Property panel in case of Standard 3D and Standard 2D
+templates.
+*SURFACE PROPERTY ASSIGNMENT
+Assign surface properties to a surface for the general contact
+algorithm. Note: This card is a sub-option in the *CONTACT card
+image.
+*TIE
+Define surface-based tie and cyclic symmetry constraints or coupled
+acoustic-structural interactions.
+*VARIABLE MASS SCALING
+Specify mass scaling during the step. Note: Explicit template only. Must be
+added to a load step (*STEP).
+EXODUS Cards
+Card
+Description
+TiedJoint
+LS-DYNA Cards
+An LS-DYNA entity that utilizes a *SET_ [NODE, SHELL, PART, and so on]
+keyword card belongs to a group, with the exception of Rigid Bodies/RBE2’s.
+The difference among configurations is the type of entities contained within a group.
+Config 1
+Contains master and slave elements.
+Config 2
+Contains master elements and slave nodes.
+Config 3
+Contains slave elements.
+Config 4
+Contains slave nodes.
+Sliding interfaces specifications.
+The Keyword _TITLE option is supported. The
+_THERMAL(IREAD==3) option is not supported.
+Use the additional cards option in Keyword decks to select number of lines of data. If
+this is on, two additional cards are available.
+In Structured, additional cards are controlled by using the IREAD
+variable. Valid values are 0, 1, and 2.
+Boxes, part sets, and sets are supported.
+The $HMNAME fields are used for names. When using the _TITLE option,
+the 70-character field is considered a comment.
+If the line following the keyword (No TITLE option), or the first line of the
+Structured card contains $HM_NAME, the name supplied is read and used as the group's
+name. If the string $HM_ID also exists, this is used as the group’s ID. NAME is 16
+characters, starting in Column 9. ID field is 8 characters, starting in Column 35.
+The solver interface type defines the general type of the LS-DYNA Sliding Interface. Use the Property Editor
+to make changes to the LS-DYNA type.
+Card
+Description
+*BOUNDARY_AMBIENT_EOS
+Defines the IDs of 2 load curves: 1) internal energy per unit reference
+specific volume and 2) relative volume.
+*BOUNDARY_FLUX_SET
+Define flux boundary conditions for a thermal or coupled thermal/structural
+analysis.
+*BOUNDARY_SPH_FLOW
+Define a flow of particle
+*CONSTRAINED_BUTT_WELD
+Define a line of coincident nodes that represent a structural butt weld
+between two parts defined by shell elements.
+*CONSTRAINED_LAGRANGE_IN_SOLID
+Provides the coupling mechanism for modeling Fluid-Structure
+Interaction.
+*CONSTRAINED_RIGID_BODIES
+Merge two rigid bodies.
+*CONSTRAINED_SPOTWELD
+Defines massless spot welds between non-contiguous nodal pairs.
+*CONSTRAINED_TIE-BREAK
+Define a tied shell edge to shell edge interface that can release locally as
+a function of plastic strain of the shells surrounding the interface
+nodes.
+*CONSTRAINED_TIED_NODES_FAILURE
+Define a tied node set with failure based on plastic strain.
+*CONTACT_AIRBAG_SINGLE_SURFACE(ID)
+Define a contact interface.
+*CONTACT_AIRBAG_SINGLE_SURFACE_MPP(ID)
+*CONTACT_AUTO_MOVE
+Move the master surface in a contact definition to close an initial gap
+between the slave and master surfaces.
+*CONTACT_AUTOMATIC_GENERAL(ID)
+Define a contact interface.
+*CONTACT_AUTOMATIC_GENERAL_INTERIOR(ID)
+Define a contact interface.
+*CONTACT_AUTOMATIC_GENERAL_INTERIOR_MPP(ID)
+*CONTACT_AUTOMATIC_GENERAL_MPP(ID)
+*CONTACT_AUTOMATIC_NODES_TO_SURFACE(ID)
+Define a contact interface.
+*CONTACT_AUTOMATIC_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_AUTOMATIC_NODES_TO_SURFACE_SMOOTH(ID)
+Define a contact interface.
+*CONTACT_AUTOMATIC_NODES_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_AUTOMATIC_ONE_WAY_SURFACE_TO_SURFACE(ID)
+*CONTACT_AUTOMATIC_ONE_WAY_SURFACE_TO_SURFACE_ORTHO_FRICTION(ID)
+*CONTACT_AUTOMATIC_ONE_WAY_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_AUTOMATIC_ONE_WAY_SURFACE_TO_SURFACE_TIEBREAK(ID)
+*CONTACT_AUTOMATIC_SINGLE_SURFACE(ID)
+*CONTACT_AUTOMATIC_SINGLE_SURFACE_MORTAR(ID)
+Define a contact interface.
+*CONTACT_AUTOMATIC_SINGLE_SURFACE_MPP(ID)
+*CONTACT_AUTOMATIC_SINGLE_SURFACE_SMOOTH(ID)
+*CONTACT_AUTOMATIC_SINGLE_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_MORTAR(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_MORTAR_TIED(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_ORTHO_FRICTION(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_THERMAL_FRICTION(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_TIEBREAK(ID)
+*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE_TIEBREAK_MPP(ID)
+*CONTACT_CONSTRAINT_NODES_TO_SURFACE(ID)
+*CONTACT_CONSTRAINT_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_CONSTRAINT_SURFACE_TO_SURFACE(ID)
+*CONTACT_CONSTRAINT_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_DRAWBEAD(ID)
+*CONTACT_DRAWBEAD_MPP(ID)
+*CONTACT_ENTITY(ID)
+Define a contact entity
+*CONTACT_ENTITY_MPP(ID)
+*CONTACT_ERODING_NODES_TO_SURFACE(ID)
+*CONTACT_ERODING_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_ERODING_SINGLE_SURFACE(ID)
+*CONTACT_ERODING_SINGLE_SURFACE_MPP(ID)
+*CONTACT_ERODING_SURFACE_TO_SURFACE(ID)
+*CONTACT_ERODING_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_FORCE_TRANSDUCER_CONSTRAINT(ID)
+*CONTACT_FORCE_TRANSDUCER_CONSTRAINT_MPP(ID)
+*CONTACT_FORCE_TRANSDUCER_PENALTY(ID)
+*CONTACT_FORCE_TRANSDUCER_PENALTY_MPP(ID)
+*CONTACT_FORMING_NODES_TO_SURFACE(ID)
+*CONTACT_FORMING_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_FORMING_NODES_TO_SURFACE_SMOOTH(ID)
+*CONTACT_FORMING_NODES_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_SMOOTH(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_SMOOTH_MPP(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_FORMING_ONEWAY_SURFACE_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_SMOOTH(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_SMOOTH_mpp(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_MORTAR(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_FORMING_SURFACE_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_INTERIOR(ID)
+Define interior contact for foam hexahedral and tetrahedral elements.
+*CONTACT_INTERIOR_MPP(ID)
+*CONTACT_NODES_TO_SURFACE(ID)
+*CONTACT_NODES_TO_SURFACE_INTERFERENCE(ID)
+*CONTACT_NODES_TO_SURFACE_INTERFERENCE_MPP(ID)
+*CONTACT_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_NODES_TO_SURFACE_SMOOTH(ID)
+*CONTACT_NODES_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_INTERFERENCE(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_INTERFERENCE_CONSTRAINED_OFFSET(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_INTERFERENCE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_INTERFERENCE_MPP(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_ONE_WAY_SURFACE_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_RIGID_BODY_ONE_WAY_TO_RIGID_BODY(ID)
+Define rigid surface contact.
+*CONTACT_RIGID_BODY_ONE_WAY_TO_RIGID_BODY_MPP(ID)
+*CONTACT_RIGID_BODY_TWO_WAY_TO_RIGID_BODY(ID)
+*CONTACT_RIGID_BODY_TWO_WAY_TO_RIGID_BODY_MPP(ID)
+*CONTACT_RIGID_NODES_TO_RIGID_BODY(ID)
+*CONTACT_RIGID_NODES_TO_RIGID_BODY_MPP(ID)
+*CONTACT_RIGID_SURFACE(ID)
+*CONTACT_RIGID_SURFACE_MPP(ID)
+*CONTACT_SINGLE_EDGE(ID)
+*CONTACT_SINGLE_EDGE_MPP(ID)
+*CONTACT_SINGLE_SURFACE(ID)
+*CONTACT_SINGLE_SURFACE_MPP(ID)
+*CONTACT_SLIDING_ONLY(ID)
+*CONTACT_SLIDING_ONLY_MPP(ID)
+*CONTACT_SLIDING_ONLY_PENALTY(ID)
+*CONTACT_SLIDING_ONLY_PENALTY_MPP(ID)
+*CONTACT_SPOTWELD(ID)
+*CONTACT_SPOTWELD_MPP(ID)
+*CONTACT_SPOTWELD_WITH_TORSION(ID)
+*CONTACT_SPOTWELD_WITH_TORSION_MPP(ID)
+*CONTACT_SURFACE_TO_SURFACE(ID)
+*CONTACT_SURFACE_TO_SURFACE_CONTRACTION_JOINT(ID)
+*CONTACT_SURFACE_TO_SURFACE_INTERFERENCE(ID)
+*CONTACT_SURFACE_TO_SURFACE_INTERFERENCE_CONSTRAINED_OFFSET
+*CONTACT_SURFACE_TO_SURFACE_INTERFERENCE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_SURFACE_TO_SURFACE_INTERFERENCE_MPP(ID)
+*CONTACT_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_SURFACE_TO_SURFACE_SMOOTH(ID)
+*CONTACT_SURFACE_TO_SURFACE_SMOOTH_MPP(ID)
+*CONTACT_SURFACE_TO_SURFACE_THERMAL_FRICTION(ID)
+*CONTACT_THERMAL_SURFACE_TO_SURFACE_(ID)
+*CONTACT_THERMAL_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_TIEBREAK_NODES_TO_SURFACE(ID)
+*CONTACT_TIEBREAK_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_TIEBREAK_SURFACE_TO_SURFACE(ID)
+*CONTACT_TIEBREAK_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_TIED_NODES_TO_SURFACE(ID)
+*CONTACT_TIED_NODES_TO_SURFACE_CONSTRAINED_OFFSET(ID)
+*CONTACT_TIED_NODES_TO_SURFACE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_TIED_NODES_TO_SURFACE_MPP(ID)
+*CONTACT_TIED_NODES_TO_SURFACE_OFFSET(ID)
+*CONTACT_TIED_NODES_TO_SURFACE_OFFSET_MPP(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_BEAM_OFFSET(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_BEAM_OFFSET_MPP(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_CONSTRAINED_OFFSET(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_MPP(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_OFFSET(ID)
+*CONTACT_TIED_SHELL_EDGE_TO_SURFACE_OFFSET_MPP(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_CONSTRAINED_OFFSET_MPP(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_MPP(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_OFFSET(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_OFFSET_MPP(ID)
+*CONTACT_TIED_SURFACE_TO_SURFACE_TITLE(ID)
+*CONTACT_2D_AUTOMATIC_SURFACE_TO_SURFACE(ID)
+Define a two-dimensional contact or slide line.
+*CONTACT_2D_AUTOMATIC_SURFACE_TO_SURFACE_THERMAL_TITLE(ID)
+*CONTACT_2D_AUTOMATIC_SURFACE_TO_SURFACE_THERMAL_TITLE_MPP(ID)
+*CONTACT_2D_AUTOMATIC_SURFACE_TO_SURFACE_TITLE(ID)
+*CONTACT_2D_AUTOMATIC_SURFACE_TO_SURFACE_TITLE_MPP(ID)
+*CONTACT_2D_AUTOMATIC_TIED_TITLE
+Defines a two-dimensional contact or slide line. May be used with rigid body
+material.
+*DATABASE_FSI
+Used to output information about certain coupled Lagrangian surfaces.
+*DATABASE_NODAL_FORCE_GROUP
+Define a nodal force group for output into ASCII file NODFOR and the binary file
+XTFILE .
+*ELEMENT_TRIM
+Define a part subset to be trimmed by *DEFINE_CURVE_TRIM
+*INITIAL_GAS_MIXTURE
+Used to specify a) which ALE multi-material groups may be present inside an
+ALE mesh set at time zero and b) the corresponding reference gas temperature and
+density which define the initial thermodynamic state of the gases.
+*INITIAL_VOID (PART and SET)
+Define initial voided part set IDs or part numbers.
+*INITIAL_VOLUME_FRACTION
+Define initial volume fractions of different materials in multi-material ALE
+elements.
+*INITIAL_VOLUME_FRACTION_GEOMETRY
+Volume filling command for defining the volume fractions of various ALE
+multi-material group that can occupy certain regions in some specified ALE mesh
+set.
+*SET_MULTI-MATERIAL_GROUP_LIST(TITLE)
+Defines an ALE multi-material set ID which contains a collection of one or
+more ALE multi-material group IDs.
+Nastran Cards
+Contact, thermal analysis definitions and non-structural mass are represented using group
+entities.
+Card
+Description
+AESURF
+Specifies an aerodynamic control surface as a member of the set of
+aerodynamic extra points.
+BCBODY
+Defines a flexible or rigid contact body in 2D or 3D. Note: Defined using the
+Interfaces panel.
+BCBODY1
+Defines a flexible or rigid contact body in 2D and 3D.
+BCONECT
+Defines the touching and touched contact bodies.
+BCTABL1
+Defines a Contact Table Note: Not supported in the BCTABLE
+Manager.
+BCTABLE
+Defines a contact table. Note: Use BCTABLE Manager tool to create BCTABLE,
+located in the utilities tab inside NASTRAN1
+BCTSET
+Note: Defined using the Interfaces panel
+BSURF
+Defines a contact body or surface defined by Element IDs. Note: Defined using
+the Interfaces panel
+BSURFS
+3D Contact Region Definition by Solid Elements. Note: NX Nastran only. Defined using the Interfaces
+panel
+CONDUCTION
+Defines CHBDYE slave elements used for thermal conduction
+analysis. Note: Defined using the Interfaces panel
+CONVECTION
+Defines CHBDYE slave elements used for thermal convection analysis, and also
+allows for CONV continuation cards to be defined. Note: Has PCONV card image.
+Defined using the Interfaces panel.
+NSM1
+Defines non-structural mass per unit length/area on properties or
+elements. Note: Defined using the NSM panel.
+NSML1
+Defines lumped non-structural mass on properties or elements. Note: Defined
+using the NSM panel.
+PCONV
+Specifies the free convection boundary condition properties of a boundary
+condition surface element used for heat transfer analysis. Note: Defined using the
+Interfaces panel, using CONVECTION group type.
+RADIATION
+Defines CHBDYE slave elements used for thermal radiation analysis. Note: Has
+RADM card image. Defined using the Interfaces panel.
+RADM
+Defines the radiation properties of a boundary element for heat transfer
+analysis. Note: Defined using the Interfaces panel, using RADIATION group
+type.
+SPBLND1
+Defines a strip based blending of two splines.
+SPBLND2
+Defines a curve based blending of two splines.
+SPRELAX
+Defines relaxation of a spline based on an adjacent spline.
+SPLINE1
+Defines a surface spline for interpolating motion and/or forces for
+aeroelastic problems on aerodynamic geometries defined by regular arrays of
+aerodynamic points.
+SPLINE2
+Defines a beam spline for interpolating motion and/or forces for aeroelastic
+problems on aerodynamic geometries defined by regular arrays of aerodynamic
+points.
+SPLINE4
+Defines a curved surface spline for interpolating motion or forces for
+aeroelastic problems on general aerodynamic geometries.
+SPLINE5
+Defines a 1D beam spline for interpolating motion and/or forces for
+aeroelastic problems on aerodynamic geometries.
+SPLINE6
+Defines a 6DOF or 3DOF finite surface spline for interpolating motion and/or
+forces between two meshes.
+SPLINE7
+Defines a 6DOF finite beam spline for interpolating motion and/or forces
+between two meshes.
+SPLINRB
+Defines a rigid body spline for interpolating motion or forces for
+aeroelastic problems on general aerodynamic geometries.
+OptiStruct Cards
+Contact, thermal analysis definitions, multi-body dynamics bodies, non-structural mass,
+rigid walls and section outputs are represented using group entities.
+Card
+Description
+CONTACT
+Defines a contact interface for Small Displacement
+Nonlinear Analysis (NLSTAT), Nonlinear Transient Dynamics (NLGEOM), and
+Contact-based Thermal Analysis (HEAT). Note: Bulk Data Entry
+CONDUCTION
+Defines CHBDYE slave elements used for thermal
+conduction analysis. Note: Bulk Data Entry
+CONVECTION
+Defines CHBDYE slave elements used for thermal
+conduction analysis, and also allows for CONV continuation cards to be
+defined. Note: Bulk Data Entry
+GROUND
+Defines a ground body out of a list of finite element
+properties, elements, and grid points. Note: Bulk Data Entry
+MBCNTDS
+Defines a Multibody Contact between a set of nodes and a
+deformable surface. Note: Bulk Data Entry
+MBCNTR
+Defines a Multibody contact between rigid
+bodies. Note: Bulk Data Entry
+NODESET
+NSM1
+Defines non-structural mass per unit area or per unit length
+for a list of elements or properties. Note: Bulk Data Entry
+NSML1
+Defines lumped non-structural mass for a list of elements
+or properties. Note: Bulk Data Entry
+PCONV
+Defines a free convection boundary condition
+properties. Note: Bulk Data Entry
+PFBODY
+Defines a flexible body out of a list of finite element
+properties, elements, and grid points. Note: Bulk Data Entry
+PRBODY
+Defines a rigid body out of a list of finite element
+properties, elements and grid points. Note: Bulk Data Entry
+SECT
+Defines a section for force output in geometric nonlinear
+analysis. Note: Bulk Data Entry
+TIE
+Defines a tied contact in Linear Static Analysis (STATICS)
+and Small Displacement Nonlinear Analysis (NLSTAT). Penalty-based and MPC-based TIE
+contacts are available and can be selected using CONTPRM ,
+TIE . Note: Bulk Data Entry
+XDAMP
+Defines the values for Raleigh damping for geometric
+nonlinear dynamic analysis. Note: Bulk Data Entry
+PAM-CRASH 2G Cards
+Card
+Description
+CNTAC / NTYPE = 1
+Special sliding without separation
+CNTAC / NTYPE = 10
+Internal solid anti-collapse contact
+CNTAC / NTYPE = 21
+Body-to-multiplane contact
+CNTAC / NTYPE = 33
+Symmetric node-to-segment contact with edge treatment
+CNTAC / NTYPE = 34
+Non-symmetric node-to-segment contact with edge treatment
+CNTAC / NTYPE = 36
+Self-impacting node-to-segment contact with edge treatment
+CNTAC / NTYPE = 37
+Enhanced self-impacting contact for airbags
+CNTAC / NTYPE = 43
+Edge-to-edge master-slave contact
+CNTAC / NTYPE = 44
+Node-to-segment-oriented contact with smooth contact surface
+CNTAC / NTYPE = 46
+Edge-to-edge self-impacting contact
+CNTAC / NTYPE = 54
+Non-symmetric-oriented contact
+CNTAC / NTYPE = 61
+Node-to-analytical surface contact
+CNTAC / NTYPE = 154
+Implicit small sliding contact
+MASS_GES /
+Added mass definition (only when IDNOD = 0)
+NSMAS /
+Non-structural mass definition
+NSMAS2/
+Alternate mass distribution method
+TIED /
+Node-surface tied interface
+Permas Cards
+Card
+Description
+$CONTACT
+Contact definitions
+$MPC ISURFACE
+Coupling of two surfaces
+$MPC WLSSURFACE/ WLDSURFACE
+Weld connection between nodes and surfaces
+$PRETENSION PLANE
+Pretension definition without detailing the threaded connection.
+$PRETENSION THREAD
+Modeling a threaded pretension section
+Radioss Cards
+Card
+Description
+/INICONT
+Container definition for ALE material. Note: Block Format Keyword
+/INIVOL
+Defines material in the ALE containers. Note: Block Format Keyword
+/INTER
+Describes the interfaces. Note: Block Format Keyword
+/INTER/LAGMUL/TYPE7
+Describes the Lagrange Multiplier interface
+TYPE7. Multi usage impact interface between a master surface and a list of slaves
+nodes. Note: Block Format Keyword
+/INTER/TYPE1
+Defines a fluid-structure interaction. Lagrangian
+elements (structure) can interact with ALE elements, which model a viscous
+fluid. Note: Block Format Keyword
+/INTER/TYPE2
+Defines a TYPE2 tied interface that connects a set
+of slave nodes to a master surface. It can be used to connect coarse and fine
+meshes, model spotwelds, rivets, and so on. Note: Block Format Keyword
+/INTER/TYPE3
+Simulates impacts between two surfaces (with
+oriented segments). This interface works properly if the two surfaces are simply
+convex. Note: Block Format Keyword
+/INTER/TYPE5
+Simulates impacts between a master surface and a
+list of slave nodes. Note: Block Format Keyword
+/INTER/TYPE6
+Simulates contact between two rigid bodies with
+tabulated input of the contact force. It works similar to interface TYPE3. Contact
+force between the bodies can be input as a function of maximal penetration. The
+interface also allows you to input a force function for unloading. Note: Block Format Keyword
+/INTER/TYPE7
+Multi-usage impact interface, modeling contact
+between a master surface and a group of slave nodes. It is also possible to consider
+heat transfer and heat friction. Note: Block Format Keyword
+/INTER/TYPE8
+Simulates drawbeads. It is mainly used in the
+process industry to model metal forming. Drawbeads are used to prevent the metal
+strip from sliding during the stamping process. Normals of the master segments must
+be oriented toward the slave nodes (unsorted group). Note: Block Format Keyword
+/INTER/TYPE9
+Defines the ALE Lagrange with void opening and
+free space. Non-impacted ALE nodes are on a free surface. The grid velocity is equal
+to the material velocity in normal direction. The normal of the master surface
+elements must be oriented toward the slave nodes. Note: Block Format Keyword
+/INTER/TYPE10
+Tied contact with void. Note: Block Format Keyword
+/INTER/TYPE11
+Simulates impact between edge to Edge or lines. A
+line can be a beam or truss element or a shell edge or spring elements. Note: Block Format Keyword
+/INTER/TYPE12
+Defines fluid to fluid contact and enables the
+transmission of flow between two ALE surfaces (master and slave side). The slave
+node velocities are interpolated from master surface values. Then convective fluxes
+are calculated between the two surfaces. Note: Block Format Keyword
+/INTER/TYPE14
+Simulates impacts between a hyper-ellipsoidal
+rigid master surface and a list of slave nodes. The hyper-ellipsoidal surface is
+treated as an analytical surface (hyper-ellipsoidal surfaces are only discretized
+for post-processing). For this interface, generally, use a mesh whose size is finer
+than the lowest semi- axis of master surface. The master surface must be a MADYMO hyper-ellipsoidal surface or a Radioss hyper-ellipsoidal surface. Note: Block Format Keyword
+/INTER/TYPE15
+Ellipsoidal Surfaces to Elements Contact. It is a
+penalty contact interface without damping. This interface replaces interface TYPE14,
+especially if the mesh is coarser than the ellipsoid size. The slave surface must be
+a set of 3-node or 4-node segments (i.e. any kind of surface; except ELLIPS and
+MDELLIPS surfaces). The master surface must be a MADYMO
+hyper-ellipsoidal surface or a Radioss hyper-ellipsoidal
+surface, and Interface does not allow penetrations up to half the
+ellipsoid. Note: Block Format Keyword
+/INTER/TYPE18
+Defnes the Euler/Lagrange or ALE/Lagrange
+contact. Euler-Lagrange or ALE-Lagrange contact is the contact between a Lagrangian
+master surface and a list of Eulerian or ALE slaves nodes. Material velocity for all
+slave nodes is imposed by master surface with a penalty formulation. ALE slave node
+grid velocity is not modified by this interface. Note: Block Format Keyword
+/INTER/TYPE19
+Combination of interface TYPE7 and TYPE11, with
+common input based on the same slave/master surfaces. Slave node group for interface
+TYPE7, as well as slave and master line segments used by equivalent TYPE11 interface
+are virtually generated from these input surfaces. Note: Block Format Keyword
+/INTER/TYPE20
+A general single surface or surface to surface
+contact interface. Edge to edge contact is also possible. Penalty stiffness is
+constant and therefore the time step is not affected (for standard penalty
+stiffness). This contact interface can replace interface TYPE3, TYPE5, TYPE7, TYPE11
+or TYPE19. The interface is basically defined in terms of one or two surfaces. If
+only one surface is used, this surface is self-impacting. If two surfaces are
+defined, nodes of surface two impact surface one. A symmetric treatment can be
+activated. Edges of surface one and two can be taken into account for the contact.
+Nodes can be added to surface. Note: Block Format Keyword
+/INTER/TYPE21
+Specific interface between a non-deformable
+master surface and a slave surface designed for stamping. All nodes of the master
+surface must belong to the rigid body. Note: Block Format Keyword
+/INTER/TYPE23
+Defines a contact interface for airbag fabrics,
+modeling contact between a master surface and a slave surface which are supposed to
+belong to an airbag. This is a soft penalty contact which can deal with penetrations
+and intersections often coming in the folded airbag mesh. This interface can be used
+for self-impacting. Note: Block Format Keyword
+Samcef Cards
+Card
+Description
+Examples
+.BOLT
+Defines a bolt contact.
+.BOLT I 1 NDIST 1155 MACRO 2090 $
+GROUP "PRETENS_1" METHOD 1 ! "BOLT_1"
+.CLM NOEUD I 1155 CHA COMP 1 VAL 150000.0
+.BOLT I 2 NDIST 1156 MACRO 3090 FIX 2 $
+GROUP "PRETENS_2" METHOD 2 ! "BOLT_2"
+.CLM NOEUD I 1156 DEP VAL 10.5 COMP 1
+.MCT
+Defines a flexible contact.
+.MCT I 10 GROUP 17 GTAR 23 OPT 3 ! Contact default
+.MCT I 20 GROUP 65 GTAR 12 OPT 2 NLIM -1 UN3 1 DMIN -0.0245 KSMO 1 ! Advanced contact
+.MCT I 30 GROUP 45 GTAR 75 OPT 2 UN3 1 OCPO 2 KSMO 1 ! Glue contact
+.STI
+Defines a glue contact.
+.STI I 1 GROUP 17 23 PROJ 0! Glue default
+.STI I 2 GROUP 35 64 ! Advanced glue
+.ZYG
+Defines a periodic condition or cyclic condition - explicit mode
+contact.
+.ZYG GROUP "slaves_nodes" "master" $
+TRAN              0.0              1.0              0.0 ! "contact_Periodic"
+.ZYG GROUP "slaves_nodes" "master" $
+WAVE                1 $
+AXE                 X $
+ORIGIN       0.88366595       1.02703438            -40.0 $
+ANGL             45.0 $
+PROJ 0 ! "contact_cyclic"
+.ZYG_AUTO
+Defines a cyclic condition - automatic mode contact.
+.ZYG AUTO GROUP "auto_elements" $
+WAVE                0 $
+AXE                 Y $
+ORIGIN      -8.41253531        5.4064082     -16.47058824 ! "contact_Auto_Cyclic"
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support

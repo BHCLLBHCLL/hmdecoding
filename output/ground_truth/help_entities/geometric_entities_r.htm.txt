@@ -1,0 +1,237 @@
+Geometric Entities
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Components and Geometric/FE Entities
+Geometric Entities
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+HyperMesh Help Manual
+What's New
+View new features for HyperMesh 2019 .
+Get Started
+Learn the basics and discover the workspace.
+Tutorials
+Discover HyperMesh functionality with interactive tutorials.
+Interface with External Products
+Solver interfaces supported in HyperMesh .
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Include Files and SolverSubmodels
+Assemblies
+Assemblies collect and organize sub-assemblies and components into hierarchical data structures which are intended to
+reflect the data structure of the product being modeled.
+Components and Geometric/FE Entities
+Components
+Components collect and organize points, lines, surfaces, solids, elements and connectors. Components are intended to be
+organizational containers for the geometry and FE idealization of a physical part which makes up a product.
+Geometric Entities
+Finite Element Entities
+Supported finite element entities.
+Load Collectors, Loads and Equations
+Part Assemblies and Parts
+System Collectors and Systems
+Vector Collectors and Vectors
+Beamsection Collectors and Beamsection
+Bags
+Bags collect and organize entities.
+Multibodies
+Multibodies collect and organize ellipsoids, multibody planes, and multibody joints and are typically used in multi-body
+analysis.
+Named Entities
+Entities which are given a name but are not collected or organized into containers.
+Morphing Entities
+Entities used for morphing the shape of FE model.
+Optimization Entities
+Entities used to set up optimization problems.
+Control Cards
+Control card entities create solver control cards such as results file I/O options, CPU and memory limits, and others.
+Undefined Entities
+Undefined entities are entities that will not be written to the solver deck.
+Solver Encryption Entities
+The encryption of solver entities is used to translate entity data into an undisclosed language.
+Element Property and Material Assignement Rules
+Element property and material assignment rules are based on the current user profile (solver interface).
+Supported Cards
+Supported cards organized by solver.
+CAD Interfaces
+Support provided by the CAD readers and writers.
+Browsers
+Browsers supply a great deal of view-related functionality in HyperMesh by listing the parts of a model in a tabular and/or tree-based format, and providing controls inside the table that
+allow you to alter the display of model parts.
+Panels
+Pre-processing and post-processing tools are displayed on panels located at the bottom of the application.
+Geometry
+Create and edit geometry.
+Meshing
+Learn about the different types of mesh you can create in HyperMesh .
+Connectors
+Create connections between parts of your model.
+Model Build and Assembly
+Create, organize, and manage the CAE parts.
+Model Verification
+Perform automatic checks on CAD models, and identify potential issues with geometry that may slow down the meshing
+process using the Verification and Comparison tools.
+Crash and Safety
+Tools used for crash and safety analysis.
+Model Setup
+Overview of how to build a finite element model.
+Morphing
+Morph the shape of your finite element model.
+Optimization
+Setup an Optimization in HyperMesh .
+Conversion Between Solver Formats
+Convert finite element models to another solver format.
+XY Plotting
+Study relationships between data vectors in results files.
+Post-Processing Analysis
+Learn how to use post-processing functions.
+View All Altair HyperWorks Help
+HyperMesh Help Manual
+Home
+Entities and Solver Interfaces
+A solver interface is made up of a template and a FE-input reader.
+Collectors and Collected Entities
+Collectors are named organizational containers for collected entities. Collected entities are nameless entities which must
+reside within one, and only one, collector. Collected entities are mutually exclusive to a collector.
+Components and Geometric/FE Entities
+Geometric Entities
+Search
+What's New
+Get Started
+Tutorials
+Interface with External Products
+Entities and Solver Interfaces
+CAD Interfaces
+Browsers
+Panels
+Geometry
+Meshing
+Connectors
+Model Build and Assembly
+Model Verification
+Crash and Safety
+Model Setup
+Morphing
+Optimization
+Conversion Between Solver Formats
+XY Plotting
+Post-Processing Analysis
+Index
+Geometric Entities
+Every point, line, surface or solid must be organized into one component, and therefore are
+mutually exclusive to a component.
+Points
+A point is a zero-dimensional geometric entity.
+A free point is a zero-dimensional geometry entity in space that is not associated with a
+surface. It is displayed as a small "x". These types of points are typically used for weld
+locations and connectors.
+A fixed point is a zero-dimensional geometry entity that is associated with a surface. It
+is displayed as a small "o". The automesher places a node at each fixed point on the surface
+being meshed. A fixed point that is placed at the junction of three or more non-suppressed
+edges is called a vertex or vertex point. Such vertices cannot be suppressed (removed).
+Lines
+A line represents a curve in space and is not attached to any surface or solid. A line is a
+one-dimensional geometric entity.
+A line can be composed of one or more line types. Each line type in a line is referred to
+as a segment. The end point of each line segment is connected to the first point of the next
+segment. A joint is the common point between two line segments. Line segments are maintained
+as a single line entity, so operations performed on the line affect each segment of the
+line. In general, HyperMesh automatically uses the appropriate
+number and type of line segments to represent the geometry.
+Lines are different from surface edges and are sometimes handled differently for certain
+operations.
+Surfaces
+A surface represents the geometry associated with a physical part. A surface is a
+two-dimensional geometric entity that may be used in automatic mesh generation.
+A surface is comprised of one or more faces. Each face contains a mathematical surface and
+edges to trim the surface, if required. When a surface has several faces, all of the faces
+are maintained as a single surface entity. Operations performed on the surface affect all
+the faces that comprise the surface. In general, HyperMesh
+automatically uses the appropriate number of and type of surface faces to represent the
+geometry.
+The perimeter of a surface is defined by edges. There are four types of surface edges:
+Free edges
+A free edge is an edge that is owned by only one surface.
+Free edges are colored red by default.
+On a clean model consisting of surfaces, free edges appear only along the outer
+perimeter of the part and around any interior holes. Free edges that appear between
+two adjacent surfaces indicate the existence of a gap between the two surfaces. The
+automesher will leave a gap in the mesh wherever there is a gap between two
+surfaces.
+Shared edges
+A shared edge is an edge that is owned, or shared, by two adjacent surfaces.
+Shared edges are colored green by default.
+When the edge between two surfaces is a shared edge, there is no gap or overlap
+between the two surfaces - they are geometrically continuous. The automesher always
+places seed nodes along the length a shared edge and will produce a continuous mesh
+without any gaps along that edge. The automesher will not construct any individual
+elements that cross over a shared edge.
+Suppressed edges
+A suppressed edge is shared by two surfaces but it is ignored by the
+automesher.
+Suppressed edges are colored blue by default.
+Like a shared edge, a suppressed edge indicates geometric continuity between two
+surfaces but, unlike a shared edge, the automesher will mesh across a suppressed edge
+as if it were not even there. The automesher does not place seed nodes along the
+length of a suppressed edge and, consequently, individual elements will span across
+it. By suppressing undesirable edges you are effectively combining surfaces into
+larger logical meshable regions.
+Non-manifold edges
+A non-manifold edge is owned by three or more surfaces.
+Non-manifold edges are colored yellow by default.
+They typically occur at "T" intersections between surfaces or when 2 or more
+duplicate surfaces exist. The automesher always places seed nodes along their length
+and will produce a continuous mesh without any gaps along that edge. The automesher
+will not construct any individual elements that cross over a T-joint edge. These edges
+cannot be suppressed.
+Surface edges are different from lines and are sometimes handled differently for certain
+operations.
+The connectivity of surface edges constitutes the geometric topology.
+Solids
+Solids are closed volume of surfaces that can take any shape. Solids are three-dimensional
+entities that can be used in automatic tetra and solid meshing.
+The surfaces defining a solid can belong to multiple component collectors. The display of a
+solid and its bounding surfaces are controlled only by the component collector to which the
+solid belongs.
+Faces
+A face is a single Non-uniform Rational B-Spline (NURBS) and is the smallest area entity.
+It has a separate underlying mathematical definition, specified when it was created.
+All faces are represented mathematically with the following formulations:
+plane
+cylinder/cone
+sphere
+torus
+NURBS
+A surface can be made up of a single face type or of multiple face types. Multiple types
+are used for more complex surfaces that contain sharp corners or highly complex shapes.
+-->
+(c) 2019. Altair Engineering Inc. All Rights Reserved.
+Intellectual Property Rights Notice | Technical Support
