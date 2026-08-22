@@ -200,6 +200,133 @@ def find_node_section_struct(p, multi=False):
         return segs
     return max(segs, key=lambda s: s[1])
 
+def _scan_small_node_clusters(p, lim=10000.0, min_cnt=2, max_cnt=49):
+    """补扫小节点段 (2..49 条): 68B/92B 布局, 允许 k=0.
+
+    find_node_section_struct 要求 k in 1..16 且 >=25 条连续验证,
+    会漏掉 k=0 的小节点段 (如 v17 的 3 条尾段). 此处用 [nid][0][k]
+    的零4 字段定位: 节点段基址均落在 mod-4=3 网格 (与已检测大段一致).
+    返回 [(count, base, stride, idoff, chain), ...].
+    """
+    n = len(p)
+    ZERO4 = b"\x00\x00\x00\x00"
+    starts = {68: [], 92: []}
+    j = 0
+    scan_lim = min(n, 36_000_000)  # 节点数据集中在文件前部
+    while True:
+        j = p.find(ZERO4, j, scan_lim)
+        if j < 0:
+            break
+        base = j - 4
+        if base < 0 or base % 4 != 3:
+            j += 1
+            continue
+        nid = u32(p, base)
+        k = u32(p, base + 8)
+        if not (1 <= nid <= 10_000_000 and k <= 16):
+            j += 1
+            continue
+        for stride in (68, 92):
+            if base + stride > n:
+                continue
+            x, y, z = d64(p, base + 12), d64(p, base + 20), d64(p, base + 28)
+            if abs(x) < lim and abs(y) < lim and abs(z) < lim:
+                starts[stride].append(base)
+                break
+        j += 1
+    out = []
+    for stride, lst in starts.items():
+        vset = set(lst)
+        runs = []
+        for c in sorted(vset):
+            if runs and runs[-1][-1] + stride == c:
+                runs[-1].append(c)
+            else:
+                runs.append([c])
+        for r in runs:
+            if not (min_cnt <= len(r) <= max_cnt):
+                continue
+            # 至少一条 k>=1, 且至少一条非零坐标 (排除元素数据假阳性)
+            if not any(1 <= u32(p, x + 8) <= 16 for x in r):
+                continue
+            if not any(max(abs(d64(p, x + 12)), abs(d64(p, x + 20)),
+                           abs(d64(p, x + 28))) > 0.001 for x in r):
+                continue
+            out.append((None, len(r), r[0], stride, 0, False))
+    return out
+
+def _collect_node_segments(p, lim=10000.0):
+    """v17 节点段收集 (快速统一扫描): 零4 定位 68B/92B 记录, 聚类成段, 重叠修正.
+
+    覆盖大段 (块 A 68B / 块 B 92B) 与 k=0 小段 (块 C). 段基址均落在
+    mod-4=3 网格 (与 find_node_section_struct 检出的大段一致). 相邻段
+    紧邻切换时会互相过扫 1 条, 按段基址截断修正, 保证 row_map 无幻影行.
+    """
+    n = len(p)
+    ZERO4 = b"\x00\x00\x00\x00"
+    starts = {68: [], 92: []}
+    j = 0
+    while True:
+        j = p.find(ZERO4, j)
+        if j < 0:
+            break
+        base = j - 4
+        if base < 0 or base % 4 != 3:
+            j += 1
+            continue
+        nid = u32(p, base)
+        k = u32(p, base + 8)
+        if not (1 <= nid <= 10_000_000 and k <= 16):
+            j += 1
+            continue
+        for stride in (68, 92):
+            if base + stride > n:
+                continue
+            x, y, z = d64(p, base + 12), d64(p, base + 20), d64(p, base + 28)
+            if abs(x) >= lim or abs(y) >= lim or abs(z) >= lim:
+                continue
+            # k==0 且坐标全零 -> 假起点 (原点节点记录内部的零字节)
+            if k == 0 and max(abs(x), abs(y), abs(z)) < 0.001:
+                continue
+            starts[stride].append(base)
+        j += 1
+    segs = []
+    for stride, lst in starts.items():
+        vset = set(lst)
+        runs = []
+        for c in sorted(vset):
+            if runs and runs[-1][-1] + stride == c:
+                runs[-1].append(c)
+            else:
+                runs.append([c])
+        for r in runs:
+            if len(r) < 2:
+                continue
+            # 至少一条 k>=1, 且至少一条非零坐标 (排除元素数据假阳性)
+            if not any(1 <= u32(p, x + 8) <= 16 for x in r):
+                continue
+            if not any(max(abs(d64(p, x + 12)), abs(d64(p, x + 20)),
+                           abs(d64(p, x + 28))) > 0.001 for x in r):
+                continue
+            segs.append((None, len(r), r[0], stride, 0, False))
+    # 若未检出 (其他版本布局), 回退到旧结构扫描
+    if not segs:
+        segs = list(find_node_section_struct(p, multi=True))
+        segs += _scan_small_node_clusters(p)
+    # 重叠修正
+    segs.sort(key=lambda s: s[2])
+    fixed = []
+    for i, (hi, cnt, base, stride, idoff, chain) in enumerate(segs):
+        end = base + cnt * stride
+        for j2 in range(i + 1, len(segs)):
+            if segs[j2][2] > base:
+                if end > segs[j2][2]:
+                    cnt = (segs[j2][2] - base) // stride
+                break
+        if cnt >= 1:
+            fixed.append((None, cnt, base, stride, idoff, chain))
+    return fixed
+
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
@@ -547,28 +674,136 @@ def parse_geo_points_variant_b(p, node_ids=None):
     return results
 
 # ---------------------------------------------------------------------------
+# family-1 核心记录全局扫描 (v14+): (701|686)+2596 模式
+# ---------------------------------------------------------------------------
+def _scan_family1_cores(p, row_map, row_count):
+    """全局扫描 family-1 核心记录, 覆盖 Y=2 段全部元素.
+
+    标记: u16=701/686 后接 u16=2596; 记录相对标记 q:
+      eid = u16(q+8) | u16(q+10)<<16; flag = u32(q+18);
+      cfg = flag>>16 (300..500); 节点行号 u32 @q+22 起, 遇 0 结束.
+    返回 {eid: (config, (row, ...))}.
+    """
+    import struct
+    elems = {}
+    for MARK in (struct.pack("<HH", 701, 2596), struct.pack("<HH", 686, 2596)):
+        j = 0
+        while True:
+            j = p.find(MARK, j)
+            if j < 0:
+                break
+            q = j
+            eid = u16(p, q + 8) | (u16(p, q + 10) << 16)
+            flag = u32(p, q + 18)
+            cfg = flag >> 16
+            if 300 <= cfg <= 500 and (flag & 0xFFFF) == 0 and 1 <= eid <= 10_000_000:
+                rows = []
+                k = q + 22
+                while u32(p, k) != 0 and len(rows) < 20:
+                    rows.append(u32(p, k))
+                    k += 4
+                if 1 <= len(rows) <= 20 and all(1 <= r <= row_count for r in rows):
+                    elems.setdefault(eid, (cfg - 256, tuple(rows)))
+            j += 2
+    return elems
+
+# ---------------------------------------------------------------------------
+# 特殊元素段 (Y≠2 段): config 1/3/21/22/55/61, 记录 [eid][0][k][tag u16] + 行号
+# ---------------------------------------------------------------------------
+SPECIAL_ELEM_TAGS = {257: 1, 259: 3, 277: 21, 278: 22, 534: 22,
+                     790: 22, 1558: 22, 567: 55, 317: 61}
+
+def _parse_special_elems(p, row_map, row_count, scan_from=0):
+    """解析 Y≠2 段的杂项特殊元素 (不在 family-1 core 中).
+
+    记录布局: [eid u32][0][k=2|3][tag u16][节点行号区].
+      - config 55: [tag=567][n u16] 后接 u32 序列; 节点行号 =
+        (下一 u32 低16位 << 16) | 当前 u32 高16位; 节点数 = n+1.
+      - config 1: 单节点 (lo u16 @+14, hi u16 @+16) -> (hi<<16)|lo.
+      - 其他 (config 3/21/22/61): 每节点 (lo u16 @+14+4i, hi u16 @+16+4i),
+        lo==0 结束. 行号低 16 位存高 u16 位 (行号 > 65535 时截断).
+    返回 {eid: (config, [row, ...])}.
+    """
+    elems = {}
+    ZERO4 = b"\x00\x00\x00\x00"
+    j = max(scan_from, 0)
+    n = len(p)
+    while True:
+        j = p.find(ZERO4, j)
+        if j < 0:
+            break
+        eid = u32(p, j - 4) if j >= 4 else 0
+        if not (1 <= eid <= 10_000_000):
+            j += 1
+            continue
+        k = u32(p, j + 4)
+        if k not in (2, 3):
+            j += 1
+            continue
+        tag = u16(p, j + 8)
+        cfg = SPECIAL_ELEM_TAGS.get(tag)
+        if cfg is None:
+            j += 1
+            continue
+        h = j - 4
+        rows = []
+        if cfg == 55:
+            nn = u16(p, h + 14)
+            if 0 <= nn <= 100:
+                rows.append(((u32(p, h + 20) & 0xFFFF) << 16) | (u32(p, h + 16) >> 16))
+                for i in range(1, nn + 1):
+                    low = u32(p, h + 28 + 4 * (i - 1)) >> 16
+                    high = u32(p, h + 32 + 4 * (i - 1)) & 0xFFFF
+                    rows.append((high << 16) | low)
+        elif cfg == 1:
+            lo = u16(p, h + 14)
+            hi = u16(p, h + 16)
+            rows = [(hi << 16) | lo]
+        else:
+            i = 0
+            while len(rows) <= 100:
+                lo = u16(p, h + 14 + 4 * i)
+                if lo == 0:
+                    break
+                hi = u16(p, h + 16 + 4 * i)
+                rows.append((hi << 16) | lo)
+                i += 1
+        if rows and all(1 <= r <= row_count for r in rows):
+            elems.setdefault(eid, (cfg, tuple(rows)))
+        j += 1
+    return elems
+
+# ---------------------------------------------------------------------------
 def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
     ns_list = []
     nodes = {}
-    if ns:
-        n1, b1 = parse_nodes(p, ns)
-        if n1:
-            nodes = n1
-            ns_list.append(ns)
-    # 结构扫描合并全部节点段 (v14+ 多段; v11 下仅 [136] 失败时)
-    if d64(p, 4) >= 14 or len(nodes) < 10:
-        for ens in find_node_section_struct(p, multi=True):
-            if ens[1] < 50:
-                continue  # 假段过滤
-            if any(abs(ens[2] - c[2]) < 32 for c in ns_list):
-                continue  # 同段跳过
+    if d64(p, 4) >= 14:
+        # v14+ (v17): 统一扫描收集全部节点段 (含小段, 已重叠修正)
+        for ens in _collect_node_segments(p):
             n2, b2 = parse_nodes(p, ens)
             if n2:
                 nodes.update(n2)
                 ns_list.append(ens)
+    else:
+        # v11-13: [136] 头; 失败时结构扫描兜底
+        if ns:
+            n1, b1 = parse_nodes(p, ns)
+            if n1:
+                nodes = n1
+                ns_list.append(ns)
+        if len(nodes) < 10:
+            for ens in find_node_section_struct(p, multi=True):
+                if ens[1] < 50:
+                    continue  # 假段过滤
+                if any(abs(ens[2] - c[2]) < 32 for c in ns_list):
+                    continue  # 同段跳过
+                n2, b2 = parse_nodes(p, ens)
+                if n2:
+                    nodes.update(n2)
+                    ns_list.append(ens)
     if ns_list and nodes:
         model.node_section = ns_list[0][0]
         model.node_count = len(nodes)
@@ -594,7 +829,16 @@ def decode(path):
                             break
                         row += 1
                         row_map[row] = nid
-            elems = decode_elements(p, row_map, len(nodes))
+            elems = _scan_family1_cores(p, row_map, len(nodes))
+            if elems:
+                # 特殊元素段 (Y≠2 段) 补扫: 节点段之后的区域
+                scan_from = max((s[2] + s[1] * s[3]) for s in ns_list) if ns_list else 0
+                elems_spec = _parse_special_elems(p, row_map, len(nodes), scan_from=scan_from)
+                if elems_spec:
+                    elems.update(elems_spec)
+                # 行号 -> 节点 ID
+                elems = {eid: (cfg, [row_map.get(r, r) for r in rows])
+                         for eid, (cfg, rows) in elems.items()}
             elems_b = _parse_ws_variant_b(p, row_map, ns[1])
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b
