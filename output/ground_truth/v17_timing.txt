@@ -1,0 +1,9 @@
+find_node_section: 1064.3s
+ns=(None, 116734, 197811, 68, 0, False)
+parse_nodes: 0.3s
+nodes=116734 count=116734
+row_map: 0.1s
+find_elem_segments: 0.1s
+segs=541
+decode_elements: 0.8s
+elems=44062

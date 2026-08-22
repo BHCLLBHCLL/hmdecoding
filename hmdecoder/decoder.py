@@ -113,37 +113,59 @@ def find_node_section(p):
         return best[1]
     return find_node_section_struct(p)
 
-def find_node_section_struct(p):
-    """结构扫描 (v14+ 无 [136] 头, 如 dummy_positioner 68B 记录)."""
-    # ---- 结构扫描 ----
-    limit = min(len(p), 600_000)  # v14+ 节点段通常在文件前部
-    best_s = None
-    for stride, idoff, xoff, chain in ((68, 0, 12, False), (52, 0, 12, False), (92, 0, 12, False)):
-        # 粗扫: 字节模式 [0][1] 前 4B 为 id (非对齐也覆盖)
+def _struct_stream_len(p, base, stride, idoff, xoff):
+    """68B 节点流扩展: [id][0][k<=16][x][y][z][0x8]."""
+    cnt = 0
+    while base + cnt * stride + stride <= len(p):
+        rec = base + cnt * stride
+        nid = u32(p, rec + idoff)
+        x = d64(p, rec + xoff)
+        if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
+            cnt += 1
+        else:
+            break
+    return cnt
+
+def find_node_section_struct(p, multi=False):
+    """结构扫描 (v14+ 无 [136] 头, 如 dummy_positioner 68B 记录).
+
+    全文件扫描 [id][0][k] 68B 流; multi=True 时收集全部段 (v17 多节点段),
+    返回 [(count, base, stride, idoff, chain), ...]; 否则返回单段.
+    """
+    segs = []
+    limit = len(p)
+    # 68B (dummy_positioner 块 A) + 92B (块 B) 布局; 仅 v14+ 调用 (见 decode)
+    for stride, idoff, xoff, chain in ((68, 0, 12, False), (92, 0, 12, False)):
+        # 粗扫: [0][k] k=1..8 字节模式
         cand_bases = []
-        pat = b"\x00\x00\x00\x00\x01\x00\x00\x00"
-        start = 0
-        while True:
-            i = p.find(pat, start, limit)
-            if i < 0:
-                break
-            base = i - 4
-            if base >= 0:
-                nid = u32(p, base + idoff)
-                if 1 <= nid <= 10_000_000:
-                    cand_bases.append(base)
-            start = i + 1
-        seen_fine = set()
-        for cb in cand_bases:
+        for mark in range(1, 9):
+            pat = b"\x00\x00\x00\x00" + bytes([mark]) + b"\x00\x00\x00"
+            start = 0
+            while True:
+                i = p.find(pat, start)
+                if i < 0:
+                    break
+                base = i - 4
+                if base >= 0:
+                    nid = u32(p, base + idoff)
+                    if 1 <= nid <= 10_000_000:
+                        cand_bases.append(base)
+                start = i + 1
+        cand_bases.sort()
+        # 精扫: 找流起点 (第一个 30 条验证通过的 base), 扩展后跳过该流
+        checked = set()
+        i = 0
+        while i < len(cand_bases):
+            cb = cand_bases[i]
+            first_match = None
             for base in range(max(0, cb - 64), min(cb + 68, limit - 20 * stride), 4):
-                if base in seen_fine:
+                if base in checked:
                     continue
-                seen_fine.add(base)
-                # 3 条预验证
+                checked.add(base)
                 pre = 0
                 for k in range(3):
                     rec = base + k * stride
-                    if 1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0 and u32(p, rec + 8) == 1:
+                    if 1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
                         pre += 1
                 if pre < 3:
                     continue
@@ -153,27 +175,30 @@ def find_node_section_struct(p):
                     rec = base + k * stride
                     nid = u32(p, rec + idoff)
                     x = d64(p, rec + xoff)
-                    if 1 <= nid <= 10_000_000 and abs(x) < 1e9:
+                    if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
                         ok += 1
                         ids.add(nid)
                     else:
                         break
                 if ok >= 25 and len(ids) >= 15:
-                    cnt = ok
-                    while base + cnt * stride + stride <= len(p):
-                        rec = base + cnt * stride
-                        nid = u32(p, rec + idoff)
-                        x = d64(p, rec + xoff)
-                        if 1 <= nid <= 10_000_000 and abs(x) < 1e9:
-                            cnt += 1
-                        else:
-                            break
-                    if best_s is None or cnt > best_s[0]:
-                        best_s = (cnt, base, stride, idoff, chain)
-    if best_s:
-        cnt, base, stride, idoff, chain = best_s
-        return (None, cnt, base, stride, idoff, chain)
-    return None
+                    first_match = base
+                    break
+            if first_match is not None:
+                cnt = _struct_stream_len(p, first_match, stride, idoff, xoff)
+                segs.append((None, cnt, first_match, stride, idoff, chain))
+                if not multi:
+                    return segs[-1]
+                # 跳过该流内的候选
+                skip_until = first_match + cnt * stride
+                while i < len(cand_bases) and cand_bases[i] < skip_until:
+                    i += 1
+                continue
+            i += 1
+    if not segs:
+        return [] if multi else None
+    if multi:
+        return segs
+    return max(segs, key=lambda s: s[1])
 
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
@@ -526,22 +551,49 @@ def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
-    nodes, base = (None, None)
+    ns_list = []
+    nodes = {}
     if ns:
-        nodes, base = parse_nodes(p, ns)
-        if len(nodes) < max(10, ns[1] * 0.85):
-            # [136] 头可能为假命中 (v14+ 无头文件) — 试结构扫描
-            ns2 = find_node_section_struct(p)
-            if ns2:
-                n2, b2 = parse_nodes(p, ns2)
-                if len(n2) > len(nodes):
-                    ns, nodes, base = ns2, n2, b2
-    if ns and nodes:
-        model.node_section = ns[0]
-        model.node_count = ns[1]
+        n1, b1 = parse_nodes(p, ns)
+        if n1:
+            nodes = n1
+            ns_list.append(ns)
+    # 结构扫描合并全部节点段 (v14+ 多段; v11 下仅 [136] 失败时)
+    if d64(p, 4) >= 14 or len(nodes) < 10:
+        for ens in find_node_section_struct(p, multi=True):
+            if ens[1] < 50:
+                continue  # 假段过滤
+            if any(abs(ens[2] - c[2]) < 32 for c in ns_list):
+                continue  # 同段跳过
+            n2, b2 = parse_nodes(p, ens)
+            if n2:
+                nodes.update(n2)
+                ns_list.append(ens)
+    if ns_list and nodes:
+        model.node_section = ns_list[0][0]
+        model.node_count = len(nodes)
         model.nodes = nodes
         if nodes:
-            row_map = row_map_from_nodes(p, ns, base)
+            # 多段行号续接构建全局 row_map
+            row_map = {}
+            row = 0
+            for cfg in sorted(ns_list, key=lambda s: s[2]):
+                hi, count, base2, stride, idoff, chain = cfg
+                if chain:
+                    for k in range(count):
+                        row += 1
+                        row_map[row] = row
+                else:
+                    for k in range(count):
+                        rec = base2 + k * stride
+                        if rec + stride > len(p):
+                            break
+                        nid = u32(p, rec + idoff)
+                        x = d64(p, rec + 12)
+                        if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9):
+                            break
+                        row += 1
+                        row_map[row] = nid
             if len(p) > 50_000_000:
                 elems = decode_elements(p, row_map, ns[1], max_rec=2000)
             else:
