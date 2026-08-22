@@ -1,0 +1,8 @@
+node base 0xea4 count=443
+节点 24 @0x686c: +0x28(next)=0
+显示点 997: None
+显示点 24: None
+显示点 75: None
+显示点 443: None
+节点24 next=0 节点25 next=0 节点26 next=0
+节点443 next=0 节点465 next=0
