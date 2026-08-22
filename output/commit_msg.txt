@@ -1,7 +1,1 @@
-feat(P4-P5): 真实 INP 导出与回归基线、文档 v2、清理伪造产物
-
-- hmdecoder/export.py: Abaqus INP 导出（真实 ID/坐标/拓扑），output/real_inp/ 两个样本
-- final_output/mesh.inp 替换为真实解码数据（6408 节点/31843 单元）
-- 回归扫描: 节点 56/98、单元 6/98 语料文件与 oracle 计数一致（其余为 v11 子变体与旧版 DB）
-- docs/format_spec_v1.md 追加 v11.05 节点/单元记录规格（双变体）
-- README 更新为真实状态与用法
+fix(P3): 小文件节点节头验证阈值修正（leg_geom 4/4、3_step_proc 13/13 节点通过）

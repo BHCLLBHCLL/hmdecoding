@@ -136,3 +136,29 @@ config 103=3 节点（11410 个）、config 204=4 节点（20433 个）。
 
 - WS_3.2_3d_tetra_finish.hm：6408/6408 节点 + 31843/31843 单元（20/20 连通性、10/10 坐标抽样一致）
 - 1d_elements.hm：443/443 节点 + 400/400 单元（400/400 连通性、37/37 坐标一致）
+## 9. class_id 关联实验结论（🟡 本轮）
+
+命名块模式 `[cap=19][0][class_id][name]` 的 class_id 与实体类型（comp/mat/prop）**无一一对应**（同一 cid 同时出现 comp 与 prop，如 cid 5: BAR2 既作 comp 又作 mat；cid 17: feature_elements 既作 prop 又作 comp）。
+
+| class_id | 观察 | 猜测 |
+|---|---|---|
+| 5 | comps 7 / mats 4（BAR2、base、Line、Roof…） | 普通用户 collector |
+| 6 | comps 2 / mats 2（auto1） | 自动创建的 collector（auto 前缀） |
+| 7 | comps 2（tetras、bumper…） | 普通 collector |
+| 8 | comps 1 + 未知 5（geomety…） | 待解 |
+| 10 | comps 1 / props 1（line_mesh、property1） | 待解 |
+| 11 | 未知 5（Model、SectBeam…） | 模型/截面类 |
+| 12/13/14/15/16 | comps（joint_parent、body_systems 为 system 实体但计入 comps） | 待解 |
+| 17 | props 4 / comps 2（feature_elements） | 待解 |
+
+结论：class_id 疑似 HM 内部 collector 子类/来源标识（auto 创建、用户创建、按配置命名等），非实体类型码。
+
+## 10. leg_geom 几何区初步定位（🟡 本轮）
+
+- 节点区（0x2f4–0x3c4，4 记录）之后为系统命名块区（joint_parent(13)/joint_child(12)/body_systems(13)，leg_geom 的 systems 计数为 0 但 payload 存在，疑似非活动系统）；
+- 0x484+ 为几何显示数据区（含 double 流与节点引用 u32 2/4/6），疑似线的显示网格/端点数据；线实体记录语义待解（hm_getvalue lines 的 dataname 在本版本不可用，需另法）。
+
+## 11. STEP 导出（✅ 本轮）
+
+- `hmdecoder/export_step.py`：AP203 SHELL_BASED_SURFACE_MODEL（OPEN_SHELL + FACE_SURFACE + PLANE + EDGE_LOOP），顶点按节点共享、面独立；
+- 输出：`output/real_inp/1d_elements.step`（7296 实体）与 `ws_tetra.step`（31843 面）。

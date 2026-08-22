@@ -1,0 +1,28 @@
+class_id 3: comp=0 mat=0 prop=0 unknown=6 total=6 -> UNKNOWN
+    known names: []
+class_id 4: comp=0 mat=0 prop=0 unknown=0 total=1 -> comps
+    known names: ['end']
+class_id 5: comp=0 mat=0 prop=0 unknown=4 total=15 -> comps
+    known names: ['BAR2', 'Line', 'RBAR', 'Roof', 'base', 'mid1']
+class_id 6: comp=0 mat=0 prop=0 unknown=14 total=35 -> UNKNOWN
+    known names: ['Inner', 'Outer', 'auto1', 'bolts', 'lower', 'misc1']
+class_id 7: comp=0 mat=0 prop=0 unknown=3 total=13 -> comps
+    known names: ['MAT1_1', 'Masses', 'bottle', 'bumper', 'center', 'rigids']
+class_id 8: comp=0 mat=0 prop=0 unknown=2 total=16 -> props
+    known names: ['bolt_4a', 'bolt_4b', 'bracket', 'channel', 'geomety', 'line_n1']
+class_id 9: comp=0 mat=0 prop=0 unknown=10 total=29 -> props
+    known names: ['Aluminum', 'bodySide', 'car_hood', 'chassis1', 'chassis2', 'chassis3']
+class_id 10: comp=0 mat=0 prop=0 unknown=2 total=17 -> props
+    known names: ['SectShll1', 'SectShll2', 'SectShll3', 'SectShll4', 'SectShll5', 'SectShll6']
+class_id 11: comp=0 mat=0 prop=0 unknown=11 total=110 -> props
+    known names: ['SectBeam85', 'SectBeam90', 'SectBeam91', 'SectBeam92', 'SectBeam93', 'SectBeam94']
+class_id 12: comp=0 mat=0 prop=0 unknown=3 total=28 -> props
+    known names: ['SectBeam100', 'SectBeam101', 'SectBeam102', 'SectBeam103', 'SectBeam105', 'SectBeam114']
+class_id 13: comp=0 mat=0 prop=0 unknown=1 total=4 -> comps
+    known names: ['engine_hoodA', 'engine_hoodB', 'morph_fillet']
+class_id 14: comp=0 mat=0 prop=0 unknown=2 total=2 -> UNKNOWN
+    known names: []
+class_id 15: comp=0 mat=0 prop=0 unknown=0 total=2 -> comps
+    known names: ['Adhesive_Inner', 'Adhesive_Outer']
+class_id 17: comp=0 mat=0 prop=0 unknown=0 total=2 -> props
+    known names: ['feature_elements']

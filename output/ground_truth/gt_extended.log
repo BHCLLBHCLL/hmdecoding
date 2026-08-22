@@ -1,0 +1,162 @@
+==FILE== D:/training/caedecoder/hmdecoding/WS_3.2_3d_tetra_finish.hm
+count comps: 2
+  comps id=240 name=base
+  comps id=241 name=tetras
+count mats: 0
+count props: 1
+  props id=241 name=a
+count systems: 0
+count groups: 0
+count loads: 0
+count assemblies: 0
+==FILE== C:/Program Files/Altair/2019/tutorials/hm/1d_elements.hm
+count comps: 4
+  comps id=1 name=BAR2
+  comps id=2 name=line_mesh
+  comps id=3 name=feature_elements
+  comps id=13 name=geomety
+count mats: 3
+  mats id=10 name=auto1
+  mats id=11 name=^BeamXS_1
+  mats id=12 name=BAR2
+count props: 2
+  props id=1 name=property1
+  props id=2 name=feature_elements
+count systems: 0
+count groups: 0
+count loads: 0
+count assemblies: 0
+==FILE== C:/Program Files/Altair/2019/tutorials/hm/spring.hm
+count comps: 1
+  comps id=5 name=twod
+count mats: 2
+  mats id=1 name=2d_mesh
+  mats id=2 name=twod
+count props: 0
+count systems: 0
+count groups: 0
+count loads: 0
+count assemblies: 0
+==FILE== C:/Program Files/Altair/2019/tutorials/hm/interfaces/madymo/leg_geom.hm
+count comps: 1
+  comps id=1 name=auto1
+count mats: 0
+count props: 0
+count systems: 8
+  systems id=2 name=System2
+  systems id=3 name=System3
+  systems id=4 name=System4
+  systems id=5 name=System5
+  systems id=6 name=System6
+  systems id=7 name=System7
+  systems id=8 name=System8
+  systems id=9 name=System9
+count groups: 0
+count loads: 0
+count assemblies: 0
+==FILE== C:/Program Files/Altair/2019/tutorials/hm/bumper.hm
+count comps: 5
+  comps id=1 name=center
+  comps id=2 name=mid1
+  comps id=3 name=mid2
+  comps id=4 name=end
+  comps id=5 name=rigid
+count mats: 1
+  mats id=1 name=steel
+count props: 0
+count systems: 54
+  systems id=1 name=System1
+  systems id=2 name=System2
+  systems id=3 name=System3
+  systems id=4 name=System4
+  systems id=5 name=System5
+  systems id=6 name=System6
+  systems id=7 name=System7
+  systems id=8 name=System8
+  systems id=9 name=System9
+  systems id=10 name=System10
+  systems id=11 name=System11
+  systems id=12 name=System12
+  systems id=13 name=System13
+  systems id=14 name=System14
+  systems id=15 name=System15
+  systems id=16 name=System16
+  systems id=17 name=System17
+  systems id=18 name=System18
+  systems id=19 name=System19
+  systems id=20 name=System20
+  systems id=21 name=System21
+  systems id=22 name=System22
+  systems id=23 name=System23
+  systems id=24 name=System24
+  systems id=25 name=System25
+  systems id=26 name=System26
+  systems id=27 name=System27
+  systems id=28 name=System28
+  systems id=29 name=System29
+  systems id=30 name=System30
+  systems id=31 name=System31
+  systems id=32 name=System32
+  systems id=33 name=System33
+  systems id=34 name=System34
+  systems id=35 name=System35
+  systems id=36 name=System36
+  systems id=37 name=System37
+  systems id=38 name=System38
+  systems id=39 name=System39
+  systems id=40 name=System40
+  systems id=41 name=System41
+  systems id=42 name=System42
+  systems id=43 name=System43
+  systems id=44 name=System44
+  systems id=45 name=System45
+  systems id=46 name=System46
+  systems id=47 name=System47
+  systems id=48 name=System48
+  systems id=49 name=System49
+  systems id=50 name=System50
+  systems id=51 name=System51
+  systems id=52 name=System52
+  systems id=53 name=System53
+  systems id=54 name=System54
+count groups: 0
+count loads: 10
+  loads id=1 name=?
+  loads id=2 name=?
+  loads id=3 name=?
+  loads id=4 name=?
+  loads id=5 name=?
+  loads id=6 name=?
+  loads id=7 name=?
+  loads id=8 name=?
+  loads id=9 name=?
+  loads id=10 name=?
+count assemblies: 1
+  assemblies id=1 name=assem_mid
+==FILE== C:/Program Files/Altair/2019/tutorials/hm/frame_assembly.hm
+count comps: 12
+  comps id=1 name=Front_Truss_1
+  comps id=2 name=Front_Truss_2
+  comps id=3 name=Con_Frt_Truss
+  comps id=4 name=Reinf_Plate
+  comps id=5 name=Con_Truss_Plate
+  comps id=6 name=Right_Rail_1
+  comps id=7 name=Right_Rail_2
+  comps id=8 name=Left_Rail_1
+  comps id=9 name=Left_Rail_2
+  comps id=10 name=Rear_Truss_1
+  comps id=11 name=Rear_Truss_2
+  comps id=12 name=Con_Rear_Truss
+count mats: 0
+count props: 2
+  props id=1 name=Left_Rail_1_Prop
+  props id=2 name=Left_Rail_2_Prop
+count systems: 0
+count groups: 0
+count loads: 0
+count assemblies: 5
+  assemblies id=1 name=assem_1
+  assemblies id=2 name=assem_2
+  assemblies id=3 name=assem_3
+  assemblies id=4 name=assem_4
+  assemblies id=5 name=assem_5

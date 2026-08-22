@@ -1,0 +1,6 @@
+data = open("output/real_inp/1d_elements.step", encoding="utf-8").read()
+lines = data.splitlines()
+print("total lines:", len(lines))
+print("first lines:", lines[:8])
+print("sample face lines:", [l for l in lines if "FACE_SURFACE" in l][:2])
+print("last lines:", lines[-3:])
