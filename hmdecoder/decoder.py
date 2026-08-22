@@ -594,10 +594,7 @@ def decode(path):
                             break
                         row += 1
                         row_map[row] = nid
-            if len(p) > 50_000_000:
-                elems = decode_elements(p, row_map, ns[1], max_rec=2000)
-            else:
-                elems = decode_elements(p, row_map, ns[1])
+            elems = decode_elements(p, row_map, len(nodes))
             elems_b = _parse_ws_variant_b(p, row_map, ns[1])
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b

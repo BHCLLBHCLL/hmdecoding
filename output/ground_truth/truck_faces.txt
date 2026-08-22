@@ -1,0 +1,7 @@
+read: 1
+edges: 212489
+faces: 0
+E2212616 exists=1 cfg=hm_getvalue: elements with id 2212616 is not a valid entity
+E2212620 exists=1 cfg=hm_getvalue: elements with id 2212620 is not a valid entity
+E228632 exists=0 cfg=103
+E228631 exists=0 cfg=103
