@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""hmdecoder — HyperMesh .hm v11.05 容器/节点/单元/显示网格解码器。"""
+"""hmdecoder — HyperMesh .hm v11.05 容器/节点/单元/显示/几何点解码器。"""
 import gzip, struct
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -21,10 +21,16 @@ class DisplayPoint:
     x: float; y: float; z: float
 
 @dataclass
+class GeoPoint:
+    id: int
+    x: float; y: float; z: float
+
+@dataclass
 class HMModel:
     nodes: dict = field(default_factory=dict)
     elements: dict = field(default_factory=dict)
     display_points: dict = field(default_factory=dict)
+    geo_points: dict = field(default_factory=dict)
     db_version: float = 0.0
     node_count: int = 0
     elem_count: int = 0
@@ -138,8 +144,6 @@ def parse_elements_variant_b(p, row_map, row_count):
     return elems
 
 def parse_display_points(p):
-    """显示网格记录: 0x40008126 标记块 → 偏移 → 52 字节记录流。
-    记录 = [d64 x][d64 y][d64 z][d64 0][d64 0][u32 id][u32 0][u32 0]。"""
     points = {}
     marks = [i for i in range(len(p) - 8) if u32(p, i) == MARK_GEOM]
     for m in marks:
@@ -158,8 +162,7 @@ def parse_display_points(p):
                     ok = False; break
             if not ok:
                 continue
-            score = sum(1 for k in range(10)
-                        if 0 < u32(p, start + k * 52 + 40) < 1e6)
+            score = sum(1 for k in range(10) if 0 < u32(p, start + k * 52 + 40) < 1e6)
             if best is None or score > best[0]:
                 best = (score, start)
         if not best or best[0] < 3:
@@ -176,6 +179,44 @@ def parse_display_points(p):
                 points[rid] = DisplayPoint(rid, x, y, z)
             k += 1
     return points
+
+def parse_geo_points_variant_b(p):
+    """变体 B 几何点: [id][1] 块 + 固定偏移候选 + 评分选择（z 整数 + 52B 家族投票）。"""
+    OFFSETS = (-249, -145, -93, -41, 15)
+    n = len(p)
+    results = {}
+    i = 0
+    while i < n - 8:
+        v = u32(p, i)
+        if 1 <= v <= 10_000_000 and u32(p, i + 4) == 1 and v not in results:
+            best = None
+            for off in OFFSETS:
+                j = i + off
+                if 0 <= j and j + 24 <= n:
+                    x, y, z = d64(p, j), d64(p, j + 8), d64(p, j + 16)
+                    if abs(x) < 1e5 and abs(y) < 1e5 and abs(z) < 1e5 and abs(x) > 1 and abs(y) > 1:
+                        s = 0
+                        if abs(z - round(z)) < 1e-4:
+                            s += 10
+                        if abs(x - round(x)) < 1e-4:
+                            s += 2
+                        if abs(y - round(y)) < 1e-4:
+                            s += 2
+                        for d in (52, -52, 104):
+                            j2 = j + d
+                            if 0 <= j2 and j2 + 24 <= n:
+                                x2, y2, z2 = d64(p, j2), d64(p, j2 + 8), d64(p, j2 + 16)
+                                if abs(x2 - x) < 1e-4 and abs(y2 - y) < 1e-4 and abs(z2 - z) < 1e-4:
+                                    s += 5
+                                    break
+                        if best is None or s > best[0]:
+                            best = (s, j, x, y, z)
+            if best:
+                results[v] = GeoPoint(v, best[2], best[3], best[4])
+            i += 8
+        else:
+            i += 1
+    return results
 
 def decode(path):
     p = load_payload(path)
@@ -198,15 +239,16 @@ def decode(path):
         model.elem_count = ehdr[1]
         model.element_variant = "A"
         model.elements = parse_elements_variant_a(p, row_map)
+        model.display_points = parse_display_points(p)
     else:
         model.element_variant = "B"
         model.elements = parse_elements_variant_b(p, row_map, ncount)
         model.elem_count = len(model.elements)
-    model.display_points = parse_display_points(p)
+        model.geo_points = parse_geo_points_variant_b(p)
     return model
 
 if __name__ == "__main__":
     import sys
     for path in sys.argv[1:]:
         m = decode(path)
-        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} elems={len(m.elements)}/{m.elem_count} display={len(m.display_points)} var={m.element_variant}")
+        print(f"{path.split('/')[-1]}: db={m.db_version} nodes={len(m.nodes)}/{m.node_count} elems={len(m.elements)}/{m.elem_count} display={len(m.display_points)} geopts={len(m.geo_points)} var={m.element_variant}")
