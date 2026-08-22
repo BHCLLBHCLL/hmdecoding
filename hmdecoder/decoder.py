@@ -63,13 +63,14 @@ def is_const(v):
 
 NODE_LAYOUTS = ((52, 0, 12, False), (52, 4, 12, False), (52, 8, 20, False),
                 (92, 0, 12, False), (92, 4, 12, False), (92, 8, 20, False),
-                (56, 44, 0, True))
+                (56, 44, 0, True), (68, 0, 12, False))
 
 def find_node_section(p):
     hits = []
+    scan_lim = min(len(p), 8_000_000)  # 节点段均在文件前部
     start = 0
     while True:
-        i = p.find(b"\x88\x00\x00\x00", start)
+        i = p.find(b"\x88\x00\x00\x00", start, scan_lim)
         if i < 0:
             break
         n = u32(p, i + 4)
@@ -110,6 +111,68 @@ def find_node_section(p):
                     best = (ok, (hi, count, base, stride, idoff, chain))
     if best and best[0] >= 45:
         return best[1]
+    return find_node_section_struct(p)
+
+def find_node_section_struct(p):
+    """结构扫描 (v14+ 无 [136] 头, 如 dummy_positioner 68B 记录)."""
+    # ---- 结构扫描 ----
+    limit = min(len(p), 600_000)  # v14+ 节点段通常在文件前部
+    best_s = None
+    for stride, idoff, xoff, chain in ((68, 0, 12, False), (52, 0, 12, False), (92, 0, 12, False)):
+        # 粗扫: 字节模式 [0][1] 前 4B 为 id (非对齐也覆盖)
+        cand_bases = []
+        pat = b"\x00\x00\x00\x00\x01\x00\x00\x00"
+        start = 0
+        while True:
+            i = p.find(pat, start, limit)
+            if i < 0:
+                break
+            base = i - 4
+            if base >= 0:
+                nid = u32(p, base + idoff)
+                if 1 <= nid <= 10_000_000:
+                    cand_bases.append(base)
+            start = i + 1
+        seen_fine = set()
+        for cb in cand_bases:
+            for base in range(max(0, cb - 64), min(cb + 68, limit - 20 * stride), 4):
+                if base in seen_fine:
+                    continue
+                seen_fine.add(base)
+                # 3 条预验证
+                pre = 0
+                for k in range(3):
+                    rec = base + k * stride
+                    if 1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0 and u32(p, rec + 8) == 1:
+                        pre += 1
+                if pre < 3:
+                    continue
+                ok = 0
+                ids = set()
+                for k in range(30):
+                    rec = base + k * stride
+                    nid = u32(p, rec + idoff)
+                    x = d64(p, rec + xoff)
+                    if 1 <= nid <= 10_000_000 and abs(x) < 1e9:
+                        ok += 1
+                        ids.add(nid)
+                    else:
+                        break
+                if ok >= 25 and len(ids) >= 15:
+                    cnt = ok
+                    while base + cnt * stride + stride <= len(p):
+                        rec = base + cnt * stride
+                        nid = u32(p, rec + idoff)
+                        x = d64(p, rec + xoff)
+                        if 1 <= nid <= 10_000_000 and abs(x) < 1e9:
+                            cnt += 1
+                        else:
+                            break
+                    if best_s is None or cnt > best_s[0]:
+                        best_s = (cnt, base, stride, idoff, chain)
+    if best_s:
+        cnt, base, stride, idoff, chain = best_s
+        return (None, cnt, base, stride, idoff, chain)
     return None
 
 def parse_nodes(p, cfg):
@@ -145,14 +208,17 @@ CONFIG_NODES = {103: 3, 104: 4, 204: 4, 220: 8, 205: 4, 206: 6, 208: 8,
 
 def find_elem_segments(p):
     segs = []
-    i = 0
-    while i < len(p) - 24:
-        if u32(p, i) == 997:
+    start = 0
+    while True:
+        i = p.find(b"\xe5\x03\x00\x00", start)
+        if i < 0:
+            break
+        if i + 24 <= len(p):
             segid = u32(p, i + 4); cfg71 = u32(p, i + 8); cnt = u32(p, i + 12)
             X = u32(p, i + 16); Y = u32(p, i + 20)
             if X in (2, 3) and 100 <= cfg71 <= 500 and 1 <= cnt <= 10_000_000 and Y < 10_000_000:
                 segs.append((i, segid, cfg71, cnt, X, Y))
-        i += 1
+        start = i + 1
     return segs
 
 def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
@@ -166,10 +232,12 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             if not is_const(u32(p, rec)):
                 # 断点重连: 记录流可能被其他数据块打断
                 nxt = None
-                for j in range(rec + 4, min(rec + 200, len(p) - 4)):
+                j = p.find(b"\xf5\x1f", rec + 4, min(rec + 200, len(p) - 2))
+                while j >= 0:
                     if is_const(u32(p, j)):
                         nxt = j
                         break
+                    j = p.find(b"\xf5\x1f", j + 1, min(rec + 200, len(p) - 2))
                 if nxt is None:
                     ok = False; break
                 rec = nxt
@@ -179,10 +247,12 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             if not (0 < eid < 10_000_000):
                 ok = False; break
             nxt = None
-            for j in range(rec + 24, min(rec + 200, len(p) - 4)):
+            j = p.find(b"\xf5\x1f", rec + 24, min(rec + 200, len(p) - 2))
+            while j >= 0:
                 if is_const(u32(p, j)):
                     nxt = j
                     break
+                j = p.find(b"\xf5\x1f", j + 1, min(rec + 200, len(p) - 2))
             d = (nxt - rec) if nxt else None
             got = None
             # ---- v11 路径: flag<<16 u32 + u32 节点 ----
@@ -205,7 +275,7 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                         n += 1
                     if n < 1:
                         continue
-                    if rec_len is not None and nodes_off + 4 * n + 8 != rec + rec_len:
+                    if rec_len is not None and nodes_off + 4 * n >= rec + rec_len:
                         continue
                     if u32(p, nodes_off + 4 * n) != 0:
                         continue
@@ -352,7 +422,7 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         rec = nxt
     return elems
 
-def decode_elements(p, row_map, row_count):
+def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
         return None
@@ -360,10 +430,10 @@ def decode_elements(p, row_map, row_count):
     for (sh, segid, cfg71, cnt, X, Y) in segs:
         got = None
         if X == 3:
-            got = _parse_a_type(p, sh, cnt, row_count, row_map)
+            got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
         else:
-            got = _parse_b_type(p, sh, cnt, row_count, row_map, Y)
-            got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y)
+            got = _parse_b_type(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
+            got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
             if got2 and (got is None or len(got2) > len(got)):
                 got = got2
         if got:
@@ -450,14 +520,26 @@ def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
+    nodes, base = (None, None)
     if ns:
+        nodes, base = parse_nodes(p, ns)
+        if len(nodes) < max(10, ns[1] * 0.85):
+            # [136] 头可能为假命中 (v14+ 无头文件) — 试结构扫描
+            ns2 = find_node_section_struct(p)
+            if ns2:
+                n2, b2 = parse_nodes(p, ns2)
+                if len(n2) > len(nodes):
+                    ns, nodes, base = ns2, n2, b2
+    if ns and nodes:
         model.node_section = ns[0]
         model.node_count = ns[1]
-        nodes, base = parse_nodes(p, ns)
         model.nodes = nodes
         if nodes:
             row_map = row_map_from_nodes(p, ns, base)
-            elems = decode_elements(p, row_map, ns[1])
+            if len(p) > 50_000_000:
+                elems = decode_elements(p, row_map, ns[1], max_rec=2000)
+            else:
+                elems = decode_elements(p, row_map, ns[1])
             elems_b = _parse_ws_variant_b(p, row_map, ns[1])
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b
@@ -474,18 +556,23 @@ def decode(path):
 
 def _parse_ws_variant_b(p, row_map, row_count):
     elems = {}
-    for i in range(0, len(p) - 30):
-        if u32(p, i + 4) == 0 and u32(p, i + 8) == 0:
-            eid = u32(p, i)
-            flag = u16(p, i + 12)
-            if eid < 100000 or eid > 10_000_000 or flag not in (359, 460):
-                continue
-            refs = [u16(p, i + 14), u16(p, i + 18), u16(p, i + 22), u16(p, i + 26)]
-            if not all(r <= row_count for r in refs):
-                continue
-            nodes = [row_map.get(r, 0) for r in refs if r != 0]
-            if eid not in elems:
-                elems[eid] = Elem(eid, nodes, flag - 256)
+    pat = b"\x00\x00\x00\x00\x00\x00\x00\x00"
+    start = 0
+    while True:
+        i = p.find(pat, start)
+        if i < 0:
+            break
+        eid_pos = i - 4
+        if eid_pos >= 0 and eid_pos + 30 <= len(p):
+            eid = u32(p, eid_pos)
+            flag = u16(p, eid_pos + 12)
+            if 100000 <= eid <= 10_000_000 and flag in (359, 460):
+                refs = [u16(p, eid_pos + 14), u16(p, eid_pos + 18), u16(p, eid_pos + 22), u16(p, eid_pos + 26)]
+                if all(r <= row_count for r in refs):
+                    nodes = [row_map.get(r, 0) for r in refs if r != 0]
+                    if eid not in elems:
+                        elems[eid] = Elem(eid, nodes, flag - 256)
+        start = i + 1
     return elems
 
 if __name__ == "__main__":
