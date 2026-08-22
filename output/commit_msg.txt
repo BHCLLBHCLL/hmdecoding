@@ -1,8 +1,6 @@
-feat(decoder): v12-13 元素段 u16 槽位布局 (CONST 家族 + 58B 记录) + 节点解析截断
+feat(decoder): B 型 u16 槽位布局 + 元素分块存储断链重连 — crash_tubes 4898/4902
 
-- CONST 家族: 0x70241FF5 (v11) / 0x70501FF5 (v12-13), 匹配 (v&0xFFFF)==0x1FF5 && v>>24==0x70
-- v12 元素记录: [CONST12][eid][附加 16B][eid][0][0][u16 flag][u16 n1][0][n2][0][n3][0][n4][0][0][2][0][0] 58B 固定
-- v12 节点引用 = u16 槽位 (行号), c_channel-tcl 行号 [246,505,558,247] 与 oracle id [3016,2892,2891,3012] 精确互证
-- SEAT_MODEL (13.03) 元素 27503/27503 全解, c_channel-tcl 780/780, cover 764/764
-- parse_nodes 遇无效记录截断 (molding1 count 含虚值, 实际 7191 条)
-- 全语料 sweep: node-full 79/122, elem-full 68/122 (原基线 66/98, 6/98)
+- B 型 u16 槽位记录: [0][0][X u16][n1][0][n2][0][n3][0][n4][0][0][0][next][0x5] (crash_tubes/abaqus3_0)
+- 元素分块存储: 块间有非元素数据 (seg2 359 条断链), 长窗口 (50KB) 重扫 + next 链验证
+- eid 线性推导 first_eid+k, 块内 next 字段验证 (t_ne == first_eid+k+2)
+- crash_tubes 4898/4902, abaqus3_0 268/270, abaqus_contactManager_2D 490/537

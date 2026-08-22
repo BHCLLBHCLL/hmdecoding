@@ -156,7 +156,7 @@ def find_elem_segments(p):
     return segs
 
 def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
-    for s in range(sh + 16, sh + 64):
+    for s in range(sh + 16, sh + 80):
         if not is_const(u32(p, s)):
             continue
         elems = {}
@@ -186,7 +186,7 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             d = (nxt - rec) if nxt else None
             got = None
             # ---- v11 路径: flag<<16 u32 + u32 节点 ----
-            prelens = [0, 4, 8, 12, 16, 20, 24, 28, 32] if d else [0]
+            prelens = [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40] if d else [0]
             for prelen in prelens:
                 rec_len = (d - prelen) if d else None
                 if rec_len is not None and (rec_len < 32 or rec_len % 4 or rec_len > 140):
@@ -288,13 +288,84 @@ def _parse_b_type(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         rec = nxt
     return elems
 
+def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
+    """B 型 u16 槽位记录: [0][0][X u16][n1][0][n2][0]..[next_eid][0..]  (crash_tubes 等)."""
+    s = sh + 24
+    if u32(p, s) != 0 or u32(p, s + 4) != 0:
+        return None
+    rec = s + 8  # X 字段位置 (每记录常量, 语义待解)
+    elems = {}
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        slots = 0
+        while slots < 12 and u16(p, rec + 2 + 4 * slots) != 0 and u16(p, rec + 2 + 4 * slots + 2) == 0:
+            slots += 1
+        nds = [u16(p, rec + 2 + 4 * j) for j in range(slots)] if slots else []
+        if slots < 1 or not all(1 <= r <= row_count for r in nds):
+            # 断链重扫: 元素分块存储, 块间有非元素数据
+            nxt = None
+            for j in range(rec + 2, min(rec + 50000, len(p) - 8)):
+                if not (u16(p, j) != 0 and u16(p, j + 2) != 0 and u16(p, j + 4) == 0
+                        and u16(p, j + 6) != 0 and u16(p, j + 8) == 0):
+                    continue
+                t_slots = 0
+                while t_slots < 12 and u16(p, j + 2 + 4 * t_slots) != 0 and u16(p, j + 2 + 4 * t_slots + 2) == 0:
+                    t_slots += 1
+                t_nds = [u16(p, j + 2 + 4 * t) for t in range(t_slots)] if t_slots else []
+                if not t_slots or not all(1 <= r <= row_count for r in t_nds):
+                    continue
+                t_ne = u16(p, j + 2 + 4 * t_slots + 4)
+                if t_ne != first_eid + k + 2:
+                    continue
+                nxt = j
+                break
+            if nxt is None:
+                break
+            rec = nxt
+            slots = 0
+            while slots < 12 and u16(p, rec + 2 + 4 * slots) != 0 and u16(p, rec + 2 + 4 * slots + 2) == 0:
+                slots += 1
+            if slots < 1:
+                break
+            nds = [u16(p, rec + 2 + 4 * j) for j in range(slots)]
+            if not all(1 <= r <= row_count for r in nds):
+                break
+        eid = first_eid + k
+        elems[eid] = (0, [row_map.get(r, r) for r in nds])
+        nxt = None
+        for j in range(rec + 2 + 4 * slots + 8, min(rec + 50000, len(p) - 8)):
+            if not (u16(p, j) != 0 and u16(p, j + 2) != 0 and u16(p, j + 4) == 0
+                    and u16(p, j + 6) != 0 and u16(p, j + 8) == 0):
+                continue
+            t_slots = 0
+            while t_slots < 12 and u16(p, j + 2 + 4 * t_slots) != 0 and u16(p, j + 2 + 4 * t_slots + 2) == 0:
+                t_slots += 1
+            t_nds = [u16(p, j + 2 + 4 * t) for t in range(t_slots)] if t_slots else []
+            if not t_slots or not all(1 <= r <= row_count for r in t_nds):
+                continue
+            t_ne = u16(p, j + 2 + 4 * t_slots + 4)
+            if t_ne != first_eid + k + 2:
+                continue
+            nxt = j
+            break
+        if nxt is None:
+            break
+        rec = nxt
+    return elems
+
 def decode_elements(p, row_map, row_count):
     segs = find_elem_segments(p)
     if not segs:
         return None
     elems = {}
     for (sh, segid, cfg71, cnt, X, Y) in segs:
-        got = _parse_a_type(p, sh, cnt, row_count, row_map) if X == 3 else _parse_b_type(p, sh, cnt, row_count, row_map, Y)
+        got = None
+        if X == 3:
+            got = _parse_a_type(p, sh, cnt, row_count, row_map)
+        else:
+            got = _parse_b_type(p, sh, cnt, row_count, row_map, Y)
+            got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y)
+            if got2 and (got is None or len(got2) > len(got)):
+                got = got2
         if got:
             elems.update(got)
     return elems or None
