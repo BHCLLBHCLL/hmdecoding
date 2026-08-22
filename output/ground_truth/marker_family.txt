@@ -1,0 +1,8 @@
+1d_elements (nodes/elems/points/lines/surfaces):
+  0x81xx/0x82xx 家族计数: [(33066, 4), (33061, 2), (33062, 1)]
+WS (nodes/elems/points/lines/surfaces):
+  0x81xx/0x82xx 家族计数: [(33061, 197), (33066, 148), (33062, 105), (32768, 28), (36864, 25), (34174, 10), (35093, 5), (36863, 5), (35551, 4), (33644, 4), (36713, 4), (35063, 4)]
+leg_geom (nodes/elems/points/lines/surfaces):
+  0x81xx/0x82xx 家族计数: []
+spring (nodes/elems/points/lines/surfaces):
+  0x81xx/0x82xx 家族计数: [(34814, 1), (35051, 1), (34576, 1), (34358, 1), (35296, 1)]
