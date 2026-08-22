@@ -1,0 +1,11 @@
+point blocks: 21
+with mapping: 21
+block order == triple order: 12/21
+  block@0x24f8 id=11573 lead=216802 triple@0xfdf
+  block@0xcd3c id=11529 lead=216513 triple@0xccdf
+  block@0xcdff id=12726 lead=216480 triple@0xce0e
+  block@0xd328 id=11525 lead=216478 triple@0xd2cb
+  block@0xd3d4 id=12921 lead=254039 triple@0xd377
+  block@0xd863 id=12887 lead=253719 triple@0xd806
+  block@0xe029 id=13210 lead=265656 triple@0xe000
+  block@0xe383 id=13211 lead=265666 triple@0xe35a
