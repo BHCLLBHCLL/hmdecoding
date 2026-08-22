@@ -63,7 +63,7 @@ def is_const(v):
 
 NODE_LAYOUTS = ((52, 0, 12, False), (52, 4, 12, False), (52, 8, 20, False),
                 (92, 0, 12, False), (92, 4, 12, False), (92, 8, 20, False),
-                (56, 44, 0, True), (68, 0, 12, False))
+                (56, 44, 0, True))  # 68B 仅用于结构扫描 (v14+ 无 [136] 头)
 
 def find_node_section(p):
     hits = []
@@ -197,7 +197,13 @@ def row_map_from_nodes(p, cfg, base):
     hi, count, stride, idoff, chain = cfg[0], cfg[1], cfg[3], cfg[4], cfg[5]
     if chain:
         return {k + 1: k + 1 for k in range(count)}
-    return {k + 1: u32(p, base + k * stride + idoff) for k in range(count)}
+    rows = {}
+    for k in range(count):
+        rec = base + k * stride
+        if rec + stride > len(p):
+            break
+        rows[k + 1] = u32(p, rec + idoff)
+    return rows
 
 # ---------------------------------------------------------------------------
 # 元素段

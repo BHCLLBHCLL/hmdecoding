@@ -1,4 +1,4 @@
-docs: 更新 README/PLAN 深入解析成果 (node-ok 101/123, elem-ok 83/123)
+fix(decoder): 68B 布局仅限结构扫描 + row_map 越界保护
 
-- README 回归状态: 元素段统一模型 A/B 型 + u16 槽位 + 节点段 52/92/56/68B 布局
-- PLAN.md 新增第三节: 安装目录手册/脚本挖掘结论 + 本轮解码突破 + 待解项
+- composites 假段修复: 68B 在 [136] 头验证中巧合命中 (count 8912898) 覆盖真 52B 段 — 68B 仅用于 v14+ 结构扫描
+- row_map_from_nodes 越界保护 (composites 崩溃修复)
