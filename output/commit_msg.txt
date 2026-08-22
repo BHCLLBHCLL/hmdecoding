@@ -1,6 +1,8 @@
-feat(P1+P2-工具): 容器格式规范 v1 与差分逆向工具链，节点记录双版本解码
+feat(P2-P3): v11.05 节点/单元记录完全解码，hmdecoder 首版通过 oracle 全量验证
 
-- docs/format_spec_v1.md: 容器层(前缀 u32 0 + double 5.0 + gzip，122/122 验证)、4 代头部布局、v14+ 字符串表、节点记录 v19.02(72B)/v11.05(52B) 布局
-- 合成语料生成器: HM2019 *writefile 直接产出 v19.02 .hm，差分链 8 样本
-- 发现: v11.05 节点记录 52 字节 [x,y,z] doubles + 下一节点链表指针；单元类型配置表 101..107；0x1c=保存计数；时间戳噪声定位
-- 新增脚本: gen_synthetic.tcl, diff_synthetic.py, find_node_layout.py, decode_node_records.py, locate_leg_nodes.py, probe_element_sections.py 等
+- 节点记录(52B): [u32 id][0][0][d64 x][d64 y][d64 z][0x10 零]，坐标+0xC；节点头 [d64 tol][1][136][count]
+- 单元记录(48B): [0][0x01680000][r1-r4][0][1][0x70241FF5][eid+1][(eid+1)<<16|2][0]，引用=节点表行号；尾部环绕记录形态
+- 1d_elements.hm 端到端验证: 400/400 单元连通性 + 37/37 节点坐标与 oracle 完全一致
+- 发现: 单元行号-23=节点ID（行号=节点表位置，非 ID）；config 104=4节点单元、103=3节点单元；元素节头 [997][3][175][count]
+- 新增 hmdecoder/ 包与验证脚本
+- WS 样本(v11.05 变体B)待解: 节点节头 [d64 9.0][0][1][136][6408]，坐标疑似 f32 量化存储，无 0x01680000/0x70241FF5 标记
