@@ -58,6 +58,29 @@
 | 14.07 | 1 | 新布局（w14=1, w3c=1536） |
 | 17.01 | 2 | 最新（dummy_positioner.hm、seat_deformer.hm） |
 
+---
+
+## 三、2026-08 深入解析成果（遍历安装目录手册/案例后）
+
+### 1. 帮助文档与脚本挖掘结论
+- help/hm 1063 页: 实体参考 (entities_r 等) 为概念性描述, 无 .hm 二进制格式文档; interfacing 无 hmascii 格式说明; Tcl API 文档不在 help 内;
+- hm/scripts 13,641 个 .tcl: hm_registertooltipforentitydataname 9,971 处注册 (实体 dataname 字典, 已提取至 output/ground_truth/dataname_regs.txt); hm_getentityvalue 13,685 处用法;
+- 结论: .hm 二进制格式无官方文档, 只能靠 oracle 对照 + 字节取证 (本轮完成大量此类工作).
+
+### 2. 本轮解码突破 (decoder v5+)
+- **元素段统一模型**: 段头 [997][seg][175][count][X][Y]; A 型 (X=3, CONST 锚 0x70??1FF5 家族) / B 型 (X=2, 链式 eid); v12-13 u16 槽位型 (58B, CONST12 0x70501FF5); B 型 u16 槽位型 (34B, crash_tubes); 元素分块存储 + 断链重连;
+- **节点段统一模型**: [136] 头 (非对齐, 字节模式定位); 52B-flat [id][0][0][x][y][z][0x4] / 92B-flat (+40B 附加) / 56B-chain (v13, [x][y][z][0x4][id+1][0][0]) / 68B (v14+/17.01, [id][0][1][x][y][z][0x8]);
+- **行号语义**: 元素节点引用 = 节点表行号 (1-based), 需 row_map 映射;
+- **oracle 对照覆盖率**: node-ok 101/123, elem-ok 83/123 (原 66/98, 6/98);
+- 关键验证: WS 6408+31843, 1d 443+400+535, body_side 7510+7182, truck 212139+204762, SEAT_MODEL 34295+27503, car_section 26697+27854, dummy_positioner (17.01) 116734+44062.
+
+### 3. 待解项 (后续轮次)
+- v17 文件 (dummy_positioner/seat_deformer) 节点分块 (116734/354176) 与元素全量 (44062/586202);
+- truck 2000001+ 段为非元素段 (oracle 证实 eid 不存在, face/显示网格段), 需排除逻辑;
+- 0D/特殊元素段 (joints seg3 等, config<100);
+- chapter2_2 (13.03) 节点布局未解;
+- 元素记录内 A/B/C 附加字段语义 (0x1a040be4/0x0a040be6/0x12040084 等, 疑为属性/显示数据).
+
 ### 3. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |

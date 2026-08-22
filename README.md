@@ -38,10 +38,13 @@ python -c "import sys; sys.path.insert(0,'.'); from hmdecoder import decode; fro
 - 仓库样本 `WS_3.2_3d_tetra_finish.hm`（LFS）为真实业务模型；
 - 合规边界：不反汇编 DLL，仅使用 HyperMesh 正常读写与 Tcl API。
 
-## 回归状态（P4 快照）
+## 回归状态（2026-08 深入解析后）
 
-- 节点解码：56/98 语料文件与 oracle 计数一致；单元解码：6/98（含仓库样本与 1d_elements 全量）；几何点：变体 B 85% 覆盖；
-- 其余为 v11 子变体/其他 DB 版本（v10/v12-13/v14+），见 `docs/PLAN.md` 后续计划；
+- **oracle 对照（123 文件）**：node-ok 101/123，elem-ok 83/123（此前基线 node 66/98、elem 6/98）；
+- **元素段统一模型**：段头 [997][seg][175][count][X][Y]；A 型（CONST 锚 0x70??1FF5 家族）/ B 型（链式 eid）/ v12-13 u16 槽位型（58B）/ B 型 u16 槽位型（34B）/ 元素分块存储 + 断链重连；
+- **节点段统一模型**：52B-flat / 92B-flat（+40B 附加）/ 56B-chain（v13）/ 68B（v14+）；[136] 头字节定位 + 结构扫描 fallback；
+- 关键验证：body_side 7510+7182、housing 8690、fe_only 17264、quality_index 2216、truck 212139+204762、SEAT_MODEL 34295+27503、car_section 26697+27854、dummy_positioner(17.01) 116734+44062；
+- 待解：v17 节点分块/元素全量、truck 非元素段排除、0D 元素段、chapter2_2(13.03) 节点布局；
 - class_id 关联结论与 leg_geom 几何区初步定位见 `docs/format_spec_v1.md` §9–10。
 
 ## 文档

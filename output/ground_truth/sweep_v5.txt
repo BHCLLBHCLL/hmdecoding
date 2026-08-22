@@ -27,7 +27,7 @@ clip_defeature.hm                          | n=0/0        e=0/0        v=
 clip_midsurface.hm                         | n=0/0        e=0/0        v=
 clip_refine.hm                             | n=1850/1850     e=1753/1753     v=segmented
 clip_repair.hm                             | n=0/0        e=0/0        v=
-composites.hm                              | n=1766/1766     e=1763/1763     v=segmented
+composites.hm                              | ERR unpack_from requires a buffer of at least 259642 bytes for unpacking 4 bytes at offset 259638 (actual buffer size is 259603)
 cover.hm                                   | n=930/930      e=764/764      v=segmented
 dummy.hm                                   | n=2552/2552     e=2536/2536     v=segmented
 dummy_position_solid.hm                    | n=3956/3956     e=3585/3585     v=segmented
@@ -62,7 +62,7 @@ hm-ansys_contact_wizard_3-d_tutorial.hm    | n=1225/1225     e=799/799      v=se
 SEAT_MODEL.hm                              | n=34295/34296    e=27503/27503    v=segmented
 body_side_assembly.hm                      | n=21055/21055    e=20149/20149    v=segmented
 cartridge.hm                               | n=2248/2248     e=1053/1053     v=segmented
-dummy_positioner.hm                        | n=0/0        e=0/0        v=
+dummy_positioner.hm                        | n=116734/116734   e=44062/44062    v=segmented
 frame_assembly.hm                          | n=10712/10712    e=10066/10066    v=segmented
 frame_assembly_1.hm                        | n=10712/10712    e=9166/9166     v=segmented
 frame_assembly_2.hm                        | n=11836/11836    e=10861/10861    v=segmented
@@ -75,7 +75,7 @@ joints.hm                                  | n=1241/1241     e=996/996      v=se
 pene_dyna.hm                               | n=4193/4193     e=3867/3867     v=segmented
 rear_truss_1_new.hm                        | n=1838/1838     e=1702/1702     v=segmented
 seat_2.hm                                  | n=1621/1621     e=1526/1526     v=segmented
-seat_deformer.hm                           | n=0/0        e=0/0        v=
+seat_deformer.hm                           | n=116734/116734   e=44062/44062    v=segmented
 seat_start.hm                              | n=1621/1621     e=1525/1525     v=segmented
 seatbelt.hm                                | n=34295/34296    e=27503/27503    v=segmented
 leg_geom.hm                                | n=0/0        e=0/0        v=
