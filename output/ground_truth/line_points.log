@@ -1,0 +1,17 @@
+lines: 18 19 20 21 36 37 38 39
+line 18 -> points(by line):  err=1
+line 19 -> points(by line):  err=1
+line 20 -> points(by line):  err=1
+line 21 -> points(by line):  err=1
+line 36 -> points(by line):  err=1
+line 37 -> points(by line):  err=1
+line 38 -> points(by line):  err=1
+line 39 -> points(by line):  err=1
+line 18 -> nodes(by line):  err=1
+line 19 -> nodes(by line):  err=1
+line 20 -> nodes(by line):  err=1
+line 21 -> nodes(by line):  err=1
+line 36 -> nodes(by line):  err=1
+line 37 -> nodes(by line):  err=1
+line 38 -> nodes(by line):  err=1
+line 39 -> nodes(by line):  err=1

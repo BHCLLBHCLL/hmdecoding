@@ -1,1 +1,6 @@
-fix(P3): 小文件节点节头验证阈值修正（leg_geom 4/4、3_step_proc 13/13 节点通过）
+feat(P2/P4): class_id 关联实验结论、STEP 面片网格导出、leg_geom 几何区初步定位
+
+- class_id 非实体类型码（同 cid 含 comp+mat/prop），疑似 collector 子类/来源标识，结论见 format_spec_v1 §9
+- hmdecoder/export_step.py: AP203 SHELL_BASED_SURFACE_MODEL 导出（顶点共享），1d_elements.step(7296实体) + ws_tetra.step(488083实体/31843面)
+- leg_geom 线/系统命名块区定位（joint_parent/joint_child/body_systems + 几何显示数据区）§10
+- 扩展 GT 收割（systems/groups/loads/assemblies 命名）

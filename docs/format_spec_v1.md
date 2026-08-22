@@ -156,7 +156,8 @@ config 103=3 节点（11410 个）、config 204=4 节点（20433 个）。
 ## 10. leg_geom 几何区初步定位（🟡 本轮）
 
 - 节点区（0x2f4–0x3c4，4 记录）之后为系统命名块区（joint_parent(13)/joint_child(12)/body_systems(13)，leg_geom 的 systems 计数为 0 但 payload 存在，疑似非活动系统）；
-- 0x484+ 为几何显示数据区（含 double 流与节点引用 u32 2/4/6），疑似线的显示网格/端点数据；线实体记录语义待解（hm_getvalue lines 的 dataname 在本版本不可用，需另法）。
+- 0x484+ 为几何区（线记录）：已定位线 id 引用（u32 1@0x4dc、4@0x584、2@0x5f8）与端点坐标副本（-0.85@0x48e、-1.0@0x4a6 等，与节点坐标一致），记录间为大量零填充，疑似 52 字节块的稀疏形态；线实体记录完整语义待解；
+- 1d_elements 的线 id 为 18,19,20,21,36,37,38,39（两组 4 条 = 两个矩形框），points 查询可用（hm_getvalue points mark=1 dataname=x/y/z/id/collector），lines 查询仅 collector 可用；
 
 ## 11. STEP 导出（✅ 本轮）
 
