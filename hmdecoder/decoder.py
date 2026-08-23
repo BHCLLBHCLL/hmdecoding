@@ -477,9 +477,13 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             d = (nxt - rec) if nxt else None
             got = None
             # ---- family-1 布局 (v11 truck 等): CONST 后 701/686+2596 标记, eid@+18 ----
+            # 仅当 @+4 为存储 ID (>= 2e6, 非真 eid) 且 != eid@+18 时启用;
+            # 普通文件 (SEAT_MODEL 等 @+4 即真 eid) 走常规 flag 路径
+            f1_eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
             if (u32(p, rec + 8) in (0x02BD0002, 0x02AE0002)
-                    and u16(p, rec + 12) == 2596):
-                f1_eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
+                    and u16(p, rec + 12) == 2596
+                    and u32(p, rec + 4) >= 2_000_000
+                    and u32(p, rec + 4) != f1_eid):
                 f1_flag = u32(p, rec + 28)
                 f1_cfg = (f1_flag >> 16) - 256
                 if (0 < f1_eid < 10_000_000 and 300 <= (f1_flag >> 16) <= 500
@@ -764,8 +768,8 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-            if got is None:
-                # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败时尝试
+            if got is None and Y == 3:
+                # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败且 Y==3 时尝试
                 nxt_sh = None
                 for (sh2, *_rest) in segs:
                     if sh2 > sh:

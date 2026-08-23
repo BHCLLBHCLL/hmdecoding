@@ -106,7 +106,17 @@
   - decode() 版本分流: v14+ 走 family-1+special, v11-13 走分段解析 (修复 v11 元素全丢 bug);
 - **剩余主要缺口**: molding1 (elems 344/14558, 节点 7191/7279), truck (204762/212489, face 段), wing_section_complete (149/1001, 复合记录变体), frame_assembly_3/4 (miss 1365/848), car_section (miss 626), chapter2_2 (v13 节点布局), geometry.hm (0/4116), icw_ex1/2 (节点少 12/23).
 
-### 3. 头部布局按版本分 4 代
+### 6. P0 优先修复（2026-08 本轮）
+- **truck family-1 布局**: _parse_a_type 检测 701/686+2596 标记 (仅 @+4 存储 ID >= 2e6 时),
+  eid@+18 语义; miss 7727→4323;
+- **molding1 全解**: 92B 主段 + 56B 尾段 (7192-7279) 补充扫描 _scan_extra_node_segs
+  (主段后 512KB + nid 下限 + nid 递增聚类); 节点 7191→7279, 元素 344→14558 全解;
+- **SEAT_MODEL 回归修复**: family-1 检测误触发 (@+4 与 @+18 差恒定 = 不同元素),
+  限制 @+4 >= 2e6 后恢复 27498 (miss 5);
+- 全量: node 109/122, elem 91/122, 0 崩溃;
+- 剩余: truck 4323 (A 型段 eid 映射 + config 55 段), chapter2_2 (v13), wing_section 852, frame_assembly 1365/848, car_section 626.
+
+### 7. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |
 |---|---|---|---|
