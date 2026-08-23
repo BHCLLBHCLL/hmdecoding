@@ -116,7 +116,14 @@
 - 全量: node 109/122, elem 91/122, 0 崩溃;
 - 剩余: truck 4323 (A 型段 eid 映射 + config 55 段), chapter2_2 (v13), wing_section 852, frame_assembly 1365/848, car_section 626.
 
-### 7. 头部布局按版本分 4 代
+### 7. v13.03 布局破解 + P0-3 (2026-08 本轮)
+- **节点 96B 布局**: [0x10200bc7][0][0][nid][0][0][x][y][z], 间距 96; _scan_v13_node_segs;
+- **Y=4 元素 76B 记录**: [eid][恒定][(0,eid)][行号@+28 起] (3 个->config 103, 4 个->config 104); _parse_v13_elems;
+- **chapter2_2 全解**: 节点 0→2898, 元素 0→2813;
+- 全量: node 109/122, elem 92/122, 0 崩溃;
+- 剩余: truck 4323 (A 型段 eid 映射), wing_section 852, frame_assembly 1365/848, car_section 626, geometry 4116.
+
+### 8. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |
 |---|---|---|---|

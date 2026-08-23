@@ -389,9 +389,36 @@ def _scan_extra_node_segs(p, exclude_ranges, lo=0, hi=None, min_nid=0, lim=10000
             out.append((None, len(r), r[0], stride, 0, False))
     return out
 
+def _scan_v13_node_segs(p, lim=10000.0):
+    """v13.03 节点段: 96B 记录 [0x10200bc7][0][0][nid][0][0][x][y][z], 间距 96."""
+    MARK = (0x10200bc7).to_bytes(4, "little")
+    hits = []
+    j = 0
+    while True:
+        j = p.find(MARK, j)
+        if j < 0:
+            break
+        nid = u32(p, j + 12)
+        x = d64(p, j + 24)
+        if 1 <= nid <= 10_000_000 and abs(x) < lim:
+            hits.append(j)
+        j += 1
+    runs = []
+    for c in sorted(hits):
+        if runs and c - runs[-1][-1] == 96:
+            runs[-1].append(c)
+        else:
+            runs.append([c])
+    segs = []
+    for r in runs:
+        if len(r) >= 2:
+            segs.append((None, len(r), r[0], 96, 12, False))
+    return segs
+
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
+    xoff = 24 if stride == 96 else 12  # v13.03 96B 记录坐标 @+24
     for k in range(count):
         rec = base + k * stride
         if rec + stride > len(p):
@@ -401,7 +428,7 @@ def parse_nodes(p, cfg):
             x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
         else:
             nid = u32(p, rec + idoff)
-            x, y, z = d64(p, rec + 12), d64(p, rec + 20), d64(p, rec + 28)
+            x, y, z = d64(p, rec + xoff), d64(p, rec + xoff + 8), d64(p, rec + xoff + 16)
         if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9):
             break  # 记录流结束 (count 字段可能含虚值)
         nodes[nid] = Node(nid, x, y, z)
@@ -759,6 +786,42 @@ def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
         j += 1
     return elems
 
+def _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=None):
+    """v13.03 Y=4 元素段 (chapter2_2): 记录 76B 间距.
+
+    记录: [eid][(2,996)][(3076,1)][(0,eid)][0][0][(0,seg)][行号...][0][4][段间标记][CONST].
+    行号 @+28 起遇 0 停; 3 个 -> config 103, 4 个 -> config 104.
+    """
+    MARK = b"\xf5\x1f\x24\x70"
+    elems = {}
+    rec = sh + 52
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        eid = u32(p, rec)
+        if not (0 < eid < 10_000_000):
+            # 重定位: 找下一条记录头 (CONST 后 eid)
+            j = p.find(MARK, rec, min(rec + 200, len(p)))
+            if j < 0:
+                break
+            rec = j + 4
+            eid = u32(p, rec)
+            if not (0 < eid < 10_000_000):
+                break
+        rows = []
+        i = 0
+        while i < 12 and 1 <= u32(p, rec + 28 + 4 * i) <= row_count:
+            rows.append(u32(p, rec + 28 + 4 * i))
+            i += 1
+        if not rows:
+            break
+        cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
+        if cfg:
+            elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+        j = p.find(MARK, rec + 20, min(rec + 200, len(p)))
+        if j < 0:
+            break
+        rec = j + 4
+    return elems
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -768,6 +831,9 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            if got is None and Y == 4:
+                # v13.03 Y=4 元素段 (chapter2_2)
+                got = _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             if got is None and Y == 3:
                 # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败且 Y==3 时尝试
                 nxt_sh = None
@@ -1009,6 +1075,13 @@ def decode(path):
                 if n2:
                     nodes.update(n2)
                     ns_list.append(ens)
+        # v13.03 96B 节点段 (0x10200bc7 标记), 如 chapter2_2
+        if not ns_list:
+            for ens in _scan_v13_node_segs(p):
+                n2, b2 = parse_nodes(p, ens)
+                if n2:
+                    nodes.update(n2)
+                    ns_list.append(ens)
     if ns_list and nodes:
         model.node_section = ns_list[0][0]
         model.node_count = len(nodes)
@@ -1024,12 +1097,13 @@ def decode(path):
                         row += 1
                         row_map[row] = row
                 else:
+                    xoff = 24 if stride == 96 else 12
                     for k in range(count):
                         rec = base2 + k * stride
                         if rec + stride > len(p):
                             break
                         nid = u32(p, rec + idoff)
-                        x = d64(p, rec + 12)
+                        x = d64(p, rec + xoff)
                         if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9):
                             break
                         row += 1
@@ -1049,7 +1123,7 @@ def decode(path):
             else:
                 # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式, 含 family-1 布局检测)
                 elems = decode_elements(p, row_map, len(nodes))
-            elems_b = _parse_ws_variant_b(p, row_map, ns[1])
+            elems_b = _parse_ws_variant_b(p, row_map, len(nodes) if nodes else 0)
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b
                 model.elem_count = len(elems_b)
