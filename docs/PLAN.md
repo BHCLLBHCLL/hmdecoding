@@ -138,10 +138,27 @@
   - config 60 (tag 316@+44): 152B, `eid=u32(@+34)`, 节点@+48/@+52;
   - config 21 (tag 277@+52): 80B, `eid=u32(@+42)`, 节点@+56/@+60;
   - config 22 (tag 278/534/790/1302@+52): 100B, `eid=u32(@+42)`, 278→2 节点, 其余→4 节点。
-- **修复**: frame_assembly_3 (10588→11953 全解), frame_assembly_4 (10513→11361 全解),
+- 修复: frame_assembly_3 (10588→11953 全解), frame_assembly_4 (10513→11361 全解),
   frame_assembly_1 (9974→10066 全解), truck (196766→**212489 全解**), SEAT_MODEL (27498→27499)。
 - 全量: node 110/122, elem **97/122**, 0 崩溃; 无回归。
-- 剩余: SEAT_MODEL miss+4, car_section miss+626, geometry 4116。
+
+### 7c. geometry + SEAT_MODEL config 60 + car_section config 3 (2026-08 本轮)
+- **geometry Y=0 段** (新增 `_parse_y0_elems`): 无标准 CONST 锚, u16 粒度变长记录。
+  记录布局 (长 22+4n): eid u16@+0, 5×0 u16, marker u16@+12 (低字节=config),
+  节点 u16@+14+4i, 4×0 尾; CONST 块分隔 `[CONST][first_eid u16][0][16]`。
+  config→节点数: 104→4/103→3/208→8/206→6。节点区有 gap (221..270) 需 row_map 映射。→ **4116/4116 全解**。
+- **SEAT_MODEL config 60** (新增 `_parse_y2_c60`, 3 节点 136B + `_parse_y4_elems` 2 节点 152B):
+  eid 判别改用 @+18 (family-1) 当 @+4 为存储 ID (非仅 >=2e6)。→ **27503/27503 全解**。
+- **car_section Y=6 config 3** (新增 `_parse_y6_c3`): rigid 元素, tag 259@+22, 2 节点@+24/+28,
+  100B stride, CONST 锚在 sh+84 (Y=6 段有 list 头)。tag 316 (config 60/RBE3) 与 tag 277 (config 21) 非元素跳过。→ elems 27885→28021。
+- **car_section 剩余 miss 490**: 属**重复 eid 现象** — 348 个 config 208 (solid 六面体, 8 节点)
+  与 142 个 rigid (config 60/21) 元素与 shell (config 104/103) **共享 eid**。oracle
+  `*createmark elements` 计 28511 条 (含 490 重复), 而 `hm_getvalue elements id=...`
+  对重复 eid 只返回 shell 元素。decoder 的 dict (eid→elem) 无法表示重复 eid,
+  故 28021 唯一 eid 已与 oracle 一致 (real missing=0), 差 490 为重复元素。
+  彻底解决需 HMModel 支持重复 eid (list 而非 dict)。
+- 全量: node 110/122, elem **101/122** (+4: geometry/SEAT_MODEL + 2), 0 崩溃; 无回归。
+- 剩余: car_section miss+490 (重复 eid 现象), SEAT_MODEL nodes miss+1 (节点 34328 布局待解)。
 
 ### 8. 头部布局按版本分 4 代
 
