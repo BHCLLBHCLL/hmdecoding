@@ -33,7 +33,7 @@ class GeoPoint:
 @dataclass
 class HMModel:
     nodes: dict = field(default_factory=dict)
-    elements: dict = field(default_factory=dict)
+    elements: list = field(default_factory=list)  # list[Elem], 允许重复 eid (shell/solid/rigid 共存)
     display_points: dict = field(default_factory=dict)
     geo_points: dict = field(default_factory=dict)
     db_version: float = 0.0
@@ -1037,7 +1037,7 @@ def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
         return None
-    elems = {}
+    records = []
     for (sh, segid, cfg71, cnt, X, Y) in segs:
         got = None
         if X == 3:
@@ -1085,8 +1085,8 @@ def decode_elements(p, row_map, row_count, max_rec=None):
             if got3 and (got is None or len(got3) > len(got)):
                 got = got3
         if got:
-            elems.update(got)
-    return elems or None
+            records.extend((eid, cfg, nds) for eid, (cfg, nds) in got.items())
+    return records or None
 
 # ---------------------------------------------------------------------------
 # 显示点 / 几何点
@@ -1172,10 +1172,13 @@ def _scan_family1_cores(p, row_map, row_count):
     标记: u16=701/686 后接 u16=2596; 记录相对标记 q:
       eid = u16(q+8) | u16(q+10)<<16; flag = u32(q+18);
       cfg = flag>>16 (300..500); 节点行号 u32 @q+22 起, 遇 0 结束.
-    返回 {eid: (config, (row, ...))}.
+    返回 [(eid, config, (row, ...)), ...] 列表.
+    同一 eid 可出现多条 (shell/solid/rigid 合法重复), 仅去除完全相同记录
+    (同 eid+config+rows, 扫描重叠产生的同一条).
     """
     import struct
-    elems = {}
+    recs = []
+    seen = set()
     for MARK in (struct.pack("<HH", 701, 2596), struct.pack("<HH", 686, 2596)):
         j = 0
         while True:
@@ -1193,9 +1196,12 @@ def _scan_family1_cores(p, row_map, row_count):
                     rows.append(u32(p, k))
                     k += 4
                 if 1 <= len(rows) <= 20 and all(1 <= r <= row_count for r in rows):
-                    elems.setdefault(eid, (cfg - 256, tuple(rows)))
+                    key = (eid, cfg - 256, tuple(rows))
+                    if key not in seen:
+                        seen.add(key)
+                        recs.append(key)
             j += 2
-    return elems
+    return recs
 
 # ---------------------------------------------------------------------------
 # 特殊元素段 (Y≠2 段): config 1/3/21/22/55/61, 记录 [eid][0][k][tag u16] + 行号
@@ -1212,9 +1218,10 @@ def _parse_special_elems(p, row_map, row_count, scan_from=0):
       - config 1: 单节点 (lo u16 @+14, hi u16 @+16) -> (hi<<16)|lo.
       - 其他 (config 3/21/22/61): 每节点 (lo u16 @+14+4i, hi u16 @+16+4i),
         lo==0 结束. 行号低 16 位存高 u16 位 (行号 > 65535 时截断).
-    返回 {eid: (config, [row, ...])}.
+    返回 [(eid, config, (row, ...)), ...] 列表 (保留同 eid 合法重复, 去完全相同记录).
     """
-    elems = {}
+    recs = []
+    seen = set()
     ZERO4 = b"\x00\x00\x00\x00"
     j = max(scan_from, 0)
     n = len(p)
@@ -1259,11 +1266,28 @@ def _parse_special_elems(p, row_map, row_count, scan_from=0):
                 rows.append((hi << 16) | lo)
                 i += 1
         if rows and all(1 <= r <= row_count for r in rows):
-            elems.setdefault(eid, (cfg, tuple(rows)))
+            key = (eid, cfg, tuple(rows))
+            if key not in seen:
+                seen.add(key)
+                recs.append(key)
         j += 1
-    return elems
+    return recs
 
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+def _elems_to_list(recs):
+    """将 [(eid, config, nodes), ...] 合并为 list[Elem] (保留同 eid 合法重复,
+    仅去除完全相同的记录, 以免扫描重叠重复计数)."""
+    out = []
+    seen = set()
+    for eid, cfg, nds in recs:
+        key = (eid, cfg, tuple(nds))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(Elem(id=eid, config=cfg, nodes=list(nds)))
+    return out
+
 def decode(path):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
@@ -1341,29 +1365,32 @@ def decode(path):
                             break
                         row += 1
                         row_map[row] = nid
+            main_recs = None  # list[(eid, config, nodes)] 主路径记录
             if d64(p, 4) >= 14:
-                # v14+ (v17): family-1 核心记录 + 特殊元素段
-                elems = _scan_family1_cores(p, row_map, len(nodes))
-                if elems:
-                    # 特殊元素段 (Y≠2 段) 补扫: 节点段之后的区域
+                # v14+ (v17): family-1 核心记录 + 特殊元素段 (均为去除完全重复的 record 列表,
+                # 保留同 eid 的 shell/solid/rigid 合法重复)
+                fam = _scan_family1_cores(p, row_map, len(nodes))
+                if fam:
                     scan_from = max((s[2] + s[1] * s[3]) for s in ns_list) if ns_list else 0
-                    elems_spec = _parse_special_elems(p, row_map, len(nodes), scan_from=scan_from)
-                    if elems_spec:
-                        elems.update(elems_spec)
+                    spec = _parse_special_elems(p, row_map, len(nodes), scan_from=scan_from)
+                    all_recs = fam + (spec or [])
                     # 行号 -> 节点 ID
-                    elems = {eid: (cfg, [row_map.get(r, r) for r in rows])
-                             for eid, (cfg, rows) in elems.items()}
+                    main_recs = [(eid, cfg, [row_map.get(r, r) for r in rows])
+                                 for eid, cfg, rows in all_recs]
             else:
                 # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式, 含 family-1 布局检测)
-                elems = decode_elements(p, row_map, len(row_map))
-            elems_b = _parse_ws_variant_b(p, row_map, len(nodes) if nodes else 0)
-            if elems_b and (not elems or len(elems_b) > len(elems)):
-                model.elements = elems_b
-                model.elem_count = len(elems_b)
+                de = decode_elements(p, row_map, len(row_map)) or []
+                main_recs = list(de)
+            main_elems = _elems_to_list(main_recs) if main_recs else []
+            ws_b = _parse_ws_variant_b(p, row_map, len(nodes) if nodes else 0)
+            wsb_elems = list(ws_b.values()) if ws_b else []
+            if wsb_elems and (not main_elems or len(wsb_elems) > len(main_elems)):
+                model.elements = wsb_elems
+                model.elem_count = len(wsb_elems)
                 model.element_variant = "WS-B"
-            elif elems:
-                model.elements = elems
-                model.elem_count = len(elems)
+            elif main_elems:
+                model.elements = main_elems
+                model.elem_count = len(main_elems)
                 model.element_variant = "segmented"
             model.display_points = parse_display_points(p)
             if not model.elements:

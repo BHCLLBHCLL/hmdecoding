@@ -19,7 +19,7 @@ def inp_type(config: int, n_nodes: int) -> str:
 def export_inp(model: HMModel, path: str, title: str = "HyperMesh model decoded by hmdecoder"):
     from collections import defaultdict
     groups = defaultdict(list)
-    for e in model.elements.values():
+    for e in model.elements:
         groups[(e.config, len(e.nodes))].append(e)
     with open(path, "w", encoding="utf-8") as f:
         f.write(f"*HEADING\n{title}\n")

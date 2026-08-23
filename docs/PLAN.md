@@ -162,6 +162,16 @@
 - 全量: node **112/122**, elem **101/122**, 0 崩溃; 无回归。
 - 剩余: car_section miss+490 (重复 eid 现象), SEAT_MODEL 已全解 (node+elem)。
 
+### 7d. 重复 eid 的 list 结构改造（2026-08 本轮）
+- **HMModel.elements 由 dict → list[Elem]**（允许重复 eid，shell/solid/rigid 共存）；
+- _scan_family1_cores / _parse_special_elems（v14+）与 decode_elements（v11-13）均由 dict 聚合改为 list record 累积，
+  跨段重复 eid 不再被 dict.update 折叠；新增 _elems_to_list 仅去除完全相同的记录，保留同 eid 合法重复；WS-B 变体选择逻辑同步适配；
+- 消费者 export.py / export_step.py 去掉 .values()，直接迭代 list；
+- 全量: node 110/120, elem **100/120**, 0 崩溃，无回归；
+- **car_section: 28021 → 28371（miss+490 → +140）**：348 个 config-208 solid 及部分 rigid 与 shell 共享 eid 现被保留，
+  输出重复 eid 组 348、额外条目 350；剩余 +140 属段内多产出源的合并提取问题（解析深度），非结构问题，留待后续。
+
+
 ### 8. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |

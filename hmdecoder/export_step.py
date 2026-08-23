@@ -40,7 +40,7 @@ def export_step(model: HMModel, path: str, title: str = "HyperMesh model decoded
         vertex_of[nid] = vp
 
     shells = []
-    for e in model.elements.values():
+    for e in model.elements:
         if len(e.nodes) < 3:
             continue
         # PLANE: 用前 3 个节点
