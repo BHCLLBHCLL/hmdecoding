@@ -492,21 +492,22 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                 if not is_const(u32(p, rec)):
                     ok = False; break
             rec_v8 = u32(p, rec + 8)
-            # A 型记录 eid 字段判别 (多布局):
+            # A 型记录 eid 字段判别 (多布局). 完整 eid 是跨 @+8 高16位与 @+12 低16位的
+            # misaligned u32 (@+10): 高16位存 eid_hi, @+8 高16位存 eid_lo, @+8 低16位存维度(1/2/3).
             # - family-1 (@+12==2596): eid 在 @+4 (小 eid) 或 @+18 (大存储 ID, 下面检测处理)
-            # - 标准 A 型 (@+12==0): @+8=(真实eid<<16)|槽数, 但仅当 @+8hi<=@+4 (重编号,
-            #   fa3/fa4/fa1 等); 若 @+8hi>@+4 (cartridge 等 @+8hi=eid+1) 则 eid 在 @+4
-            # - @+4 为存储 ID (>=2e6, truck Y=1): @+8hi=eid
+            # - @+4 为存储 ID (>=2e6, truck Y=1): 完整 eid 在 @+10
+            # - 标准 A 型 (@+12==0): @+10 为完整 eid, 但未重编号文件 (cartridge 等 @+10=@+4+1)
+            #   在 @+10 > @+4 时 eid 实际在 @+4
             # - 其他 (@+12==1..6, yoke/Morph): eid 在 @+4
             rec_v12 = u16(p, rec + 12)
             rec_v4 = u32(p, rec + 4)
-            rec_v8hi = rec_v8 >> 16
+            eid10 = u32(p, rec + 10)
             if rec_v12 == 2596:
                 eid = rec_v4
-            elif rec_v12 == 0:
-                eid = rec_v8hi if rec_v8hi <= rec_v4 else rec_v4
             elif rec_v4 >= 2_000_000:
-                eid = rec_v8hi
+                eid = eid10
+            elif rec_v12 == 0:
+                eid = eid10 if eid10 <= rec_v4 else rec_v4
             else:
                 eid = rec_v4
             if not (0 < eid < 10_000_000):
@@ -839,6 +840,40 @@ def _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         rec = j + 4
     return elems
 
+def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
+    """truck Y=7 config-3 段: 112B 记录 (CONST 锚 + 固定间距).
+
+    记录: [CONST][存储ID@+4][列表数据 @+8..@+76][eid 低16@+82 高16@+84]
+          [0][(tag<<16)@+92][节点1@+96][节点2@+100][0][7].
+    eid = (u16(@+84)<<16)|u16(@+82); config = tag-256 (259->3); 2 节点.
+    """
+    anchor = None
+    for s in range(sh + 16, sh + 80):
+        if is_const(u32(p, s)):
+            anchor = s
+            break
+    if anchor is None:
+        return None
+    elems = {}
+    rec = anchor
+    stride = 112
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        eid = (u16(p, rec + 84) << 16) | u16(p, rec + 82)
+        tag = u32(p, rec + 92) >> 16
+        cfg = tag - 256
+        n1 = u32(p, rec + 96)
+        n2 = u32(p, rec + 100)
+        if not (0 < eid < 10_000_000):
+            break
+        if not (1 <= cfg <= 100):
+            break
+        nds = [n1, n2]
+        if not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        rec += stride
+    return elems
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -848,6 +883,11 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            if Y == 7 and (got is None or len(got) < cnt):
+                # truck Y=7 config-3 段: 112B 记录 (eid@+82, tag@+92, 节点@+96)
+                got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got7 and (got is None or len(got7) > len(got)):
+                    got = got7
             if got is None and Y == 4:
                 # v13.03 Y=4 元素段 (chapter2_2)
                 got = _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
