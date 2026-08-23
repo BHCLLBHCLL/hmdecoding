@@ -123,6 +123,19 @@
 - 全量: node 109/122, elem 92/122, 0 崩溃;
 - 剩余: truck 4323 (A 型段 eid 映射), wing_section 852, frame_assembly 1365/848, car_section 626, geometry 4116.
 
+### 7b. A 型元素 eid 字段判别 + frame_assembly/truck eid 映射 (2026-08 本轮)
+- **问题**: 部分文件 (frame_assembly_3/4、truck Y=1) 记录 @+4 存的是存储 ID (非真实 eid),
+  真实 eid 在高 16 位 (@+8hi); 而 yoke/Morph/cartridge 等 @+4 即真实 eid。需按记录布局判别。
+- **A 型记录 eid 字段判别规则** (写入 `_parse_a_type`):
+  - family-1 (`u16(@+12)==2596`): eid 在 @+4 (小 eid, SEAT_MODEL/cartridge) 或 @+18 (大存储 ID, truck Y=2);
+  - 标准 A 型 (`@+12==0`): `@+8=(真实eid<<16)|节点槽数`; 当 `@+8hi<=@+4` (重编号, fa3/fa4/fa1) 用 @+8hi, 否则 (cartridge `@+8hi=eid+1`) 用 @+4;
+  - `@+4` 为存储 ID (`>=2e6`, truck Y=1): 用 @+8hi;
+  - 其他 (`@+12==1..6`, yoke/Morph): 用 @+4。
+- **修复**: frame_assembly_3 (10588→11953 全解), frame_assembly_4 (10513→11361 全解),
+  frame_assembly_1 (9974→10066 全解), truck Y=1 eid 映射 (extra 11687→188)。
+- 全量: node 110/122, elem **96/122** (原 93/122), 0 崩溃; 无回归 (yoke/Morph/cartridge/SEAT_MODEL 均保持)。
+- 剩余: truck Y=4/Y=7 段 (15911, 不同布局), SEAT_MODEL miss+5, car_section miss+626, geometry 4116。
+
 ### 8. 头部布局按版本分 4 代
 
 | 布局家族 | 版本 | 特征（u32@0x14 / 0x1c / 0x3c） | 文件数 |

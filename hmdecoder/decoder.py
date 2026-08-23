@@ -491,7 +491,24 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                 rec = nxt
                 if not is_const(u32(p, rec)):
                     ok = False; break
-            eid = u32(p, rec + 4)
+            rec_v8 = u32(p, rec + 8)
+            # A 型记录 eid 字段判别 (多布局):
+            # - family-1 (@+12==2596): eid 在 @+4 (小 eid) 或 @+18 (大存储 ID, 下面检测处理)
+            # - 标准 A 型 (@+12==0): @+8=(真实eid<<16)|槽数, 但仅当 @+8hi<=@+4 (重编号,
+            #   fa3/fa4/fa1 等); 若 @+8hi>@+4 (cartridge 等 @+8hi=eid+1) 则 eid 在 @+4
+            # - @+4 为存储 ID (>=2e6, truck Y=1): @+8hi=eid
+            # - 其他 (@+12==1..6, yoke/Morph): eid 在 @+4
+            rec_v12 = u16(p, rec + 12)
+            rec_v4 = u32(p, rec + 4)
+            rec_v8hi = rec_v8 >> 16
+            if rec_v12 == 2596:
+                eid = rec_v4
+            elif rec_v12 == 0:
+                eid = rec_v8hi if rec_v8hi <= rec_v4 else rec_v4
+            elif rec_v4 >= 2_000_000:
+                eid = rec_v8hi
+            else:
+                eid = rec_v4
             if not (0 < eid < 10_000_000):
                 ok = False; break
             nxt = None
@@ -507,7 +524,7 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             # 仅当 @+4 为存储 ID (>= 2e6, 非真 eid) 且 != eid@+18 时启用;
             # 普通文件 (SEAT_MODEL 等 @+4 即真 eid) 走常规 flag 路径
             f1_eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
-            if (u32(p, rec + 8) in (0x02BD0002, 0x02AE0002)
+            if (rec_v8 in (0x02BD0002, 0x02AE0002)
                     and u16(p, rec + 12) == 2596
                     and u32(p, rec + 4) >= 2_000_000
                     and u32(p, rec + 4) != f1_eid):
