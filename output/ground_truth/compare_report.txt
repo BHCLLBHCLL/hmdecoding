@@ -48,7 +48,7 @@ seat_start.hm                        v11.05  v11-classic payload=   196,718 | no
 seat_2.hm                            v11.05  v11-classic payload=   197,473 | nodes     1,621/    1,620 miss-1 | elems     1,526/    1,562 miss+36 |    0.2s
 bumper_cen_mid1.hm                   v11.05  v11-classic payload=   208,968 | nodes       221/      221 OK | elems       192/      192 OK |    0.1s
 cover.hm                             v12.03  v12-13     payload=   215,372 | nodes       930/      930 OK | elems       764/      764 OK |    0.1s
-icw_ex2.hm                           v11.05  v11-classic payload=   246,944 | nodes        82/      100 miss+18 | elems       257/      269 miss+12 |    1.8s
+icw_ex2.hm                           v11.05  v11-classic payload=   246,944 | nodes        82/      100 miss+18 | elems       257/      269 miss+12 |    1.7s
 electrical_housing.hm                v11.05  v11-classic payload=   248,101 | nodes         0/        0 skip(0) | elems         0/        0 skip(0) |    0.1s
 solid_geom.hm                        v11.05  v11-classic payload=   249,185 | nodes         0/        2 miss+2 | elems         0/        0 skip(0) |    0.0s
 composites.hm                        v11.05  v11-classic payload=   259,603 | nodes     1,766/    1,766 OK | elems     1,763/    1,763 OK |    0.2s
@@ -105,24 +105,24 @@ frame_assembly.hm                    v11.05  v11-classic payload= 2,476,986 | no
 frame_assembly.hm                    v11.05  v11-classic payload= 2,502,066 | nodes    10,712/   10,712 OK | elems    10,066/   10,066 OK |    2.1s
 frame_assembly_1.hm                  v11.05  v11-classic payload= 2,553,173 | nodes    11,836/   11,836 OK | elems    10,861/   10,861 OK |    2.2s
 frame_assembly_2.hm                  v11.05  v11-classic payload= 2,553,294 | nodes    11,836/   11,836 OK | elems    10,861/   10,861 OK |    2.3s
-frame_assembly_2.hm                  v11.05  v11-classic payload= 2,553,501 | nodes    11,836/   11,836 OK | elems    10,861/   10,861 OK |    2.3s
+frame_assembly_2.hm                  v11.05  v11-classic payload= 2,553,501 | nodes    11,836/   11,836 OK | elems    10,861/   10,861 OK |    2.2s
 frame_assembly_4.hm                  v11.05  v11-classic payload= 2,627,658 | nodes    12,046/   12,046 OK | elems    11,361/   11,361 OK |    2.2s
-frame_assembly_3.hm                  v11.05  v11-classic payload= 2,633,629 | nodes    12,642/   12,642 OK | elems    11,953/   11,953 OK |    2.2s
+frame_assembly_3.hm                  v11.05  v11-classic payload= 2,633,629 | nodes    12,642/   12,642 OK | elems    11,953/   11,953 OK |    2.3s
 car_section.hm                       v11.05  v11-classic payload= 3,083,215 | nodes    26,697/   26,695 miss-2 | elems    27,885/   28,511 miss+626 |    1.9s
 fe_to_surf.hm                        v10.02  v10-legacy payload= 3,589,848 | nodes    18,772/   18,772 OK | elems    76,767/   76,767 OK |    2.9s
 frame_assembly_3.hm                  v11.05  v11-classic payload= 3,676,465 | nodes    17,712/   17,712 OK | elems    17,254/   17,254 OK |    3.2s
-ujoint_cfd.hm                        v11.05  v11-classic payload= 3,746,184 | nodes         0/        0 skip(0) | elems         0/        0 skip(0) |    0.2s
-SEAT_MODEL.hm                        v13.03  v12-13     payload= 4,186,059 | nodes    34,295/   34,296 miss+1 | elems    27,498/   27,503 miss+5 |    2.3s
-seatbelt.hm                          v13.03  v12-13     payload= 4,186,059 | nodes    34,295/   34,296 miss+1 | elems    27,498/   27,503 miss+5 |    2.3s
+ujoint_cfd.hm                        v11.05  v11-classic payload= 3,746,184 | nodes         0/        0 skip(0) | elems         0/        0 skip(0) |    0.1s
+SEAT_MODEL.hm                        v13.03  v12-13     payload= 4,186,059 | nodes    34,295/   34,296 miss+1 | elems    27,499/   27,503 miss+4 |    2.3s
+seatbelt.hm                          v13.03  v12-13     payload= 4,186,059 | nodes    34,295/   34,296 miss+1 | elems    27,499/   27,503 miss+4 |    2.3s
 fe_only.hm                           v11.05  v11-classic payload= 6,444,443 | nodes    91,306/   91,306 OK | elems    17,264/   17,264 OK |    3.4s
-yoke.hm                              v11.05  v11-classic payload= 8,794,470 | nodes    34,828/   34,828 OK | elems   133,793/  133,793 OK |    5.4s
+yoke.hm                              v11.05  v11-classic payload= 8,794,470 | nodes    34,828/   34,828 OK | elems   133,793/  133,793 OK |    5.3s
 Morph_Adhesive_Layers.hm             v11.05  v11-classic payload=27,918,220 | nodes   253,240/  253,240 OK | elems   230,400/  230,400 OK |   15.2s
-truck.hm                             v11.05  v11-classic payload=30,042,257 | nodes   212,139/  212,138 miss-1 | elems   211,917/  212,489 miss+572 |   13.6s
-dummy_positioner.hm                  v17.01  v14+       payload=73,392,134 | nodes   354,176/  354,176 OK | elems   586,202/  586,202 OK |   46.0s
-seat_deformer.hm                     v17.01  v14+       payload=73,399,566 | nodes   354,174/  354,174 OK | elems   586,202/  586,202 OK |  130.2s
+truck.hm                             v11.05  v11-classic payload=30,042,257 | nodes   212,139/  212,138 miss-1 | elems   212,457/  212,489 miss+32 |   13.7s
+dummy_positioner.hm                  v17.01  v14+       payload=73,392,134 | nodes   354,176/  354,176 OK | elems   586,202/  586,202 OK |   46.2s
+seat_deformer.hm                     v17.01  v14+       payload=73,399,566 | nodes   354,174/  354,174 OK | elems   586,202/  586,202 OK |  131.0s
 
 ====================================================================================================
 files: 122  errors: 0
 node exact: 110/122  (target 1,704,094, decode )
 elem exact: 96/122  (target 2,219,608)
-total decode time: 270s
+total decode time: 271s

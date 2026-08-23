@@ -874,6 +874,56 @@ def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         rec += stride
     return elems
 
+def _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=None):
+    """truck Y=4 特殊元素段: config-55 (变长) 与 config-60 (152B 定长).
+
+    config-55: [CONST][...][eid@+42][(567<<16)@+52][n@+56][节点1@+60][1][123456][节点2..n+1@+72][4]
+              节点数=n+1, 记录长=76+4*n.
+    config-60: [CONST][...][eid@+34][(316<<16)@+44][节点1@+48][节点2@+52], 记录长=152.
+    """
+    anchor = None
+    for s in range(sh + 16, sh + 80):
+        if is_const(u32(p, s)):
+            anchor = s
+            break
+    if anchor is None:
+        return None
+    elems = {}
+    rec = anchor
+    for k in range(min(cnt, max_rec if max_rec else cnt)):
+        tag55 = u32(p, rec + 52) >> 16
+        tag60 = u32(p, rec + 44) >> 16
+        if tag55 == 567:
+            eid = (u16(p, rec + 44) << 16) | u16(p, rec + 42)
+            n = u32(p, rec + 56)
+            if not (0 <= n <= 100):
+                break
+            nds = [u32(p, rec + 60)]
+            for i in range(n):
+                nds.append(u32(p, rec + 72 + 4 * i))
+            cfg = 55
+            stride = 76 + 4 * n
+        elif tag55 == 277:
+            # config 21: 2 节点, 80B
+            eid = (u16(p, rec + 44) << 16) | u16(p, rec + 42)
+            nds = [u32(p, rec + 56), u32(p, rec + 60)]
+            cfg = 21
+            stride = 80
+        elif tag60 == 316:
+            eid = (u16(p, rec + 36) << 16) | u16(p, rec + 34)
+            nds = [u32(p, rec + 48), u32(p, rec + 52)]
+            cfg = 60
+            stride = 152
+        else:
+            break
+        if not (0 < eid < 10_000_000):
+            break
+        if not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        rec += stride
+    return elems
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -888,10 +938,15 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
                 if got7 and (got is None or len(got7) > len(got)):
                     got = got7
-            if got is None and Y == 4:
-                # v13.03 Y=4 元素段 (chapter2_2)
-                got = _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-            if got is None and Y == 3:
+            if Y == 4:
+                # truck Y=4 特殊元素段 (config 55/60, CONST 锚 + tag): 优先于 A 型 (后者读到存储 ID)
+                got4 = _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got4:
+                    got = got4
+                elif got is None:
+                    # v13.03 Y=4 元素段 (chapter2_2)
+                    got = _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            elif got is None and Y == 3:
                 # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败且 Y==3 时尝试
                 nxt_sh = None
                 for (sh2, *_rest) in segs:
