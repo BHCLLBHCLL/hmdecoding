@@ -841,11 +841,10 @@ def _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=None):
     return elems
 
 def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
-    """truck Y=7 config-3 段: 112B 记录 (CONST 锚 + 固定间距).
+    """truck Y=7 段: config-3 (112B) 与 config-60 (176B).
 
-    记录: [CONST][存储ID@+4][列表数据 @+8..@+76][eid 低16@+82 高16@+84]
-          [0][(tag<<16)@+92][节点1@+96][节点2@+100][0][7].
-    eid = (u16(@+84)<<16)|u16(@+82); config = tag-256 (259->3); 2 节点.
+    config-3: [CONST][存储ID@+4][列表数据][eid@+82][(259<<16)@+92][节点1@+96][节点2@+100].
+    config-60: [CONST][存储ID@+4][...][eid@+58][(316<<16)@+68][节点1@+72][节点2@+76][节点3@+152].
     """
     anchor = None
     for s in range(sh + 16, sh + 80):
@@ -856,18 +855,23 @@ def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         return None
     elems = {}
     rec = anchor
-    stride = 112
     for k in range(min(cnt, max_rec if max_rec else cnt)):
-        eid = (u16(p, rec + 84) << 16) | u16(p, rec + 82)
-        tag = u32(p, rec + 92) >> 16
-        cfg = tag - 256
-        n1 = u32(p, rec + 96)
-        n2 = u32(p, rec + 100)
+        tag3 = u32(p, rec + 92) >> 16
+        tag60 = u32(p, rec + 68) >> 16
+        if tag3 == 259:
+            eid = (u16(p, rec + 84) << 16) | u16(p, rec + 82)
+            nds = [u32(p, rec + 96), u32(p, rec + 100)]
+            cfg = 3
+            stride = 112
+        elif tag60 == 316:
+            eid = (u16(p, rec + 60) << 16) | u16(p, rec + 58)
+            nds = [u32(p, rec + 72), u32(p, rec + 76), u32(p, rec + 164)]
+            cfg = 60
+            stride = 176
+        else:
+            break
         if not (0 < eid < 10_000_000):
             break
-        if not (1 <= cfg <= 100):
-            break
-        nds = [n1, n2]
         if not all(1 <= r <= row_count for r in nds):
             break
         elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
@@ -940,10 +944,10 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-            if Y == 7 and (got is None or len(got) < cnt):
-                # truck Y=7 config-3 段: 112B 记录 (eid@+82, tag@+92, 节点@+96)
+            if Y == 7:
+                # truck Y=7 段 (config 3/60): 优先于 A 型 (后者读到存储 ID)
                 got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-                if got7 and (got is None or len(got7) > len(got)):
+                if got7:
                     got = got7
             if Y == 4:
                 # truck Y=4 特殊元素段 (config 55/60, CONST 锚 + tag): 优先于 A 型 (后者读到存储 ID)
