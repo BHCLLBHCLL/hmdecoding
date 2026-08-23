@@ -329,6 +329,66 @@ def _collect_node_segments(p, lim=10000.0):
             fixed.append((None, cnt, base, stride, idoff, chain))
     return fixed
 
+def _scan_extra_node_segs(p, exclude_ranges, lo=0, hi=None, min_nid=0, lim=10000.0):
+    """补充扫描小节点段 (v11 多布局): 52/56/68/92B, 任意对齐, 排除已知主段范围.
+
+    v11 文件可能把节点拆成多个布局段 (如 molding1: 92B 主段 + 56B 尾段),
+    而 find_node_section 只返回主段. 零4 定位 + 聚类, 要求 >=2 条且非零坐标.
+    exclude_ranges: [(start, end), ...] 已知主段覆盖范围.
+    lo/hi: 扫描范围 (默认主段之后区域). min_nid: 段内 nid 下限 (主段节点数).
+    返回 [(count, base, stride, idoff, chain), ...].
+    """
+    n = len(p)
+    if hi is None:
+        hi = n
+    ZERO4 = b"\x00\x00\x00\x00"
+    starts = {52: [], 56: [], 68: [], 92: []}
+    j = max(lo, 0)
+    while True:
+        j = p.find(ZERO4, j, hi)
+        if j < 0:
+            break
+        base = j - 4
+        if base < 0 or any(a <= base < b for a, b in exclude_ranges):
+            j += 1
+            continue
+        nid = u32(p, base)
+        k = u32(p, base + 8)
+        if not (min_nid < nid <= 10_000_000 and k <= 16):
+            j += 1
+            continue
+        for stride in (52, 56, 68, 92):
+            if base + stride > n:
+                continue
+            x, y, z = d64(p, base + 12), d64(p, base + 20), d64(p, base + 28)
+            if abs(x) < lim and abs(y) < lim and abs(z) < lim:
+                starts[stride].append(base)
+        j += 1
+    out = []
+    for stride, lst in starts.items():
+        vset = set(lst)
+        # 聚类: 间距 == stride 且 nid 严格递增 (相差 1); 假候选 (nid 跳变,
+        # 间距 < 2*stride) 跳过, 间距 > 2*stride 视为新段起点
+        runs = []
+        for c in sorted(vset):
+            if runs:
+                last = runs[-1][-1]
+                if c - last == stride and u32(p, c) == u32(p, last) + 1:
+                    runs[-1].append(c)
+                    continue
+                if c - last > stride * 2:
+                    runs.append([c])
+                continue
+            runs.append([c])
+        for r in runs:
+            if len(r) < 2:
+                continue
+            if not any(max(abs(d64(p, x + 12)), abs(d64(p, x + 20)),
+                           abs(d64(p, x + 28))) > 0.001 for x in r):
+                continue
+            out.append((None, len(r), r[0], stride, 0, False))
+    return out
+
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
@@ -416,36 +476,53 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                 j = p.find(b"\xf5\x1f", j + 1, min(rec + 200, len(p) - 2))
             d = (nxt - rec) if nxt else None
             got = None
+            # ---- family-1 布局 (v11 truck 等): CONST 后 701/686+2596 标记, eid@+18 ----
+            if (u32(p, rec + 8) in (0x02BD0002, 0x02AE0002)
+                    and u16(p, rec + 12) == 2596):
+                f1_eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
+                f1_flag = u32(p, rec + 28)
+                f1_cfg = (f1_flag >> 16) - 256
+                if (0 < f1_eid < 10_000_000 and 300 <= (f1_flag >> 16) <= 500
+                        and (f1_flag & 0xFFFF) == 0):
+                    f1_rows = []
+                    kk = rec + 32
+                    while len(f1_rows) < 12 and u32(p, kk) != 0:
+                        f1_rows.append(u32(p, kk))
+                        kk += 4
+                    if 1 <= len(f1_rows) <= 12 and all(1 <= r <= row_count for r in f1_rows):
+                        eid = f1_eid
+                        got = (0, len(f1_rows), f1_rows, f1_cfg)
             # ---- v11 路径: flag<<16 u32 + u32 节点 ----
             prelens = [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40] if d else [0]
-            for prelen in prelens:
-                rec_len = (d - prelen) if d else None
-                if rec_len is not None and (rec_len < 32 or rec_len % 4 or rec_len > 140):
-                    continue
-                lim = (rec_len - 12) if rec_len else 84
-                cands = []
-                for off in range(12, lim, 4):
-                    v = u32(p, rec + off)
-                    f = v >> 16
-                    if 300 <= f <= 500 and (v & 0xFFFF) == 0:
-                        cands.append(off)
-                for fp in sorted(cands, reverse=True):
-                    nodes_off = rec + fp + 4
-                    n = 0
-                    while n < 12 and nodes_off + 4 * n + 4 <= len(p) and u32(p, nodes_off + 4 * n) != 0:
-                        n += 1
-                    if n < 1:
+            if got is None:
+                for prelen in prelens:
+                    rec_len = (d - prelen) if d else None
+                    if rec_len is not None and (rec_len < 32 or rec_len % 4 or rec_len > 140):
                         continue
-                    if rec_len is not None and nodes_off + 4 * n >= rec + rec_len:
-                        continue
-                    if u32(p, nodes_off + 4 * n) != 0:
-                        continue
-                    nds = [u32(p, nodes_off + 4 * j) for j in range(n)]
-                    if all(1 <= r <= row_count for r in nds):
-                        got = (prelen, n, nds, (u32(p, rec + fp) >> 16) - 256)
+                    lim = (rec_len - 12) if rec_len else 84
+                    cands = []
+                    for off in range(12, lim, 4):
+                        v = u32(p, rec + off)
+                        f = v >> 16
+                        if 300 <= f <= 500 and (v & 0xFFFF) == 0:
+                            cands.append(off)
+                    for fp in sorted(cands, reverse=True):
+                        nodes_off = rec + fp + 4
+                        n = 0
+                        while n < 12 and nodes_off + 4 * n + 4 <= len(p) and u32(p, nodes_off + 4 * n) != 0:
+                            n += 1
+                        if n < 1:
+                            continue
+                        if rec_len is not None and nodes_off + 4 * n >= rec + rec_len:
+                            continue
+                        if u32(p, nodes_off + 4 * n) != 0:
+                            continue
+                        nds = [u32(p, nodes_off + 4 * j) for j in range(n)]
+                        if all(1 <= r <= row_count for r in nds):
+                            got = (prelen, n, nds, (u32(p, rec + fp) >> 16) - 256)
+                            break
+                    if got:
                         break
-                if got:
-                    break
             # ---- v12 路径: u16 flag + u16 槽位节点 (58B 记录等) ----
             if got is None:
                 for fp in range(16, 56, 2):
@@ -687,15 +764,15 @@ def decode_elements(p, row_map, row_count, max_rec=None):
         got = None
         if X == 3:
             got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-            nxt_sh = None
-            for (sh2, *_rest) in segs:
-                if sh2 > sh:
-                    nxt_sh = sh2
-                    break
-            hi = nxt_sh if nxt_sh else len(p)
-            got2 = _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=max_rec)
-            if got2 and (got is None or len(got2) > len(got)):
-                got = got2
+            if got is None:
+                # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败时尝试
+                nxt_sh = None
+                for (sh2, *_rest) in segs:
+                    if sh2 > sh:
+                        nxt_sh = sh2
+                        break
+                hi = nxt_sh if nxt_sh else len(p)
+                got = _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=max_rec)
         else:
             got = _parse_b_type(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
             got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
@@ -914,6 +991,20 @@ def decode(path):
                 if n2:
                     nodes.update(n2)
                     ns_list.append(ens)
+        # 补充小节点段 (多布局: 52/56/68/92B), 如 molding1 92B 主段 + 56B 尾段;
+        # 仅扫描主段之后 512KB 区域, 且 nid > 主段节点数 (排除元素区假段)
+        if ns_list:
+            main = ns_list[0]
+            m_end = main[2] + len(nodes) * main[3]
+            excl = [(c[2], c[2] + 8) for c in ns_list]
+            for ens in _scan_extra_node_segs(p, excl, lo=max(0, m_end - 256),
+                                             hi=m_end + 512 * 1024, min_nid=len(nodes) - 16):
+                if any(abs(ens[2] - c[2]) < 32 for c in ns_list):
+                    continue
+                n2, b2 = parse_nodes(p, ens)
+                if n2:
+                    nodes.update(n2)
+                    ns_list.append(ens)
     if ns_list and nodes:
         model.node_section = ns_list[0][0]
         model.node_count = len(nodes)
@@ -952,7 +1043,7 @@ def decode(path):
                     elems = {eid: (cfg, [row_map.get(r, r) for r in rows])
                              for eid, (cfg, rows) in elems.items()}
             else:
-                # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式)
+                # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式, 含 family-1 布局检测)
                 elems = decode_elements(p, row_map, len(nodes))
             elems_b = _parse_ws_variant_b(p, row_map, ns[1])
             if elems_b and (not elems or len(elems_b) > len(elems)):
