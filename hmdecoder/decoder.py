@@ -419,6 +419,7 @@ def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
     xoff = 24 if stride == 96 else 12  # v13.03 96B 记录坐标 @+24
+    prev_nid = 0
     for k in range(count):
         rec = base + k * stride
         if rec + stride > len(p):
@@ -426,12 +427,17 @@ def parse_nodes(p, cfg):
         if chain:
             nid = u32(p, rec + 44) - 1
             x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
+            # 末条 44B 短记录: nid 字段被紧随的元素段标记覆盖 (读回更小的值),
+            # 隐含 nid = 前一条 + 1 (如 SEAT_MODEL 节点 34328)
+            if k == count - 1 and nid <= prev_nid:
+                nid = prev_nid + 1
         else:
             nid = u32(p, rec + idoff)
             x, y, z = d64(p, rec + xoff), d64(p, rec + xoff + 8), d64(p, rec + xoff + 16)
         if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9):
             break  # 记录流结束 (count 字段可能含虚值)
         nodes[nid] = Node(nid, x, y, z)
+        prev_nid = nid
     return nodes, base
 
 def row_map_from_nodes(p, cfg, base):
