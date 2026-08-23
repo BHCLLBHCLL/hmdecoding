@@ -995,6 +995,38 @@ def _parse_y0_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         k += 1
     return elems
 
+def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
+    """car_section Y=6 段 config 3 (rigid, tag 259, 2 节点, 100B stride).
+
+    Y=6 段有 list 头 (60B), CONST 锚在 sh+84 之后; _parse_a_type 的 sh+16..80 扫不到.
+    记录: [CONST][eid@+4][...][259@+22][节点1@+24][节点2@+28]. tag 316 (config 60,
+    RBE3/rigid wall) 非元素, 跳过.
+    """
+    anchor = None
+    for s in range(sh + 16, sh + 240):
+        if is_const(u32(p, s)):
+            anchor = s
+            break
+    if anchor is None:
+        return None
+    if u16(p, anchor + 22) != 259:
+        return None
+    elems = {}
+    rec = anchor
+    limit = min(cnt, max_rec if max_rec else cnt)
+    for k in range(limit):
+        if rec + 32 > len(p) or not is_const(u32(p, rec)):
+            break
+        if u16(p, rec + 22) != 259:
+            break
+        eid = u16(p, rec + 4)
+        nds = [u16(p, rec + 24), u16(p, rec + 28)]
+        if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (3, [row_map.get(r, r) for r in nds])
+        rec += 100
+    return elems or None
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -1011,6 +1043,9 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=max_rec)
                 if got is None:
                     got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            elif Y == 6:
+                # car_section Y=6: config 3 rigid (tag 259); tag 316/277 非元素跳过
+                got = _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             else:
                 got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             if Y == 7:
