@@ -502,8 +502,11 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             rec_v12 = u16(p, rec + 12)
             rec_v4 = u32(p, rec + 4)
             eid10 = u32(p, rec + 10)
+            f1_eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
             if rec_v12 == 2596:
-                eid = rec_v4
+                # family-1 (@+12==2596): @+4 可能是存储 ID, 真实 eid 在 @+18
+                # (SEAT_MODEL/truck). @+18 合法且 != @+4 时用 @+18, 否则 @+4 即真 eid.
+                eid = f1_eid if (0 < f1_eid < 10_000_000 and f1_eid != rec_v4) else rec_v4
             elif rec_v4 >= 2_000_000:
                 eid = eid10
             elif rec_v12 == 0:
@@ -935,6 +938,63 @@ def _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         rec += stride
     return elems
 
+def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
+    """SEAT_MODEL seg 29: Y=2 段 3 节点 config 60 (136B stride).
+
+    记录: [CONST][存储ID@+4][...][eid@+18][...][316@+30][节点1@+32][节点2@+36]
+          [...][节点3@+124]. tag 316 判别 (config 60).
+    """
+    rec = sh + 24
+    if rec + 136 > len(p) or not is_const(u32(p, rec)):
+        return None
+    if u16(p, rec + 30) != 316:
+        return None
+    elems = {}
+    limit = min(cnt, max_rec if max_rec else cnt)
+    for k in range(limit):
+        if rec + 136 > len(p) or not is_const(u32(p, rec)):
+            break
+        if u16(p, rec + 30) != 316:
+            break
+        eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
+        nds = [u16(p, rec + 32), u16(p, rec + 36), u16(p, rec + 124)]
+        if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (60, [row_map.get(r, r) for r in nds])
+        rec += 136
+    return elems or None
+
+def _parse_y0_elems(p, sh, cnt, row_count, row_map, max_rec=None):
+    """geometry Y=0 元素段: 无 CONST 锚, u16 粒度变长记录, CONST 块分隔.
+
+    记录布局 (长 22+4n 字节):
+      [+0] eid u16  [+2..+10] 5×0 u16  [+12] marker u16 (低字节=config)
+      [+14+4i] (0, 节点行号) u16 对 i=0..n-1  [+14+4n..+22+4n] 4×0 u16 尾
+    config→节点数: 104→4, 103→3, 208→8, 206→6.
+    CONST 块分隔: [CONST][first_eid u16][0 u16][16 u16] + 记录 (记录自身带 eid).
+    """
+    B = sh + 24
+    elems = {}
+    limit = min(cnt, max_rec if max_rec else cnt)
+    k = 0
+    while k < limit:
+        if B + 10 <= len(p) and is_const(u32(p, B)):
+            B += 10  # CONST + 块头 (6 字节)
+            continue
+        eid = u16(p, B)
+        marker = u16(p, B + 12)
+        cfg = marker & 0xFF
+        n = CONFIG_NODES.get(cfg)
+        if n is None:
+            break
+        nds = [u16(p, B + 14 + 4 * i) for i in range(n)]
+        if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
+            break
+        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        B += 22 + 4 * n
+        k += 1
+    return elems
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -943,7 +1003,16 @@ def decode_elements(p, row_map, row_count, max_rec=None):
     for (sh, segid, cfg71, cnt, X, Y) in segs:
         got = None
         if X == 3:
-            got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            if Y == 0:
+                # geometry Y=0 段: u16 变长记录 + CONST 块分隔 (无标准 CONST 锚)
+                got = _parse_y0_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            elif Y == 2:
+                # SEAT_MODEL seg 29: 3 节点 config 60 (tag 316) 优先于 A 型 (后者读到存储 ID)
+                got = _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got is None:
+                    got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+            else:
+                got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             if Y == 7:
                 # truck Y=7 段 (config 3/60): 优先于 A 型 (后者读到存储 ID)
                 got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
@@ -1245,7 +1314,7 @@ def decode(path):
                              for eid, (cfg, rows) in elems.items()}
             else:
                 # v11-13: 分段解析 (A 型 CONST 锚 / B 型链式, 含 family-1 布局检测)
-                elems = decode_elements(p, row_map, len(nodes))
+                elems = decode_elements(p, row_map, len(row_map))
             elems_b = _parse_ws_variant_b(p, row_map, len(nodes) if nodes else 0)
             if elems_b and (not elems or len(elems_b) > len(elems)):
                 model.elements = elems_b
