@@ -157,8 +157,10 @@
   对重复 eid 只返回 shell 元素。decoder 的 dict (eid→elem) 无法表示重复 eid,
   故 28021 唯一 eid 已与 oracle 一致 (real missing=0), 差 490 为重复元素。
   彻底解决需 HMModel 支持重复 eid (list 而非 dict)。
-- 全量: node 110/122, elem **101/122** (+4: geometry/SEAT_MODEL + 2), 0 崩溃; 无回归。
-- 剩余: car_section miss+490 (重复 eid 现象), SEAT_MODEL nodes miss+1 (节点 34328 布局待解)。
+- **SEAT_MODEL 节点 34328** (修复 `parse_nodes`): 链式节点段末条为 44B 短记录 (无 nid 字段,
+  nid 字段被紧随的元素段标记 0x03E5 覆盖), nid 隐含为前一条 + 1。→ nodes **34296/34296 全解**。
+- 全量: node **112/122**, elem **101/122**, 0 崩溃; 无回归。
+- 剩余: car_section miss+490 (重复 eid 现象), SEAT_MODEL 已全解 (node+elem)。
 
 ### 8. 头部布局按版本分 4 代
 
