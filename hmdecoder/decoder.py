@@ -909,6 +909,13 @@ def _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             nds = [u32(p, rec + 56), u32(p, rec + 60)]
             cfg = 21
             stride = 80
+        elif tag55 in (278, 534, 790, 1302):
+            # config 22: tag 278→2 节点, tag 534/790/1302→4 节点, 100B
+            eid = (u16(p, rec + 44) << 16) | u16(p, rec + 42)
+            nn = 2 if tag55 == 278 else 4
+            nds = [u32(p, rec + 56 + 4 * i) for i in range(nn)]
+            cfg = 22
+            stride = 100
         elif tag60 == 316:
             eid = (u16(p, rec + 36) << 16) | u16(p, rec + 34)
             nds = [u32(p, rec + 48), u32(p, rec + 52)]

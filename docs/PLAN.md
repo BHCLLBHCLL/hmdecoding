@@ -136,11 +136,12 @@
 - **truck Y=4 特殊元素段** (新增 `_parse_y4_elems`): 按 tag 判别 —
   - config 55 (tag 567@+52): 变长记录, `eid=u32(@+42)`, n@+56, 节点数=n+1 (节点1@+60, 节点2..n+1@+72 起), 记录长=76+4n;
   - config 60 (tag 316@+44): 152B, `eid=u32(@+34)`, 节点@+48/@+52;
-  - config 21 (tag 277@+52): 80B, `eid=u32(@+42)`, 节点@+56/@+60。
+  - config 21 (tag 277@+52): 80B, `eid=u32(@+42)`, 节点@+56/@+60;
+  - config 22 (tag 278/534/790/1302@+52): 100B, `eid=u32(@+42)`, 278→2 节点, 其余→4 节点。
 - **修复**: frame_assembly_3 (10588→11953 全解), frame_assembly_4 (10513→11361 全解),
-  frame_assembly_1 (9974→10066 全解), truck (196766→212457, +15691), SEAT_MODEL (27498→27499)。
+  frame_assembly_1 (9974→10066 全解), truck (196766→212484, +15718), SEAT_MODEL (27498→27499)。
 - 全量: node 110/122, elem **96/122** (原 93/122), 0 崩溃; 无回归。
-- 剩余: truck config-22 段 (27, 变长 2/4 节点) + 5 个 config-21, SEAT_MODEL miss+4, car_section miss+626, geometry 4116。
+- 剩余: truck 5 个 config-21 (小 Y=7 段 2000189/2000218, 不同布局), SEAT_MODEL miss+4, car_section miss+626, geometry 4116。
 
 ### 8. 头部布局按版本分 4 代
 
