@@ -1,0 +1,8 @@
+readfile: 1
+total: 2898
+N nid=1 x=55.68956 y=80.41011 z=0
+N nid=2 x=64.7529 y=41.66918 z=0
+N nid=3 x=55.90279 y=14.8688 z=0
+N nid=4 x=94.11644 y=108.1662 z=0
+N nid=5 x=100 y=72 z=0
+first: 1 last: 2898

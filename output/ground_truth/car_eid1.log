@@ -1,0 +1,8 @@
+readfile: 1
+eid=1 config=103 nnodes=3 nodes=35 27 36
+eid=2 config=103 nnodes=3 nodes=35 28 27
+eid=3 config=104 nnodes=4 nodes=36 24 23 37
+eid=340 config=104 nnodes=4 nodes=173 257 174 157
+eid=341 config=104 nnodes=4 nodes=425 242 241 172
+eid=342 config=104 nnodes=4 nodes=161 172 241 220
+eid=343 config=104 nnodes=4 nodes=157 426 427 174

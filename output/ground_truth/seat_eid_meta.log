@@ -1,0 +1,14 @@
+readfile: 1
+eid=5545 config=104 nnodes=4 nodes=7256 9972 9973 8416
+eid=5546 config=104 nnodes=4 nodes=7255 9965 9973 9972
+eid=5547 config=104 nnodes=4 nodes=7258 8515 9973 9965
+eid=5548 config=104 nnodes=4 nodes=385 8399 9974 9971
+eid=27495 config=60 nnodes=3 nodes=531 4 96
+eid=27496 config=60 nnodes=3 nodes=2 529 55
+eid=27497 config=60 nnodes=3 nodes=3 530 71
+eid=27498 config=60 nnodes=3 nodes=1 528 92
+eid=27499 config=60 nnodes=3 nodes=34328 528 17373
+eid=27500 config=60 nnodes=3 nodes=529 17374 17373
+eid=27501 config=60 nnodes=3 nodes=17374 17373 529
+eid=27502 config=60 nnodes=2 nodes=17368 17374
+eid=27503 config=60 nnodes=2 nodes=34328 34327

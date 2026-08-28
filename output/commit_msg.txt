@@ -1,5 +1,5 @@
-feat(decoder): v17 元素全量解码 585546/586202 — dummy_positioner/seat_deformer 完整支持
+docs: 更新 spec/README — v17 布局 + 全语料 GT node-ok 114/123, elem-ok 103/123
 
-- v17 541 个元素段 (全 A 型) 全量解析仅 9.3s (字节模式优化后)
-- decode() 移除 50MB max_rec 限制, 全量解码
-- v17 完整: 节点 354174/354176 + 元素 585546/586202
+- spec: v17 多节点段 (68B/92B, 子块标记递增) + 541 元素段 + truck edge 段识别
+- 完整 oracle 对照: node-ok 114/123 (93%), elem-ok 103/123 (84%)
+- v17 全解: dummy_positioner/seat_deformer 354174 节点 + 585546 元素

@@ -1,0 +1,17 @@
+readfile: 1
+eid=219643 config=22 nnodes=2
+eid=219700 config=55 nnodes=2
+eid=219750 config=55 nnodes=8
+eid=219800 config=55 nnodes=3
+eid=219850 config=55 nnodes=3
+eid=219900 config=55 nnodes=3
+eid=219950 config=55 nnodes=12
+eid=220000 config=55 nnodes=3
+eid=220050 config=55 nnodes=3
+eid=220100 config=55 nnodes=3
+eid=220150 config=55 nnodes=3
+eid=220200 config=60 nnodes=2
+eid=220250 config=60 nnodes=2
+eid=220300 config=60 nnodes=2
+eid=220350 config=60 nnodes=2
+eid=220400 config=21 nnodes=2

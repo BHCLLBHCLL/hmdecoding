@@ -1,0 +1,13 @@
+readfile: 1
+eid=1 config=104 nnodes=4 nodes=20 21 61 19
+eid=2 config=104 nnodes=4 nodes=19 61 62 18
+eid=3 config=104 nnodes=4 nodes=21 22 63 61
+eid=4 config=104 nnodes=4 nodes=61 63 64 62
+eid=5 config=104 nnodes=4 nodes=18 62 66 17
+eid=100 config=104 nnodes=4 nodes=141 136 34 35
+eid=1000 config=208 nnodes=8 nodes=945 951 963 954 1165 1171 1183 1174
+eid=2000 config=208 nnodes=8 nodes=2069 2076 2086 2083 2289 2296 2306 2303
+eid=3000 config=208 nnodes=8 nodes=3199 3208 3207 3198 3419 3428 3427 3418
+eid=4000 config=208 nnodes=8 nodes=4310 4318 4329 4320 4530 4538 4549 4540
+eid=4116 config=208 nnodes=8 nodes=4450 4449 4447 4448 4670 4669 4667 4668
+max_elem_id=4116

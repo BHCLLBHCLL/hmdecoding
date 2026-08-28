@@ -1,0 +1,11 @@
+readfile: 1
+total: 14558
+E eid=71760 config=103 nodes=1 4 2
+E eid=71761 config=103 nodes=3 4 1
+E eid=71762 config=103 nodes=7 2 5
+E eid=71763 config=103 nodes=8 6 3
+E eid=71764 config=103 nodes=9 1 2
+E eid=71765 config=103 nodes=9 3 1
+E eid=71766 config=103 nodes=4 11 2
+E eid=71767 config=103 nodes=2 11 5
+first eid: 71760  last: 160168

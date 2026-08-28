@@ -1,0 +1,6 @@
+readfile: 1
+eid=27499 config=60 nnodes=3 nodes=34328 528 17373
+eid=27500 config=60 nnodes=3 nodes=529 17374 17373
+eid=27501 config=60 nnodes=3 nodes=17374 17373 529
+eid=27502 config=60 nnodes=2 nodes=17368 17374
+eid=27503 config=60 nnodes=2 nodes=34328 34327
