@@ -954,6 +954,56 @@ def _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         rec += stride
     return elems
 
+
+def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
+    """ansys 2D 教程 Y=2 段: 头 0x30200B1F, 记录 62B 固定.
+
+    记录: [0x30200B1F][7][0][0x30200B21][7][1][eid@+24][0][0][?][行号×4 @+38][0][2].
+    行号 = u32 @+38 连续 (遇 0 停); cfg 由行号数推 (4->104, 3->103).
+    """
+    pat = b"\x1f\x0b\x20\x30"
+    elems = {}
+    j = sh + 24
+    n = 0
+    lim = min(cnt, max_rec if max_rec else cnt)
+    while n < lim:
+        j = p.find(pat, j, min(j + 200, len(p)))
+        if j < 0:
+            break
+        eid = u32(p, j + 24)
+        rows = []
+        for i in range(8):
+            r = u32(p, j + 38 + 4 * i)
+            if not (1 <= r <= row_count):
+                break
+            rows.append(r)
+        if rows and 0 < eid < 10_000_000:
+            cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
+            if cfg:
+                elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+        j += 62
+        n += 1
+    # 补漏: 主链之外的记录 (如 wizard_2d eid 58 @ sh+82) — 独立 find 全部头补缺失 eid
+    j = sh + 24
+    while True:
+        j = p.find(pat, j, min(sh + 40 * 70, len(p)))
+        if j < 0:
+            break
+        eid = u32(p, j + 24)
+        if eid not in elems and 0 < eid < 10_000_000:
+            rows = []
+            for i in range(8):
+                r = u32(p, j + 38 + 4 * i)
+                if not (1 <= r <= row_count):
+                    break
+                rows.append(r)
+            if rows:
+                cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
+                if cfg:
+                    elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+        j += 1
+    return elems
+
 def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
     """SEAT_MODEL seg 29: Y=2 段 3 节点 config 60 (136B stride).
 
@@ -1059,6 +1109,10 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=max_rec)
                 if got is None:
                     got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got is None or len(got) < 2:
+                    got_a = _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                    if got_a and (got is None or len(got_a) > len(got)):
+                        got = got_a
             elif Y == 6:
                 # car_section Y=6: config 3 rigid (tag 259); tag 316/277 非元素跳过
                 got = _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=max_rec)
