@@ -40,7 +40,7 @@ python -c "import sys; sys.path.insert(0,'.'); from hmdecoder import decode; fro
 
 ## 回归状态（2026-08 深入解析后）
 
-- **oracle 对照（123 文件）**：node-ok 114/123 (93%)，elem-ok 103/123 (84%)（此前基线 node 66/98、elem 6/98）；v17 (17.01) 全解 dummy_positioner/seat_deformer 354174 节点 + 585546 元素；
+- **oracle 对照（123 文件）**：node-ok 114/123 (93%)，elem-ok 105/123 (85%)；wing_section_complete 1001/1001、hm-ansys wizard_2d 202/202 全解（此前基线 node 66/98、elem 6/98）；v17 (17.01) 全解 dummy_positioner/seat_deformer 354174 节点 + 585546 元素；
 - **元素段统一模型**：段头 [997][seg][175][count][X][Y]；A 型（CONST 锚 0x70??1FF5 家族）/ B 型（链式 eid）/ v12-13 u16 槽位型（58B）/ B 型 u16 槽位型（34B）/ 元素分块存储 + 断链重连；
 - **节点段统一模型**：52B-flat / 92B-flat（+40B 附加）/ 56B-chain（v13）/ 68B（v14+）；[136] 头字节定位 + 结构扫描 fallback；
 - 关键验证：body_side 7510+7182、housing 8690、fe_only 17264、quality_index 2216、truck 212139+204762、SEAT_MODEL 34295+27503、car_section 26697+27854、dummy_positioner(17.01) 116734+44062；
