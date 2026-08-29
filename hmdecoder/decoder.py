@@ -806,10 +806,10 @@ def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
             nds.append(r)
         if nds and 0 < eid < 10_000_000:
             elems[eid] = (104, [row_map.get(r, r) for r in nds])
-            prev = j
             n_parsed += 1
             if max_rec and n_parsed >= max_rec:
                 break
+        prev = j  # 坏记录也推进 prev, 避免间距基准卡死酿成连锁跳过
         j += 1
     return elems
 
@@ -1067,15 +1067,17 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 elif got is None:
                     # v13.03 Y=4 元素段 (chapter2_2)
                     got = _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
-            elif got is None and Y == 3:
-                # Y=3 几何复合记录 (无 CONST 锚): 仅当 A 型完全失败且 Y==3 时尝试
+            if Y == 3:
+                # Y=3 几何复合记录 (无 CONST 锚): 与 A 型并行取多 (A 型对 Y=3 部分成功会掩盖 geom)
                 nxt_sh = None
                 for (sh2, *_rest) in segs:
                     if sh2 > sh:
                         nxt_sh = sh2
                         break
                 hi = nxt_sh if nxt_sh else len(p)
-                got = _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=max_rec)
+                got_g = _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=max_rec)
+                if got_g and (got is None or len(got_g) > len(got)):
+                    got = got_g
         else:
             got = _parse_b_type(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
             got2 = _parse_b_slots(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)

@@ -1,5 +1,5 @@
-docs: 更新 spec/README — v17 布局 + 全语料 GT node-ok 114/123, elem-ok 103/123
+feat(decoder): wing_section Y=3 复合记录 150→797 — Y=3 并行 geom + 坏记录 prev 推进
 
-- spec: v17 多节点段 (68B/92B, 子块标记递增) + 541 元素段 + truck edge 段识别
-- 完整 oracle 对照: node-ok 114/123 (93%), elem-ok 103/123 (84%)
-- v17 全解: dummy_positioner/seat_deformer 354174 节点 + 585546 元素
+- decode Y=3 取 _parse_a_geom 与 _parse_a_type 多者 (A 型部分成功曾掩盖 geom)
+- _parse_a_geom 坏记录 (eid=0/行号无效) 也推进 prev, 修复连锁跳过
+- wing_section_complete 150→797 (剩 77 短名变体记录待解)
