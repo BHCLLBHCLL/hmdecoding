@@ -1,5 +1,3 @@
-feat(decoder): ansys 2D 系列 Y=2 头 0x30200B1F 布局破解 — wizard_2d 202/202
+feat(decoder): ansys 2D 系列 — wizard_2d 202/202 全解 (P0-2 部分)
 
-- 新增 _parse_ansys2d_elems: 记录 62B, [0x30200B1F][7][0][0x30200B21][7][1][eid@+24][...][行号 u32@+38][0][2]
-- 主 62 链 + 补漏 (独立 find 全部头补缺失 eid, 如 eid 58 @ sh+82)
-- wizard_2d 201→202 全解; P0-2 部分 (manager_2d v12.07 待解)
+- wizard_2d (11.05) 202/202; manager_2d (12.07) 68/173 (seg2 105 条 v12 无头变体待解)
