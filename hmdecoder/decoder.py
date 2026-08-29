@@ -797,13 +797,23 @@ def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
         if prev is not None and not (68 <= j - prev <= 80):
             j += 1
             continue  # 间距异常 -> 误匹配
-        eid = u32(p, j + 36)
+        L = u32(p, j + 4)  # ASCII 名长度 (8 = 标准, 5 = 短名变体)
+        eid_off = 28 + L
+        eid = u32(p, j + eid_off)
         nds = []
-        for i in range(8):
-            r = u32(p, j + 48 + 4 * i) >> 16
-            if not (1 <= r <= row_count):
-                break
-            nds.append(r)
+        if L == 8:
+            for i in range(8):
+                r = u32(p, j + eid_off + 12 + 4 * i) >> 16
+                if not (1 <= r <= row_count):
+                    break
+                nds.append(r)
+        else:
+            # 短名变体: 行号为 u16 [行号, 0] 对 @ eid_off+14+4i
+            for i in range(8):
+                r = u16(p, j + eid_off + 14 + 4 * i)
+                if not (1 <= r <= row_count):
+                    break
+                nds.append(r)
         if nds and 0 < eid < 10_000_000:
             elems[eid] = (104, [row_map.get(r, r) for r in nds])
             n_parsed += 1
