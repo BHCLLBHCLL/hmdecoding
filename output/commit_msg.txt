@@ -1,6 +1,5 @@
-find(decoder): car_section 141 缺口根因定位 — 解析函数 dict 覆盖同 eid 重复实体
+feat(decoder): 元素解析重复 eid 保留 — body_side_assembly 20215→20320 全解, elem-ok 105→108
 
-- car_section 28511 实体/28021 唯一 eid, 348 重复 eid (额外 491 实体)
-- decode 解 28371 (350 重复额外), 缺 141 重复实体
-- 根因: _parse_* 函数返回 dict, 同段同 eid 记录被覆盖 (eid 3+ 应 3 个实体 decode 只 2)
-- 下一步: 元素解析改保留重复 (list 或 dict[eid]=list); 同步影响 body_side_assembly seg48/manager
+- 新增 _rec_add(elems, eid, cfg, nds): dict[eid]=list[(cfg,nds)], 保留同 eid 重复实体
+- 15 处 elems[eid]= 转换; decode_elements 处理 list 值; 放宽 not-in-elems 防重
+- body_side_assembly 20320/20320 全解 (seg48 105 补全); car_section 141 为记录未解析 (待解)

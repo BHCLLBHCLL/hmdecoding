@@ -51,6 +51,11 @@ def load_payload(path):
     return gzip.decompress(raw[12:])
 
 def u32(p, o): return struct.unpack_from("<I", p, o)[0]
+def _rec_add(elems, eid, cfg, nds):
+    """保留同 eid 的重复记录 (car_section 等 Ansys 多实体模型). dict[eid]=list[(cfg, nds)]."""
+    elems.setdefault(eid, []).append((cfg, nds))
+    return elems
+
 def u16(p, o): return struct.unpack_from("<H", p, o)[0]
 def d64(p, o): return struct.unpack_from("<d", p, o)[0]
 CONST = 0x70241FF5
@@ -616,7 +621,7 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             if got is None:
                 ok = False; break
             fp, n, nds, config = got
-            elems[eid] = (config, [row_map.get(r, r) for r in nds])
+            _rec_add(elems, eid, config, [row_map.get(r, r) for r in nds])
             if nxt is None:
                 break
             rec = nxt
@@ -652,7 +657,7 @@ def _parse_b_type(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         nds = [u32(p, rec + 10 + j * 4) for j in range(n)]
         if not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (config, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, config, [row_map.get(r, r) for r in nds])
         nxt = None
         for j in range(rec + 10 + 4 * n + 4, rec + 400):
             if u32(p, j) == 0 and u32(p, j + 4) == 0 and 300 <= u16(p, j + 8) <= 500:
@@ -712,7 +717,7 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
             if not all(1 <= r <= row_count for r in nds):
                 break
         eid = first_eid + k
-        elems[eid] = (0, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, 0, [row_map.get(r, r) for r in nds])
         nxt = None
         for j in range(rec + 2 + 4 * slots + 8, min(rec + 50000, len(p) - 8)):
             if not (u16(p, j) != 0 and u16(p, j + 2) != 0 and u16(p, j + 4) == 0
@@ -762,7 +767,7 @@ def _parse_b_u16rows(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
             j += 1
         if not nds:
             break
-        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         eid += 1
         # 找下一条记录: [0][0][flag 300-500]
         nxt = None
@@ -815,7 +820,7 @@ def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
                     break
                 nds.append(r)
         if nds and 0 < eid < 10_000_000:
-            elems[eid] = (104, [row_map.get(r, r) for r in nds])
+            _rec_add(elems, eid, 104, [row_map.get(r, r) for r in nds])
             n_parsed += 1
             if max_rec and n_parsed >= max_rec:
                 break
@@ -852,7 +857,7 @@ def _parse_v13_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             break
         cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
         if cfg:
-            elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+            _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in rows])
         j = p.find(MARK, rec + 20, min(rec + 200, len(p)))
         if j < 0:
             break
@@ -893,7 +898,7 @@ def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             break
         if not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         rec += stride
     return elems
 
@@ -950,7 +955,7 @@ def _parse_y4_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             break
         if not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         rec += stride
     return elems
 
@@ -980,7 +985,7 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         if rows and 0 < eid < 10_000_000:
             cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
             if cfg:
-                elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+                _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in rows])
         j += 62
         n += 1
     # 补漏: 主链之外的记录 (如 wizard_2d eid 58 @ sh+82) — 独立 find 全部头补缺失 eid
@@ -990,7 +995,7 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         if j < 0:
             break
         eid = u32(p, j + 24)
-        if eid not in elems and 0 < eid < 10_000_000:
+        if 0 < eid < 10_000_000:
             rows = []
             for i in range(8):
                 r = u32(p, j + 38 + 4 * i)
@@ -1000,7 +1005,7 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             if rows:
                 cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
                 if cfg:
-                    elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
+                    _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in rows])
         j += 1
     # v12 变体 (manager_2d seg2 eid 203..307): 38B 记录, eid@+0, 行号 u16 @+14+4i
     # 从最后一个头之后开始扫 eid 递增 38B 流
@@ -1023,8 +1028,8 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
                 if not (1 <= r <= row_count):
                     break
                 rows.append(r)
-            if eid not in elems and 0 < eid < 10_000_000 and len(rows) == 4:
-                elems[eid] = (104, [row_map.get(r, r) for r in rows])
+            if 0 < eid < 10_000_000 and len(rows) == 4:
+                _rec_add(elems, eid, 104, [row_map.get(r, r) for r in rows])
             rec += 38
             guard += 1
             if len(rows) < 4 and u32(p, rec) == 0:
@@ -1053,7 +1058,7 @@ def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
         nds = [u16(p, rec + 32), u16(p, rec + 36), u16(p, rec + 124)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (60, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, 60, [row_map.get(r, r) for r in nds])
         rec += 136
     return elems or None
 
@@ -1083,7 +1088,7 @@ def _parse_y0_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         nds = [u16(p, B + 14 + 4 * i) for i in range(n)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (cfg, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         B += 22 + 4 * n
         k += 1
     return elems
@@ -1116,7 +1121,7 @@ def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
         nds = [u16(p, rec + 24), u16(p, rec + 28)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
-        elems[eid] = (3, [row_map.get(r, r) for r in nds])
+        _rec_add(elems, eid, 3, [row_map.get(r, r) for r in nds])
         rec += 100
     return elems or None
 
@@ -1178,7 +1183,7 @@ def decode_elements(p, row_map, row_count, max_rec=None):
             if got3 and (got is None or len(got3) > len(got)):
                 got = got3
         if got:
-            records.extend((eid, cfg, nds) for eid, (cfg, nds) in got.items())
+            records.extend((eid, cfg, nds) for eid, recs in got.items() for (cfg, nds) in recs)
     return records or None
 
 # ---------------------------------------------------------------------------
