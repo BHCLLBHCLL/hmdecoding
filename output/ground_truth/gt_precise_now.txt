@@ -1,0 +1,29 @@
+﻿total=123
+
+=== NODE misses (cur, exp) ===
+  truck.hm                                       212139 / 212138
+  car_section.hm                                  26697 / 26695
+  chapter2_2.hm                                       2 / 2898
+  seat_2.hm                                        1621 / 1620
+  seat_start.hm                                    1621 / 1620
+  icw_ex2.hm                                         90 / 100
+  icw_ex1.hm                                         77 / 89
+  solid_map.hm                                        4 / 2
+
+=== ELEM misses (cur, exp) ===
+  hook.hm                                         12111 / 12115
+  crash_tubes.hm                                   4898 / 4902
+  chapter2_2.hm                                       0 / 2813
+  channel_brkt_assem_analysis.hm                   2428 / 2431
+  channel_brkt_assem_loading.hm                    2429 / 2431
+  seat_2.hm                                        1526 / 1562
+  seat_start.hm                                    1525 / 1559
+  abaqus_contactManager_3D_tutorial.hm             1215 / 1340
+  joints.hm                                         998 / 1009
+  hm-ansys_contact_manager_3-d_tutorial.hm          799 / 924
+  hm-ansys_contact_wizard_3-d_tutorial.hm           799 / 924
+  abaqus_contactManager_2D_tutorial.hm              490 / 537
+  keyhole.hm                                        502 / 505
+  abaqus3_0tutorial.hm                              268 / 270
+
+node exact=115/123 elem exact=109/123

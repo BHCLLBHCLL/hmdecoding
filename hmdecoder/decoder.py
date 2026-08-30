@@ -1446,13 +1446,14 @@ def decode(path):
                 if n2:
                     nodes.update(n2)
                     ns_list.append(ens)
-        # v13.03 96B 节点段 (0x10200bc7 标记), 如 chapter2_2
-        if not ns_list:
-            for ens in _scan_v13_node_segs(p):
-                n2, b2 = parse_nodes(p, ens)
-                if n2:
-                    nodes.update(n2)
-                    ns_list.append(ens)
+        # v13.03 96B 节点段 (0x10200bc7 标记), 如 chapter2_2 — 无条件补充 (与主段合并)
+        for ens in _scan_v13_node_segs(p):
+            if any(abs(ens[2] - c[2]) < 32 for c in ns_list):
+                continue
+            n2, b2 = parse_nodes(p, ens)
+            if n2:
+                nodes.update(n2)
+                ns_list.append(ens)
     if ns_list and nodes:
         model.node_section = ns_list[0][0]
         model.node_count = len(nodes)
