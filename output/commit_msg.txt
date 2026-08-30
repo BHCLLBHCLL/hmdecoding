@@ -1,5 +1,5 @@
-feat(decoder): car_section 28511/28511 全解 — Y=6 tag 316 (config 3 rigid, 168B 记录)
+fix(decoder): 节点补扫阈值基于 ns[1]*0.85 — manager_2d 节点 111→202 (68B mark=0 段部分捕获)
 
-- _parse_y6_c3 扩展 tag 316 分支: 168B 记录, eid=存储ID@+4, 行号@+24/+28/+32 (3 节点 config 3)
-- 原只 tag 259 (100B, 2 节点) -> car_section 136 rigid 漏; 现 141 缺口清零
-- elem-ok 108 -> 109
+- decode v11-13 节点补扫触发条件由 len(nodes)<10 改为 len(nodes)<max(10,ns[1]*0.85)
+- manager 68B mark=0 段 (id 233..323) 补入, 202/203 (差 id 232 因 _scan_extra_node_segs base 偏移)
+- car_section Y=6 tag316 此前已解 (elem-ok 109)

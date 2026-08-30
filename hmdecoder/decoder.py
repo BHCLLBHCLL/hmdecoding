@@ -1412,7 +1412,8 @@ def decode(path):
             if n1:
                 nodes = n1
                 ns_list.append(ns)
-        if len(nodes) < 10:
+        need = max(10, ns[1] * 0.85) if ns else 10
+        if len(nodes) < need:
             for ens in find_node_section_struct(p, multi=True):
                 if ens[1] < 50:
                     continue  # 假段过滤
