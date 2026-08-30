@@ -1,5 +1,6 @@
-feat(decoder): manager_2d v12 38B 变体破解 68→169/173 (P0-2 突破)
+find(decoder): car_section 141 缺口根因定位 — 解析函数 dict 覆盖同 eid 重复实体
 
-- seg2 变体 38B 记录: eid@+0, 行号 u16 @+14+4i (4 节点), 链式 next_eid@+36
-- _parse_ansys2d_elems 末尾追加 38B 变体扫描 (末头后)
-- manager_2d 68→169 (仅剩 eid 304..307, 因节点 202 vs 203 行号超界)
+- car_section 28511 实体/28021 唯一 eid, 348 重复 eid (额外 491 实体)
+- decode 解 28371 (350 重复额外), 缺 141 重复实体
+- 根因: _parse_* 函数返回 dict, 同段同 eid 记录被覆盖 (eid 3+ 应 3 个实体 decode 只 2)
+- 下一步: 元素解析改保留重复 (list 或 dict[eid]=list); 同步影响 body_side_assembly seg48/manager
