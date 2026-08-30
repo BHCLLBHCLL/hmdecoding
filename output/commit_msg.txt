@@ -1,5 +1,5 @@
-feat(decoder): 元素解析重复 eid 保留 — body_side_assembly 20215→20320 全解, elem-ok 105→108
+feat(decoder): car_section 28511/28511 全解 — Y=6 tag 316 (config 3 rigid, 168B 记录)
 
-- 新增 _rec_add(elems, eid, cfg, nds): dict[eid]=list[(cfg,nds)], 保留同 eid 重复实体
-- 15 处 elems[eid]= 转换; decode_elements 处理 list 值; 放宽 not-in-elems 防重
-- body_side_assembly 20320/20320 全解 (seg48 105 补全); car_section 141 为记录未解析 (待解)
+- _parse_y6_c3 扩展 tag 316 分支: 168B 记录, eid=存储ID@+4, 行号@+24/+28/+32 (3 节点 config 3)
+- 原只 tag 259 (100B, 2 节点) -> car_section 136 rigid 漏; 现 141 缺口清零
+- elem-ok 108 -> 109

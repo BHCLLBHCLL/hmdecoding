@@ -1107,7 +1107,13 @@ def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
             break
     if anchor is None:
         return None
-    if u16(p, anchor + 22) != 259:
+    tag = u16(p, anchor + 22)
+    if tag == 259:
+        stride, nrow, noff = 100, 2, 24
+    elif tag == 316:
+        # car_section Y=6 rigid: 168B 记录, eid=存储ID@+4, 行号@+24/+28/+32 (3 节点)
+        stride, nrow, noff = 168, 3, 24
+    else:
         return None
     elems = {}
     rec = anchor
@@ -1115,14 +1121,14 @@ def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
     for k in range(limit):
         if rec + 32 > len(p) or not is_const(u32(p, rec)):
             break
-        if u16(p, rec + 22) != 259:
+        if u16(p, rec + 22) != tag:
             break
         eid = u16(p, rec + 4)
-        nds = [u16(p, rec + 24), u16(p, rec + 28)]
+        nds = [u16(p, rec + noff + 4 * i) for i in range(nrow)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
         _rec_add(elems, eid, 3, [row_map.get(r, r) for r in nds])
-        rec += 100
+        rec += stride
     return elems or None
 
 def decode_elements(p, row_map, row_count, max_rec=None):
