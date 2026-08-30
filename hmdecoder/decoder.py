@@ -112,11 +112,11 @@ def find_node_section(p):
                 # 假候选 id 大量重复 (如 molding1 base=142 全 3) -> 淘汰
                 if len(seen) < max(2, ok // 2):
                     continue
-                # 小 count 文件 (极小型模型) 阈值按 count 缩放
-                need = max(3, int(min(count, 60) * 0.8))
+                # 小 count 文件 (极小型模型) 阈值按 count 缩放 (count=2 时需 2)
+                need = max(1, min(count, max(3, int(min(count, 60) * 0.8))))
                 if ok >= need and (best is None or ok > best[0]):
                     best = (ok, (hi, count, base, stride, idoff, chain))
-    if best and best[0] >= max(3, int(min(best[1][1], 60) * 0.8)):
+    if best and best[0] >= max(1, min(best[1][1], max(3, int(min(best[1][1], 60) * 0.8)))):
         return best[1]
     return find_node_section_struct(p)
 
@@ -391,7 +391,16 @@ def _scan_extra_node_segs(p, exclude_ranges, lo=0, hi=None, min_nid=0, lim=10000
             if not any(max(abs(d64(p, x + 12)), abs(d64(p, x + 20)),
                            abs(d64(p, x + 28))) > 0.001 for x in r):
                 continue
-            out.append((None, len(r), r[0], stride, 0, False))
+            # 段起点回溯: 假候选污染聚类可能丢弃段首 (如 manager id 232 @base-stride).
+            b = r[0]
+            while b - stride >= 0 and u32(p, b - stride) == u32(p, b) - 1:
+                # 校验回溯候选的坐标合理, 防止向数据区过度回溯
+                if not (abs(d64(p, b - stride + 12)) < 10000.0
+                        and abs(d64(p, b - stride + 20)) < 10000.0):
+                    break
+                b -= stride
+                r.insert(0, b)
+            out.append((None, len(r), b, stride, 0, False))
     return out
 
 def _scan_v13_node_segs(p, lim=10000.0):
