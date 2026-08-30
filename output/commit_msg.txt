@@ -1,3 +1,1 @@
-feat(decoder): ansys 2D 系列 — wizard_2d 202/202 全解 (P0-2 部分)
-
-- wizard_2d (11.05) 202/202; manager_2d (12.07) 68/173 (seg2 105 条 v12 无头变体待解)
+docs(PLAN_V2): P0 进度 — wing 全解, wizard_2d 全解, car_section 主体 (28021 唯一) 全解, manager/bsa v12 变体待解
