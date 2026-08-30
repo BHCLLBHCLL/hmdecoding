@@ -985,16 +985,22 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
         if j < 0:
             break
         eid = u32(p, j + 24)
+        # flag @+36 (u16) 指示 config (476->220 8节点, 360->104 4节点); 无 flag 默认 4 节点 cfg 104
+        flag = u16(p, j + 36)
+        if 300 <= flag <= 500:
+            nrow = CONFIG_NODES.get(flag - 256, 4)
+            cfg = flag - 256
+        else:
+            nrow = 4
+            cfg = 104
         rows = []
-        for i in range(8):
-            r = u32(p, j + 38 + 4 * i)
+        for i in range(nrow):
+            r = u16(p, j + 38 + 4 * i)
             if not (1 <= r <= row_count):
                 break
             rows.append(r)
-        if rows and 0 < eid < 10_000_000:
-            cfg = 104 if len(rows) == 4 else (103 if len(rows) == 3 else 0)
-            if cfg:
-                _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in rows])
+        if rows and 0 < eid < 10_000_000 and len(rows) == nrow:
+            _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in rows])
         j += 62
         n += 1
     # 补漏: 主链之外的记录 (如 wizard_2d eid 58 @ sh+82) — 独立 find 全部头补缺失 eid

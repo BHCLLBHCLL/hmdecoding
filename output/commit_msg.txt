@@ -1,4 +1,5 @@
-fix(decoder): chapter2_2 回归修复 — v13 96B 节点补充改无条件 (小 count 阈值误选假小段)
+feat(decoder): ansys 3D 段 flag-config 支持 — abaqus_3D 1340/1340, hm-ansys_3d 924/924 全解
 
-- find_node_section 小 count 阈值放宽误选 chapter2_2 假 [136] 小段 (2/2898)
-- _scan_v13_node_segs (96B) 改无条件补充, 与主段合并 -> chapter2_2 2898+2813 全解恢复
+- _parse_ansys2d_elems 读 flag@+36 (u16) -> config (476->220 8节点), 行号 u16 对 @+38+4i
+- 无 flag 默认 4 节点 cfg 104; 支持 8/4/3 节点
+- abaqus_contactManager_3D 1215->1340, hm-ansys_manager_3d/wizard_3d 799->924 (全解)
