@@ -1002,6 +1002,33 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
                 if cfg:
                     elems[eid] = (cfg, [row_map.get(r, r) for r in rows])
         j += 1
+    # v12 变体 (manager_2d seg2 eid 203..307): 38B 记录, eid@+0, 行号 u16 @+14+4i
+    # 从最后一个头之后开始扫 eid 递增 38B 流
+    last_head = None
+    jj = sh + 24
+    while True:
+        jj = p.find(pat, jj, min(sh + 40 * 70, len(p)))
+        if jj < 0:
+            break
+        last_head = jj
+        jj += 62
+    if last_head is not None:
+        rec = last_head + 62
+        guard = 0
+        while rec + 38 <= len(p) and guard < cnt * 2:
+            eid = u32(p, rec)
+            rows = []
+            for i in range(4):
+                r = u16(p, rec + 14 + 4 * i)
+                if not (1 <= r <= row_count):
+                    break
+                rows.append(r)
+            if eid not in elems and 0 < eid < 10_000_000 and len(rows) == 4:
+                elems[eid] = (104, [row_map.get(r, r) for r in rows])
+            rec += 38
+            guard += 1
+            if len(rows) < 4 and u32(p, rec) == 0:
+                break
     return elems
 
 def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):

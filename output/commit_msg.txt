@@ -1,1 +1,5 @@
-docs(PLAN_V2): P0 进度 — wing 全解, wizard_2d 全解, car_section 主体 (28021 唯一) 全解, manager/bsa v12 变体待解
+feat(decoder): manager_2d v12 38B 变体破解 68→169/173 (P0-2 突破)
+
+- seg2 变体 38B 记录: eid@+0, 行号 u16 @+14+4i (4 节点), 链式 next_eid@+36
+- _parse_ansys2d_elems 末尾追加 38B 变体扫描 (末头后)
+- manager_2d 68→169 (仅剩 eid 304..307, 因节点 202 vs 203 行号超界)
