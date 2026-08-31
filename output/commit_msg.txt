@@ -1,4 +1,5 @@
-feat(eng): auto_compare 回归门禁固化 (decode 全语料 vs corpus_gt, PASS node 116/elem 113)
+docs(spec): config 完整字典 (18 config 节点数映射) + truck 元素全解确认 (212489)
 
-- hmdecoder/auto_compare.py: 覆盖报告 + 快照基线 + 退出码 (回归时 1)
-- 作为后续每改动的回归检查
+- config 字典: 0/1/2/3/5/21/22/55/56/60/61/103/104/204/206/208/220 节点数分布
+- truck 212489 元素 0 缺 0 重复 (重复保留后); 更正 "2000001+ 段为 edge 段" 误判
+- 主流 config 节点数与 CONFIG_NODES 一致; 可扩充 5->2, 21->2/3, 61->2, 56->3/5
