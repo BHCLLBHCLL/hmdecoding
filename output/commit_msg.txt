@@ -1,1 +1,4 @@
-chore(analysis): 小缺口 per-seg 定位 — hook/crash/keyhole/abq3_0 差 1-4 (B 型槽位末条/末条 row 检查失败)
+feat(eng): auto_compare 回归门禁固化 (decode 全语料 vs corpus_gt, PASS node 116/elem 113)
+
+- hmdecoder/auto_compare.py: 覆盖报告 + 快照基线 + 退出码 (回归时 1)
+- 作为后续每改动的回归检查
