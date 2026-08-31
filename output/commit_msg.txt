@@ -1,5 +1,1 @@
-feat(decoder): ansys 3D 段 flag-config 支持 — abaqus_3D 1340/1340, hm-ansys_3d 924/924 全解
-
-- _parse_ansys2d_elems 读 flag@+36 (u16) -> config (476->220 8节点), 行号 u16 对 @+38+4i
-- 无 flag 默认 4 节点 cfg 104; 支持 8/4/3 节点
-- abaqus_contactManager_3D 1215->1340, hm-ansys_manager_3d/wizard_3d 799->924 (全解)
+chore(analysis): 小缺口 per-seg 定位 — hook/crash/keyhole/abq3_0 差 1-4 (B 型槽位末条/末条 row 检查失败)
