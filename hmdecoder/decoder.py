@@ -727,6 +727,8 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
                 break
         eid = first_eid + k
         _rec_add(elems, eid, 0, [row_map.get(r, r) for r in nds])
+        if k >= min(cnt, max_rec if max_rec else cnt) - 1:
+            break  # 末条: 直接结束 (末条已存)
         nxt = None
         for j in range(rec + 2 + 4 * slots + 8, min(rec + 50000, len(p) - 8)):
             if not (u16(p, j) != 0 and u16(p, j + 2) != 0 and u16(p, j + 4) == 0
@@ -739,7 +741,8 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
             if not t_slots or not all(1 <= r <= row_count for r in t_nds):
                 continue
             t_ne = u16(p, j + 2 + 4 * t_slots + 4)
-            if t_ne != first_eid + k + 2:
+            # 末 5 条允许任意 next_eid (链尾 0), 防末条被误拒
+            if t_ne != first_eid + k + 2 and not (k >= min(cnt, max_rec if max_rec else cnt) - 5):
                 continue
             nxt = j
             break
