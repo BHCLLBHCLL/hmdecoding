@@ -1158,7 +1158,8 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
     Node layout: master+slave (nslave@+32,master@+36,slv@+48 | nslave@+24,master@+28,slv@+40)
                  or fixed node sequence (@+32 / @+24)."""
     s = None
-    for off in range(sh + 16, min(sh + 80, len(p) - 4)):
+    # 记录首 CONST 可能距段头较远 (如 joints seg3 @+88); 放宽窗口
+    for off in range(sh + 16, min(sh + 160, len(p) - 4)):
         if is_const(u32(p, off)):
             s = off
             break
@@ -1185,16 +1186,29 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
             e18 = u16(p, rec + 18)
             e4 = u32(p, rec + 4)
             e = e18 if (0 < e18 < 10_000_000 and e18 != e4 and e4 < 100000) else e4
-            c30 = u16(p, rec + 30) - 512
-            c22 = u16(p, rec + 22) & 0xFF
             # candidate configs & layouts
             cands = []
-            for cc, tag in ((c30,'30'), (c22,'22')):
+            if (const >> 16) == 0x7050:
+                # joints 分裂锚点: eid=u32@+4, flag=u16@+44 (567->55), nslave=u16@+46, master=u16@+50,
+                # slave u16 slot @+62+4t; 记录长 = 62 + 4*nslave
+                e = e4
+                ccore = u16(p, rec + 44) - 512
+                if ccore == 55:
+                    nsl = u16(p, rec + 46)
+                    master = u16(p, rec + 50)
+                    if 1 <= master <= row_count and 0 <= nsl <= 2000 and rec + 62 + 4*nsl + 4 <= len(p):
+                        sl = [u16(p, rec + 62 + 4 * t) for t in range(nsl)]
+                        if all(1 <= r <= row_count for r in sl):
+                            cands.append((55, [master]+sl, rec + 62 + 4 * nsl))
+            c30 = u16(p, rec + 30) - 512
+            c22 = u16(p, rec + 22) & 0xFF
+            c34 = u16(p, rec + 34) - 512  # joints Y=4 家族: flag @u32+32 高16位
+            for cc in (c30, c22, c34):
                 if not (1 <= cc <= 100):
                     continue
                 if cc == 55:
-                    # (nslave,master,slvoff): try @+24/@+28/@+40 then @+32/@+36/@+48
-                    for (nso,mo,svo) in ((24,28,40),(32,36,48)):
+                    # (nslave,master,slvoff): joints @+36/@+40/@+52 优先, 其余尝试
+                    for (nso,mo,svo) in ((36,40,52),(24,28,40),(32,36,48)):
                         nsl = u32(p, rec + nso)
                         master = u32(p, rec + mo)
                         if 1 <= master <= row_count and 0 <= nsl <= 2000 and rec + svo + 4*nsl + 4 <= len(p):

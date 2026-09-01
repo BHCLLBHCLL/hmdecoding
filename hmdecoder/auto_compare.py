@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "hmdecoder"))
 from decoder import decode
 
 # 历史快照 (达标基线; 低于此视为回归)
-SNAPSHOT = {"node": 118, "elem": 121, "total": 123}
+SNAPSHOT = {"node": 118, "elem": 122, "total": 123}
 
 def main():
     gt = json.load(open(os.path.join(os.path.dirname(__file__), "..",
