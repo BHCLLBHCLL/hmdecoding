@@ -1,1 +1,1 @@
-fix(decoder): _parse_cfg55_mpc 跳过无法识别的 CONST 锚 (v12 0x70501FF5 split), 防断链
+feat(decoder): family-1 candidate-layout 解析统一 — keyhole 全解 + joints +1, elem-ok 121
