@@ -1,6 +1,6 @@
 ﻿total=123 node-ok=116 elem-ok=120
 node-exact 116/123 (snapshot 116)
-elem-exact 120/123 (snapshot 119)
+elem-exact 120/123 (snapshot 120)
   X ('car_section.hm', 'node', 26697, 26695)
   X ('channel_brkt_assem_analysis.hm', 'elem', 2428, 2431)
   X ('icw_ex1.hm', 'node', 77, 89)

@@ -1209,7 +1209,18 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
                 if 0 < e < 10_000_000 and ncfg >= 1 and 1 <= cc <= 100:
                     eid, cfg, nds, tail = e, cc, [u32(p, rec + 32 + 4 * t) for t in range(ncfg)], rec + 32 + 4 * ncfg
         if eid is None or cfg is None or nds is None or tail is None:
-            break
+            # unrecognized CONST anchor (e.g. v12 0x70501FF5 split): skip to next CONST and continue
+            skip = None
+            jj = p.find(b"\xf5\x1f", rec + 4, min(rec + 200, len(p) - 2))
+            while jj >= 0:
+                if is_const(u32(p, jj)):
+                    skip = jj
+                    break
+                jj = p.find(b"\xf5\x1f", jj + 1, min(rec + 200, len(p) - 2))
+            if skip is None:
+                break
+            rec = skip
+            continue
         _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         nxt = None
         j = p.find(b"\xf5\x1f", tail, min(tail + 120, len(p) - 2))

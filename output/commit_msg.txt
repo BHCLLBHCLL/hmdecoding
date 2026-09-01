@@ -1,1 +1,1 @@
-feat(decoder): family-1 config 22/55 双布局 (v11 seat / v12 hook) — hook 全解 + seat_2/seat_start, elem-ok 120
+fix(decoder): _parse_cfg55_mpc 跳过无法识别的 CONST 锚 (v12 0x70501FF5 split), 防断链
