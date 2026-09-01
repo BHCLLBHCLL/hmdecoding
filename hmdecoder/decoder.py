@@ -96,13 +96,17 @@ def find_node_section(p):
                     if rec + stride > len(p):
                         break
                     x = d64(p, rec + xoff)
+                    y = d64(p, rec + xoff + 8)
+                    z = d64(p, rec + xoff + 16)
                     if chain:
                         tailok = u32(p, rec + 48) == 0 and u32(p, rec + 52) == 0
                         nid = u32(p, rec + 44) - 1
                     else:
                         tailok = True
                         nid = u32(p, rec + idoff)
-                    if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and tailok:
+                    # 三坐标合理判据: 排除下溢假记录 (solid_map 等取消寸外座标为 e-306 级)
+                    coord_ok = abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9 and max(abs(x), abs(y), abs(z)) > 1e-5
+                    if 1 <= nid <= 10_000_000 and coord_ok and tailok:
                         ok += 1
                         seen.add(nid)
                     else:
