@@ -741,8 +741,9 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
             if not t_slots or not all(1 <= r <= row_count for r in t_nds):
                 continue
             t_ne = u16(p, j + 2 + 4 * t_slots + 4)
-            # 末 5 条允许任意 next_eid (链尾 0), 防末条被误拒
-            if t_ne != first_eid + k + 2 and not (k >= min(cnt, max_rec if max_rec else cnt) - 5):
+            # 允许前向链 (t_ne >= expected): 删除元素产生 eid 空洞 (下一条跳号)
+            # 只要链仍前向推进即视为同一元素段继续; 末 5 条允许任意 next_eid (链尾 0).
+            if t_ne < first_eid + k + 2 and not (k >= min(cnt, max_rec if max_rec else cnt) - 5):
                 continue
             nxt = j
             break

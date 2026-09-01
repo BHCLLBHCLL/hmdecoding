@@ -1,5 +1,1 @@
-feat(decoder): _parse_b_slots 末段 next_eid 放宽 — crash_tubes 4902/4902, abaqus3_0 270/270 全解 (-6 清零)
-
-- B 型槽位末条/末 5 条允许 next_eid 为链尾 0 (原验证拒绝致末条漏)
-- crash seg1-4 各 2279/2279->2280; abaqus3_0 2 段 89->90, 179->180
-- head_2 920 无回归
+feat(decoder): B-slot 链容忍删除元素 eid 空洞 — abaqus_contactManager_2D 537/537 全解 (elem-ok 117)
