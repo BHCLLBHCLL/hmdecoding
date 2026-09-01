@@ -1,15 +1,13 @@
-﻿total=123 node-ok=116 elem-ok=117
+﻿total=123 node-ok=116 elem-ok=119
 node-exact 116/123 (snapshot 116)
-elem-exact 117/123 (snapshot 113)
+elem-exact 119/123 (snapshot 117)
   X ('car_section.hm', 'node', 26697, 26695)
   X ('channel_brkt_assem_analysis.hm', 'elem', 2428, 2431)
   X ('icw_ex1.hm', 'node', 77, 89)
   X ('icw_ex2.hm', 'node', 90, 100)
   X ('joints.hm', 'elem', 998, 1009)
   X ('seat_2.hm', 'node', 1621, 1620)
-  X ('seat_2.hm', 'elem', 1526, 1562)
   X ('seat_start.hm', 'node', 1621, 1620)
-  X ('seat_start.hm', 'elem', 1525, 1559)
   X ('hook.hm', 'elem', 12111, 12115)
   X ('keyhole.hm', 'elem', 502, 505)
   X ('solid_map.hm', 'node', 4, 2)

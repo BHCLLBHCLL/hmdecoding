@@ -1,1 +1,1 @@
-feat(decoder): B-slot 链容忍删除元素 eid 空洞 — abaqus_contactManager_2D 537/537 全解 (elem-ok 117)
+feat(decoder): family-1 MPC 变长记录解析 (config 22/55) — seat_2/seat_start 全解, elem-ok 119
