@@ -40,7 +40,7 @@ python -c "import sys; sys.path.insert(0,'.'); from hmdecoder import decode; fro
 
 ## 回归状态（2026-08 深入解析后）
 
-- **oracle 对照（123 文件）**：node-ok 116/123 (94%)，elem-ok 119/123 (97%) — crash_tubes/abaqus3_0/truck/abaqus_contactManager_2D/seat_2/seat_start 全解（family-1 MPC config 55 变长记录）；wing_section_complete 1001/1001、hm-ansys wizard_2d 202/202 全解（此前基线 node 66/98、elem 6/98）；v17 (17.01) 全解 dummy_positioner/seat_deformer 354174+585546；wing/wizard_2d/body_side_assembly/car_section/chapter2_2/manager_2d/abaqus_3D/hm-ansys_3d 全解；
+- **oracle 对照（123 文件）**：node-ok 116/123 (94%)，elem-ok 120/123 (98%) — crash_tubes/abaqus3_0/truck/abaqus_contactManager_2D/seat_2/seat_start/hook 全解（family-1 MPC config 22/55 变长记录 v11/v12 双布局）；wing_section_complete 1001/1001、hm-ansys wizard_2d 202/202 全解（此前基线 node 66/98、elem 6/98）；v17 (17.01) 全解 dummy_positioner/seat_deformer 354174+585546；wing/wizard_2d/body_side_assembly/car_section/chapter2_2/manager_2d/abaqus_3D/hm-ansys_3d 全解；
 - **元素段统一模型**：段头 [997][seg][175][count][X][Y]；A 型（CONST 锚 0x70??1FF5 家族）/ B 型（链式 eid）/ v12-13 u16 槽位型（58B）/ B 型 u16 槽位型（34B）/ 元素分块存储 + 断链重连；
 - **节点段统一模型**：52B-flat / 92B-flat（+40B 附加）/ 56B-chain（v13）/ 68B（v14+）；[136] 头字节定位 + 结构扫描 fallback；
 - 关键验证：body_side 7510+7182、housing 8690、fe_only 17264、quality_index 2216、truck 212139+204762、SEAT_MODEL 34295+27503、car_section 26697+27854、dummy_positioner(17.01) 116734+44062；

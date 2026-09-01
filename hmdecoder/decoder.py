@@ -1151,8 +1151,9 @@ def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
     return elems or None
 
 def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
-    """Family-1 family record (config 22/55): [CONST][storage][?][?][eid@+18][0][0][flag]
-    eid = u16@+18; config = u16@+30 - 512."""
+    """Family-1 family record (config 22/55), two variants:
+    - seat-style (0x70241FF5; v11): eid=u16@+18, cfg=u16@+30-512, nslave=@+32, master@+36, slave@+48
+    - hook-style (0x70541FF5; v12):  eid=u32@+4,  cfg=u16@+22-256, ncount=@+24, node@+40"""
     s = None
     for off in range(sh + 16, min(sh + 80, len(p) - 4)):
         if is_const(u32(p, off)):
@@ -1175,36 +1176,40 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
             if nxt is None:
                 break
             rec = nxt
-        eid = u16(p, rec + 18)
-        cfg = u16(p, rec + 30) - 512
-        if not (0 < eid < 10_000_000):
+        const = u32(p, rec)
+        eid = None; cfg = None; nds = None; tail = None
+        if (const >> 16) == 0x7054:
+            # hook-style (v12): eid@+4, cfg = u16@+22 - 256, ncount@+24, node@+40,+4
+            e = u32(p, rec + 4)
+            cc = u16(p, rec + 22) - 256
+            ncount = u32(p, rec + 24)
+            if 0 < e < 10_000_000 and 1 <= cc <= 100 and 1 <= ncount <= 2000:
+                ns = [u32(p, rec + 40 + 4 * t) for t in range(ncount)]
+                if all(1 <= r <= row_count for r in ns):
+                    eid, cfg, nds, tail = e, cc, ns, rec + 40 + 4 * ncount
+        elif (const >> 16) == 0x7024:
+            # seat-style (v11): eid=u16@+18, cfg=u16@+30-512
+            e = u16(p, rec + 18)
+            cc = u16(p, rec + 30) - 512
+            if cc == 55:
+                nslave = u32(p, rec + 32)
+                master = u32(p, rec + 36)
+                if 0 < e < 10_000_000 and 1 <= master <= row_count and 0 <= nslave <= 60:
+                    slaves = [u32(p, rec + 48 + 4 * t) for t in range(nslave)]
+                    if all(1 <= r <= row_count for r in slaves):
+                        eid, cfg, nds, tail = e, cc, [master]+slaves, rec + 48 + 4 * nslave
+            else:
+                # fixed node sequence @+32,+4 until 0/out-of-range (config 22 etc)
+                ncfg = 0
+                while ncfg < 20 and rec + 32 + 4 * ncfg + 4 <= len(p):
+                    r = u32(p, rec + 32 + 4 * ncfg)
+                    if not (1 <= r <= row_count):
+                        break
+                    ncfg += 1
+                if 0 < e < 10_000_000 and ncfg >= 1 and 1 <= cc <= 100:
+                    eid, cfg, nds, tail = e, cc, [u32(p, rec + 32 + 4 * t) for t in range(ncfg)], rec + 32 + 4 * ncfg
+        if eid is None or cfg is None or nds is None or tail is None:
             break
-        if cfg == 55:
-            nslave = u32(p, rec + 32)
-            master = u32(p, rec + 36)
-            if not (1 <= master <= row_count and 0 <= nslave <= 60):
-                break
-            slaves = []
-            for t in range(nslave):
-                r = u32(p, rec + 48 + 4 * t)
-                if not (1 <= r <= row_count):
-                    break
-                slaves.append(r)
-            if len(slaves) != nslave:
-                break
-            nds = [master] + slaves
-            tail = rec + 48 + 4 * nslave
-        else:
-            ncfg = 0
-            while ncfg < 20 and rec + 32 + 4 * ncfg + 4 <= len(p):
-                r = u32(p, rec + 32 + 4 * ncfg)
-                if not (1 <= r <= row_count):
-                    break
-                ncfg += 1
-            if ncfg < 1:
-                break
-            nds = [u32(p, rec + 32 + 4 * t) for t in range(ncfg)]
-            tail = rec + 32 + 4 * ncfg
         _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         nxt = None
         j = p.find(b"\xf5\x1f", tail, min(tail + 120, len(p) - 2))
@@ -1247,6 +1252,10 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             else:
                 got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                # Y=1 等族: family-1 变长/固定节点记录 (hook/keyhole/channel/joints config 22/55)
+                got_m = _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got_m and len(got_m) > len(got or {}):
+                    got = got_m
             if Y == 7:
                 # truck Y=7 段 (config 3/60): 优先于 A 型 (后者读到存储 ID)
                 got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)

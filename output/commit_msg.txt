@@ -1,1 +1,1 @@
-feat(decoder): family-1 MPC 变长记录解析 (config 22/55) — seat_2/seat_start 全解, elem-ok 119
+feat(decoder): family-1 config 22/55 双布局 (v11 seat / v12 hook) — hook 全解 + seat_2/seat_start, elem-ok 120
