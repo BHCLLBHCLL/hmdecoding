@@ -1,1 +1,1 @@
-feat(decoder): family-1 0x7050 分裂锚点 + joints Y=4 布局 + 锚点窗口放宽 — joints 1009/1009 全解, elem-ok 122
+feat(decoder): v13 几何段 config-60 记录 (channel seg4) — elem-ok 123/123 (100%) 全部元素全解

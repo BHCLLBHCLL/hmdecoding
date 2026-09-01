@@ -1151,6 +1151,38 @@ def _parse_y6_c3(p, sh, cnt, row_count, row_map, max_rec=None):
         rec += stride
     return elems or None
 
+def _parse_v13c60(p, sh, cnt, row_count, row_map, max_rec=None):
+    """v13 Y=1 几何段 config-60 记录 (含浮点显示数据):
+    eid = u32@+rec, node1_row = u16@+rec+14, node2_row = u16@+rec+18; stride = 118.
+    仅当段内记录全部有效 (len(elems)==cnt) 时返回, 否则 None (避免误命中其它段)."""
+    # first record offset: find eid-looking u32 near sh+24..sh+120 with valid coords
+    rec = None
+    for off in range(sh + 24, min(sh + 120, len(p) - 4)):
+        eid = u32(p, off)
+        n1 = u16(p, off + 14)
+        n2 = u16(p, off + 18)
+        if 0 < eid < 10_000_000 and 1 <= n1 <= row_count and 1 <= n2 <= row_count:
+            rec = off
+            break
+    if rec is None:
+        return None
+    elems = {}
+    limit = min(cnt, max_rec if max_rec else cnt)
+    for k in range(limit):
+        if rec + 118 > len(p):
+            break
+        eid = u32(p, rec)
+        n1 = u16(p, rec + 14)
+        n2 = u16(p, rec + 18)
+        if not (0 < eid < 10_000_000 and 1 <= n1 <= row_count and 1 <= n2 <= row_count):
+            break
+        _rec_add(elems, eid, 60, [row_map.get(n1, n1), row_map.get(n2, n2)])
+        rec += 118
+    # 完整段才返回, 否则误命中引发回归
+    if len(elems) == max(1, limit):
+        return elems
+    return None
+
 def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
     """Family-1 family record (config 22/55), attempts candidate layouts and validates.
     eid: u16@+18 (if valid & non-zero) else u32@+4.
@@ -1290,6 +1322,10 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got_m = _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=max_rec)
                 if got_m and len(got_m) > len(got or {}):
                     got = got_m
+                # v13 Y=1 几何段 config-60 (含浮点显示数据, channel seg4)
+                got_c = _parse_v13c60(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                if got_c and len(got_c) > len(got or {}):
+                    got = got_c
             if Y == 7:
                 # truck Y=7 段 (config 3/60): 优先于 A 型 (后者读到存储 ID)
                 got7 = _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
