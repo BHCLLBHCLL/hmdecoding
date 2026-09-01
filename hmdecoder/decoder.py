@@ -441,9 +441,10 @@ def parse_nodes(p, cfg):
         if chain:
             nid = u32(p, rec + 44) - 1
             x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
-            # 末条 44B 短记录: nid 字段被紧随的元素段标记覆盖 (读回更小的值),
-            # 隐含 nid = 前一条 + 1 (如 SEAT_MODEL 节点 34328)
-            if k == count - 1 and nid <= prev_nid:
+            # 44B 链式记录: 尾段 nid 字段被其他数据块覆盖 (读回 0/乱值),
+            # 但坐标仍有效 — 隐含 nid = 前一条 + 1 (如 SEAT_MODEL/icw 尾段)
+            # nid 损坏 (<= prev 或越界, 如夹到元素段标记的乱值) 但坐标有效 → 顺序补号
+            if (nid <= prev_nid or nid > 10_000_000) and abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9:
                 nid = prev_nid + 1
         else:
             nid = u32(p, rec + idoff)

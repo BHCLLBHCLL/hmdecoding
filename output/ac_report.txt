@@ -1,10 +1,8 @@
-﻿total=123 node-ok=116 elem-ok=121
-node-exact 116/123 (snapshot 116)
-elem-exact 121/123 (snapshot 120)
+﻿total=123 node-ok=118 elem-ok=121
+node-exact 118/123 (snapshot 116)
+elem-exact 121/123 (snapshot 121)
   X ('car_section.hm', 'node', 26697, 26695)
   X ('channel_brkt_assem_analysis.hm', 'elem', 2428, 2431)
-  X ('icw_ex1.hm', 'node', 77, 89)
-  X ('icw_ex2.hm', 'node', 90, 100)
   X ('joints.hm', 'elem', 1001, 1009)
   X ('seat_2.hm', 'node', 1621, 1620)
   X ('seat_start.hm', 'node', 1621, 1620)

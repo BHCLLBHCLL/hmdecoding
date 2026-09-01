@@ -1,1 +1,1 @@
-feat(decoder): family-1 candidate-layout 解析统一 — keyhole 全解 + joints +1, elem-ok 121
+fix(decoder): 44B 链式节点 nid 乱值顺序补号 — icw_ex1/icw_ex2 全解, node-ok 118
