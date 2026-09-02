@@ -696,6 +696,7 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         return None
     rec = s + 8  # X 字段位置 (每记录常量, 语义待解)
     elems = {}
+    cur_eid = first_eid  # 跟随链上真实 eid (空洞处 next_eid 跳号)
     for k in range(min(cnt, max_rec if max_rec else cnt)):
         slots = 0
         while slots < 12 and u16(p, rec + 2 + 4 * slots) != 0 and u16(p, rec + 2 + 4 * slots + 2) == 0:
@@ -730,8 +731,13 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
             nds = [u16(p, rec + 2 + 4 * j) for j in range(slots)]
             if not all(1 <= r <= row_count for r in nds):
                 break
-        eid = first_eid + k
-        _rec_add(elems, eid, 0, [row_map.get(r, r) for r in nds])
+        eid = cur_eid
+        # config 按节点数推断 (B 型槽位记录无 flag 字段): 4->104 quad, 3->103 tria, 2->100 beam
+        cfg = {4: 104, 3: 103, 2: 100, 6: 206, 8: 220}.get(len(nds), 0)
+        _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
+        # 下一 eid 跟随本条 next_eid 字段 (实际 eid 有洞空时跳号)
+        ne = u16(p, rec + 2 + 4 * slots + 4)
+        cur_eid = ne if ne > eid else eid + 1
         if k >= min(cnt, max_rec if max_rec else cnt) - 1:
             break  # 末条: 直接结束 (末条已存)
         nxt = None
