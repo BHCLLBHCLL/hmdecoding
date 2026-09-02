@@ -4,3 +4,7 @@ command.tcl
 output/ground_truth/harvest.log
 output/ground_truth/command.tcl
 corpus/synthetic/
+# oracle 批量元素导出 (185MB, 可由 scripts/*_export.tcl 重新生成)
+output/ground_truth/elems/
+output/ground_truth/paths_todo.txt
+output/ground_truth/paths_big.txt
