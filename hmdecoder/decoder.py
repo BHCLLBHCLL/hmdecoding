@@ -930,7 +930,8 @@ def _parse_y7_elems(p, sh, cnt, row_count, row_map, max_rec=None):
             stride = 112
         elif tag60 == 316:
             eid = (u16(p, rec + 60) << 16) | u16(p, rec + 58)
-            nds = [u32(p, rec + 72), u32(p, rec + 76), u32(p, rec + 164)]
+            # config-60 (2 节点 beam): @+72/@+76; @+164 为尾段重复字段非节点
+            nds = [u32(p, rec + 72), u32(p, rec + 76)]
             cfg = 60
             stride = 176
         else:
