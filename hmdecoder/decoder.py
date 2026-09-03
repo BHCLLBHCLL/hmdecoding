@@ -590,6 +590,16 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                         if 300 <= f <= 500 and (v & 0xFFFF) == 0:
                             cands.append(off)
                     for fp in sorted(cands, reverse=True):
+                        cfg_flag = u32(p, rec + fp) >> 16
+                        if cfg_flag == 312 and u32(p, rec + 24) and u32(p, rec + 28):
+                            # cfg56 (5 节点): [nslave@+24][master@+28][浮点@+32..48][slave@+52+4k]
+                            nslave = u32(p, rec + 24)
+                            master = u32(p, rec + 28)
+                            if 0 <= nslave <= 20 and 1 <= master <= row_count:
+                                sl = [u32(p, rec + 52 + 4 * t) for t in range(nslave)]
+                                if sl and all(1 <= r <= row_count for r in sl):
+                                    got = (fp, nslave + 1, [master] + sl, 56)
+                                    break
                         nodes_off = rec + fp + 4
                         n = 0
                         while n < 12 and nodes_off + 4 * n + 4 <= len(p) and u32(p, nodes_off + 4 * n) != 0:
