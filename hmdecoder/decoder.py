@@ -539,6 +539,9 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             elif rec_v12 in (3, 4) and u16(p, rec + 10):
                 # yoke seg43/41: eid = misaligned u32 @+10 (u16@+12 作高16, u16@+10 作佤16)
                 eid = (rec_v12 << 16) | u16(p, rec + 10)
+            elif rec_v12 == 0x7024 and 0 < u16(p, rec + 20) < 10_000_000:
+                # body_side 分裂锚点 (0x7050 家族): 真实 eid 在 u16@+20 (@+4 为存储 ID)
+                eid = u16(p, rec + 20)
             else:
                 eid = rec_v4
             if not (0 < eid < 10_000_000):
