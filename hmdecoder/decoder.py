@@ -536,6 +536,9 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                 eid = eid10
             elif rec_v12 == 0:
                 eid = eid10 if eid10 <= rec_v4 else rec_v4
+            elif rec_v12 in (3, 4) and u16(p, rec + 10):
+                # yoke seg43/41: eid = misaligned u32 @+10 (u16@+12 作高16, u16@+10 作佤16)
+                eid = (rec_v12 << 16) | u16(p, rec + 10)
             else:
                 eid = rec_v4
             if not (0 < eid < 10_000_000):
