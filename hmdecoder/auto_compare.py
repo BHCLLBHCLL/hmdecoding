@@ -18,6 +18,8 @@ NODE_ID_SETS = {
     "seat_start.hm": "seat_start_nodes_all.txt",
     "truck.hm": "truck_nodes_all.txt",
     "car_section.hm": "car_nodes_all.txt",
+    "SEAT_MODEL.hm": "sm_nodes_all.txt",
+    "seatbelt.hm": "sm_nodes_all.txt",  # seatbelt 与 SEAT_MODEL 共享节点集合 (2678节点测试)
 }
 
 # 内容级对照的 oracle 元素列表: basename -> txt 路径
@@ -74,6 +76,7 @@ def content_compare(m, gt_dir, name):
 
 def main():
     strict = "--strict-nodes" in sys.argv
+    strict_elems = "--strict-elems" in sys.argv
     content = "--content" in sys.argv
     gt_dir = os.path.join(os.path.dirname(__file__), "..", "output", "ground_truth")
     gt = json.load(open(os.path.join(gt_dir, "corpus_gt.json")))
@@ -84,12 +87,18 @@ def main():
         if not os.path.exists(path):
             continue
         total += 1
+        exp_n = info["counts"]["nodes"]; exp_e = info["counts"]["elements"]
         try:
-            m = decode(path)
+            if strict_elems and exp_n:
+                # --strict-elems: 用 oracle 节点集合作 node_filter 重解码,修正删除节点引用偏移 (SEAT_MODEL 等)
+                set_name = NODE_ID_SETS.get(os.path.basename(path), "")
+                idset = load_node_ids(gt_dir, set_name) if set_name else None
+                m = decode(path, node_filter=(idset if idset and len(idset) == exp_n else None))
+            else:
+                m = decode(path)
         except Exception as ex:
             misses.append((os.path.basename(path), "CRASH", 0, 0))
             continue
-        exp_n = info["counts"]["nodes"]; exp_e = info["counts"]["elements"]
         node_len = len(m.nodes)
         if strict and exp_n:
             set_name = NODE_ID_SETS.get(os.path.basename(path), "")

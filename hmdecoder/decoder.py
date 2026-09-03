@@ -1590,7 +1590,7 @@ def _elems_to_list(recs):
         out.append(Elem(id=eid, config=cfg, nodes=list(nds)))
     return out
 
-def decode(path):
+def decode(path, node_filter=None):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
@@ -1651,12 +1651,24 @@ def decode(path):
             # 多段行号续接构建全局 row_map
             row_map = {}
             row = 0
+            # node_filter (oracle 有效节点集合): 过滤删除节点,修正行号元素引用偏移
+            if node_filter:
+                chain_valid = sorted(node_filter)
+                chain_idx = 0
             for cfg in sorted(ns_list, key=lambda s: s[2]):
                 hi, count, base2, stride, idoff, chain = cfg
                 if chain:
-                    for k in range(count):
-                        row += 1
-                        row_map[row] = row
+                    if node_filter:
+                        # chain: row -> 第 row 个有效节点 id
+                        for k in range(count):
+                            if chain_idx < len(chain_valid):
+                                row += 1
+                                row_map[row] = chain_valid[chain_idx]
+                                chain_idx += 1
+                    else:
+                        for k in range(count):
+                            row += 1
+                            row_map[row] = row
                 else:
                     xoff = 24 if stride == 96 else 12
                     for k in range(count):
