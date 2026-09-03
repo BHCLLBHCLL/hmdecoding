@@ -736,7 +736,8 @@ def _parse_b_slots(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
                 break
         eid = cur_eid
         # config 按节点数推断 (B 型槽位记录无 flag 字段): 4->104 quad, 3->103 tria, 2->100 beam
-        cfg = {4: 104, 3: 103, 2: 100, 6: 206, 8: 220}.get(len(nds), 0)
+        # 8 节点 hex=208, 16 节点 hex20=220 (CONFIG_NODES 一致)
+        cfg = {4: 104, 3: 103, 2: 100, 6: 206, 8: 208, 16: 220}.get(len(nds), 0)
         _rec_add(elems, eid, cfg, [row_map.get(r, r) for r in nds])
         # 下一 eid 跟随本条 next_eid 字段 (实际 eid 有洞空时跳号)
         ne = u16(p, rec + 2 + 4 * slots + 4)
