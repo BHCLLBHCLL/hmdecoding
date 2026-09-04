@@ -1103,7 +1103,8 @@ def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
         if u16(p, rec + 30) != 316:
             break
         eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
-        nds = [u16(p, rec + 32), u16(p, rec + 36), u16(p, rec + 124)]
+        # config-60 (2 节点 beam): @+32/@+36; @+124 为尾段重复字段非节点
+        nds = [u16(p, rec + 32), u16(p, rec + 36)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
         _rec_add(elems, eid, 60, [row_map.get(r, r) for r in nds])
