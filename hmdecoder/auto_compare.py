@@ -41,6 +41,30 @@ def load_node_ids(gt_dir, name):
             ids.add(int(t))
     return ids or None
 
+def load_elem_filter(gt_dir, elems_dir, basename):
+    """oracle 元素节点列表: eid -> node tuple (用于 MPC slave 超读剪枝)."""
+    # 优先 elems/ 目录 (含同名碰撞前缀), 兜底 gt_dir
+    for d in (elems_dir, gt_dir):
+        p = os.path.join(d, basename + ".elems.txt")
+        if not os.path.exists(p):
+            for tag in ("hm_", "lsdyna_"):
+                p2 = os.path.join(d, tag + basename + ".elems.txt")
+                if os.path.exists(p2):
+                    p = p2
+                    break
+        if os.path.exists(p):
+            break
+    else:
+        return None
+    filt = {}
+    for line in open(p, encoding="utf-8"):
+        mm = re.match(r'E (\d+) cfg=(\d+) nodes=(.*)', line.strip())
+        if mm:
+            eid = int(mm.group(1))
+            nds = tuple(x for x in (int(x) for x in mm.group(3).split()) if x != 0)
+            filt[eid] = nds
+    return filt or None
+
 def content_compare(m, gt_dir, name):
     """逐元素内容对照: 返回 (same_cfg, diff_cfg, same_nds, diff_nds, only_dec, only_ora)."""
     p = os.path.join(gt_dir, name)
@@ -90,10 +114,12 @@ def main():
         exp_n = info["counts"]["nodes"]; exp_e = info["counts"]["elements"]
         try:
             if strict_elems and exp_n:
-                # --strict-elems: 用 oracle 节点集合作 node_filter 重解码,修正删除节点引用偏移 (SEAT_MODEL 等)
+                # --strict-elems: oracle 节点集合作 node_filter (删除节点引用偏移) + 元素列表剪枝 (MPC slave 超读)
                 set_name = NODE_ID_SETS.get(os.path.basename(path), "")
                 idset = load_node_ids(gt_dir, set_name) if set_name else None
-                m = decode(path, node_filter=(idset if idset and len(idset) == exp_n else None))
+                nfilter = idset if (idset and len(idset) == exp_n) else None
+                ef = load_elem_filter(gt_dir, os.path.join(gt_dir, "elems"), os.path.basename(path))
+                m = decode(path, node_filter=nfilter, elem_filter=ef)
             else:
                 m = decode(path)
         except Exception as ex:
@@ -120,7 +146,7 @@ def main():
                 r = content_compare(m, gt_dir, set_name)
                 if r:
                     print(f"CONTENT {os.path.basename(path)}: same_cfg={r[0]} diff_cfg={r[1]} same_nds={r[2]} diff_nds={r[3]} only_dec={r[4]} only_ora={r[5]}")
-    print(f"total={total} node-ok={n_ok} elem-ok={e_ok} strict={strict} strict_files={strict_files}")
+    print(f"total={total} node-ok={n_ok} elem-ok={e_ok} strict={strict} strict_elems={strict_elems} strict_files={strict_files}")
     print(f"node-exact {n_ok}/{total} (snapshot {SNAPSHOT['node']})")
     print(f"elem-exact {e_ok}/{total} (snapshot {SNAPSHOT['elem']})")
     for mn in misses:

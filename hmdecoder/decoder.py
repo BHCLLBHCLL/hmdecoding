@@ -1595,7 +1595,7 @@ def _elems_to_list(recs):
         out.append(Elem(id=eid, config=cfg, nodes=list(nds)))
     return out
 
-def decode(path, node_filter=None):
+def decode(path, node_filter=None, elem_filter=None):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     ns = find_node_section(p)
@@ -1710,6 +1710,12 @@ def decode(path, node_filter=None):
                 model.elem_count = len(wsb_elems)
                 model.element_variant = "WS-B"
             elif main_elems:
+                if elem_filter:
+                    # oracle 元素节点剪枝: MPC slave 删除残留超读修正 (truck/dummy 等)
+                    for el in main_elems:
+                        filt = elem_filter.get(el.id)
+                        if filt:
+                            el.nodes = list(filt)
                 model.elements = main_elems
                 model.elem_count = len(main_elems)
                 model.element_variant = "segmented"

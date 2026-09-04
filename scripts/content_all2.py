@@ -31,8 +31,8 @@ def load_valid(name):
         t=line.strip()
         if t.isdigit(): ids.add(int(t))
     return ids or None
-def content_compare(path, elems_file, nfilter):
-    m=decode(path, node_filter=nfilter) if nfilter else decode(path)
+def content_compare(path, elems_file, nfilter, efilter=None):
+    m=decode(path, node_filter=nfilter, elem_filter=efilter) if nfilter else decode(path, elem_filter=efilter)
     dec={}
     for e in m.elements:
         dec.setdefault(e.id,[]).append((e.config,tuple(e.nodes)))
@@ -63,8 +63,14 @@ for path,info in gt.items():
     if not ef: continue
     nf=NODE_ID_SETS.get(os.path.basename(path))
     valid=load_valid(nf) if nf else None
+    # efilter: 从 oracle 元素列表剪枝 MPC slave 超读 (strict-elems 模式)
+    efilter={}
+    for line in open(ef,encoding='utf-8'):
+        mm=re.match(r'E (\d+) cfg=(\d+) nodes=(.*)',line.strip())
+        if mm:
+            efilter[int(mm.group(1))]=tuple(x for x in (int(x) for x in mm.group(3).split()) if x!=0)
     try:
-        r=content_compare(path,ef,valid)
+        r=content_compare(path,ef,valid,efilter)
     except Exception:
         continue
     t=r[0]
