@@ -1084,7 +1084,7 @@ def _parse_ansys2d_elems(p, sh, cnt, row_count, row_map, max_rec=None):
                 break
     return elems
 
-def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
+def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None, two_node=False):
     """SEAT_MODEL seg 29: Y=2 段 3 节点 config 60 (136B stride).
 
     记录: [CONST][存储ID@+4][...][eid@+18][...][316@+30][节点1@+32][节点2@+36]
@@ -1103,8 +1103,11 @@ def _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=None):
         if u16(p, rec + 30) != 316:
             break
         eid = u16(p, rec + 18) | (u16(p, rec + 20) << 16)
-        # config-60 (2 节点 beam): @+32/@+36; @+124 为尾段重复字段非节点
-        nds = [u16(p, rec + 32), u16(p, rec + 36)]
+        if two_node:
+            # SEAT_MODEL 等 v13: cfg60 为 2 节点 (@+124 尾段重复)
+            nds = [u16(p, rec + 32), u16(p, rec + 36)]
+        else:
+            nds = [u16(p, rec + 32), u16(p, rec + 36), u16(p, rec + 124)]
         if not (0 < eid < 10_000_000) or not all(1 <= r <= row_count for r in nds):
             break
         _rec_add(elems, eid, 60, [row_map.get(r, r) for r in nds])
@@ -1331,7 +1334,8 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = _parse_y0_elems(p, sh, cnt, row_count, row_map, max_rec=max_rec)
             elif Y == 2:
                 # SEAT_MODEL seg 29: 3 节点 config 60 (tag 316) 优先于 A 型 (后者读到存储 ID)
-                got = _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=max_rec)
+                # v13 (SEAT_MODEL/seatbelt) cfg60 为 2 节点 (@+124 尾段重复)
+                got = _parse_y2_c60(p, sh, cnt, row_count, row_map, max_rec=max_rec, two_node=(d64(p, 4) >= 13))
                 if got is None:
                     got = _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=max_rec)
                 if got is None or len(got) < 2:
