@@ -163,27 +163,30 @@ def find_node_section_struct(p, multi=False):
                         cand_bases.append(base)
                 start = i + 1
         cand_bases.sort()
-        # 精扫: 找流起点 (第一个 30 条验证通过的 base), 扩展后跳过该流
+        # 精扫: 找流起点 (第一个 30 条验证通过的 base), 扩展后跳过该流.
+        # 快路径: pattern 已保证 record@cb 的 [+4]==0, [+8] in 1..8 与 nid 有效,
+        # 只需验 k=1..2 与 30 条; 命中后向前回退找真流起点 (流首 k 可能 9..16 无 pattern).
+        # 慢路径 (±64 窗口) 仅在候选少时启用 (大文件候选可达百万级, 窗口 O(33n) 太慢,
+        # 且垃圾候选在 k=1 处即失败, 窗口几乎从不命中).
         checked = set()
+        use_window = len(cand_bases) < 200_000
         i = 0
         while i < len(cand_bases):
             cb = cand_bases[i]
             first_match = None
-            for base in range(max(0, cb - 64), min(cb + 68, limit - 20 * stride), 4):
-                if base in checked:
-                    continue
-                checked.add(base)
-                pre = 0
-                for k in range(3):
-                    rec = base + k * stride
-                    if 1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
-                        pre += 1
-                if pre < 3:
-                    continue
+            if (cb + 2 * stride <= limit
+                    and 1 <= u32(p, cb + stride + idoff) <= 10_000_000
+                    and u32(p, cb + stride + 4) == 0
+                    and 1 <= u32(p, cb + stride + 8) <= 16
+                    and 1 <= u32(p, cb + 2 * stride + idoff) <= 10_000_000
+                    and u32(p, cb + 2 * stride + 4) == 0
+                    and 1 <= u32(p, cb + 2 * stride + 8) <= 16):
                 ok = 0
                 ids = set()
                 for k in range(30):
-                    rec = base + k * stride
+                    rec = cb + k * stride
+                    if rec + 28 > limit:
+                        break
                     nid = u32(p, rec + idoff)
                     x = d64(p, rec + xoff)
                     if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
@@ -192,8 +195,41 @@ def find_node_section_struct(p, multi=False):
                     else:
                         break
                 if ok >= 25 and len(ids) >= 15:
-                    first_match = base
-                    break
+                    first_match = cb
+                    # 回退到流起点: 前一条 record 不再满足为止
+                    while first_match - stride >= 0:
+                        rec = first_match - stride
+                        if (1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0
+                                and 1 <= u32(p, rec + 8) <= 16 and abs(d64(p, rec + xoff)) < 1e9):
+                            first_match -= stride
+                        else:
+                            break
+            if first_match is None and use_window:
+                for base in range(max(0, cb - 64), min(cb + 68, limit - 20 * stride), 4):
+                    if base in checked:
+                        continue
+                    checked.add(base)
+                    pre = 0
+                    for k in range(3):
+                        rec = base + k * stride
+                        if 1 <= u32(p, rec + idoff) <= 10_000_000 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
+                            pre += 1
+                    if pre < 3:
+                        continue
+                    ok = 0
+                    ids = set()
+                    for k in range(30):
+                        rec = base + k * stride
+                        nid = u32(p, rec + idoff)
+                        x = d64(p, rec + xoff)
+                        if 1 <= nid <= 10_000_000 and abs(x) < 1e9 and u32(p, rec + 4) == 0 and 1 <= u32(p, rec + 8) <= 16:
+                            ok += 1
+                            ids.add(nid)
+                        else:
+                            break
+                    if ok >= 25 and len(ids) >= 15:
+                        first_match = base
+                        break
             if first_match is not None:
                 cnt = _struct_stream_len(p, first_match, stride, idoff, xoff)
                 segs.append((None, cnt, first_match, stride, idoff, chain))
@@ -535,7 +571,10 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             elif rec_v4 >= 2_000_000:
                 eid = eid10
             elif rec_v12 == 0:
-                eid = eid10 if eid10 <= rec_v4 else rec_v4
+                # - eid10 == rec_v4+1 (cartridge 未重编号): 真 eid 在 @+4
+                # - eid10 <= rec_v4 (shell_section/frame_assembly_4 等, @+4 为存储 ID): 真 eid 在 @+10
+                # - eid10 > rec_v4+1 (cover seg4, 存储 ID 与真 eid 偏移 +330): 真 eid 在 @+10
+                eid = rec_v4 if eid10 == rec_v4 + 1 else eid10
             elif rec_v12 in (3, 4) and u16(p, rec + 10):
                 # yoke seg43/41: eid = misaligned u32 @+10 (u16@+12 作高16, u16@+10 作佤16)
                 eid = (rec_v12 << 16) | u16(p, rec + 10)
