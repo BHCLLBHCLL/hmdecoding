@@ -571,12 +571,19 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
             elif rec_v4 >= 2_000_000:
                 eid = eid10
             elif rec_v12 == 0:
-                # - eid10 == rec_v4+1 (cartridge 未重编号): 真 eid 在 @+4
-                # - eid10 <= rec_v4 (shell_section/frame_assembly_4 等, @+4 为存储 ID): 真 eid 在 @+10
-                # - eid10 > rec_v4+1 (cover seg4, 存储 ID 与真 eid 偏移 +330): 真 eid 在 @+10
-                eid = rec_v4 if eid10 == rec_v4 + 1 else eid10
-            elif rec_v12 in (3, 4) and u16(p, rec + 10):
-                # yoke seg43/41: eid = misaligned u32 @+10 (u16@+12 作高16, u16@+10 作佤16)
+                # rec12==0 记录的真 eid 一律在 @+10 (misaligned u32):
+                # - eid10 <  rec_v4 (shell_section/frame_assembly_4 等, @+4 为存储 ID)
+                # - eid10 == rec_v4 (普通文件)
+                # - eid10 == rec_v4+1 (cartridge seg1..3: @+4 是行存储 ID, 全文件 eid=@+10,
+                #   文件首元素 E 1 实际来自 seg4 的 family-1 记录)
+                # - eid10 >  rec_v4+1 (cover seg4, 存储 ID 与真 eid 偏移 +330)
+                eid = eid10
+            elif rec_v12 in (3, 4):
+                # yoke seg43/41: eid = (u16@+12 << 16) | u16@+10 (u10 可为 0, 如 yoke 262144)
+                eid = (rec_v12 << 16) | u16(p, rec + 10)
+            elif rec_v12 == 1 and u16(p, rec + 10):
+                # penetration_check 5 条: eid = (1<<16) | u16@+10, @+4 为陈旧存储 ID
+                # (dummy/spring/molding1 的 v12==1 记录 @+4 恰等于该式, 等价无影响)
                 eid = (rec_v12 << 16) | u16(p, rec + 10)
             elif rec_v12 == 0x7024 and 0 < u16(p, rec + 20) < 10_000_000:
                 # body_side 分裂锚点 (0x7050 家族): 真实 eid 在 u16@+20 (@+4 为存储 ID)
@@ -858,6 +865,80 @@ def _parse_b_u16rows(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
         if nxt is None:
             break
         rec = nxt
+    return elems
+
+def _parse_b_mpc(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
+    """B 型 cfg55 MPC 记录 (channel_brkt seg3): u16 布局
+
+    [0][0][311][nslave][0][master][0][1][0][X][1] [slave][0]×nslave [next_eid][0][0][0][0][0]
+    eid 链: 首条 = first_eid, 后续 = 上一条 next_eid. master/slave 均为行号.
+    """
+    elems = {}
+    s = sh + 24
+    lim = min(cnt, max_rec if max_rec else cnt)
+    eid = first_eid
+    j = s
+    for k in range(lim):
+        # 定位 [0][0][311][nslave]
+        f = None
+        for q in range(j, min(j + 400, len(p) - 24)):
+            if (u16(p, q) == 0 and u16(p, q + 2) == 0 and u16(p, q + 4) == 311
+                    and 1 <= u16(p, q + 6) <= 16):
+                f = q + 4
+                break
+        if f is None:
+            break
+        nslave = u16(p, f + 2)
+        master = u16(p, f + 6)
+        if not (1 <= master <= row_count):
+            break
+        nds = [master]
+        ok = True
+        for i in range(nslave):
+            r = u16(p, f + 18 + 4 * i)
+            if not (1 <= r <= row_count):
+                ok = False
+                break
+            nds.append(r)
+        if not ok or len(nds) != nslave + 1:
+            break
+        _rec_add(elems, eid, 55, [row_map.get(r, r) for r in nds])
+        if k >= lim - 1:
+            break
+        ne = u16(p, f + 18 + 4 * nslave)
+        if not (0 < ne < 10_000_000):
+            break
+        eid = ne
+        j = f + 18 + 4 * nslave + 8
+    return elems
+
+def _parse_b_c60(p, sh, cnt, row_count, row_map, first_eid, max_rec=None):
+    """B 型 cfg60 双节点记录 (channel_brkt seg4): 114B 步长 u16 布局
+
+    [572][master][0][rigid][0][0][0][X][显示数据...][next_eid@+102][0...]
+    eid 链: 首条 = first_eid (段头 Y 字段), 后续 = 上一条 next_eid.
+    """
+    elems = {}
+    rec = sh + 32
+    if rec + 114 > len(p) or u16(p, rec) != 572:
+        return None
+    lim = min(cnt, max_rec if max_rec else cnt)
+    eid = first_eid
+    for k in range(lim):
+        if rec + 114 > len(p) or u16(p, rec) != 572:
+            break
+        master = u16(p, rec + 2)
+        rigid = u16(p, rec + 6)
+        if not (1 <= master <= row_count and 1 <= rigid <= row_count):
+            break
+        _rec_add(elems, eid, 60, [row_map.get(master, master), row_map.get(rigid, rigid)])
+        if k >= lim - 1:
+            break
+        ne = u16(p, rec + 102)
+        if not (0 < ne < 10_000_000):
+            break
+        eid = ne
+        rec += 114
     return elems
 
 def _parse_a_geom(p, sh, hi, cnt, row_count, row_map, max_rec=None):
@@ -1430,6 +1511,13 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = got2
             if got3 and (got is None or len(got3) > len(got)):
                 got = got3
+            # 专用 B 型变体 (签名严格, 命中即用): cfg55 MPC / cfg60 双节点
+            got_m = _parse_b_mpc(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
+            if got_m and len(got_m) >= len(got or {}):
+                got = got_m
+            got_c = _parse_b_c60(p, sh, cnt, row_count, row_map, Y, max_rec=max_rec)
+            if got_c and len(got_c) >= len(got or {}):
+                got = got_c
         if got:
             records.extend((eid, cfg, nds) for eid, recs in got.items() for (cfg, nds) in recs)
     return records or None
