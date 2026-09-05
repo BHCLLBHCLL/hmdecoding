@@ -19,6 +19,7 @@ class Elem:
     id: int
     nodes: list
     config: int = 0
+    comp: int = 0  # 组件 id (M3)
 
 @dataclass
 class DisplayPoint:
@@ -36,6 +37,7 @@ class HMModel:
     elements: list = field(default_factory=list)  # list[Elem], 允许重复 eid (shell/solid/rigid 共存)
     display_points: dict = field(default_factory=dict)
     geo_points: dict = field(default_factory=dict)
+    comps: dict = field(default_factory=dict)  # 组件 id -> 名称 (collector 解码, M3)
     db_version: float = 0.0
     node_count: int = 0
     elem_count: int = 0
@@ -65,6 +67,8 @@ MARK_GEOM = 0x40008126
 def is_const(v):
     """元素段常量家族: 0x70??1FF5 (v11: 0x70241FF5, v12-13: 0x70501FF5)."""
     return (v & 0xFFFF) == 0x1FF5 and ((v >> 24) & 0xFF) == 0x70
+
+_ELEM_COMP = {}  # eid -> 组件 id (M3: 元素段头 field[1] = segid = component id)
 
 NODE_LAYOUTS = ((52, 0, 12, False), (52, 4, 12, False), (52, 8, 20, False),
                 (92, 0, 12, False), (92, 4, 12, False), (92, 8, 20, False),
@@ -1487,6 +1491,48 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
         rec = nxt
     return elems or None
 
+def _parse_comps(p):
+    """解析组件 collector 段: 返回按文件顺序的组件名称 list.
+
+    组件记录 = 16B 头 {19, type=1, card=2, name_len+1} + ASCII 名称 + 变长属性.
+    名称/属性长度导致后续记录 2 字节错位 (u32 视角 value<<16), 故按 2 字节粒度
+    同时匹配 4 对齐 (u32==19) 与 2 对齐 (u16==19 at odd) 两种头.
+    组件 id 显式字段在变长属性区 (待最后定位); decode 按顺序赋 id (1..N).
+    """
+    found = []
+    limit = min(len(p), 8_000_000)
+
+    def _wordlike(b):
+        return 0 < len(b) <= 100 and all(32 <= x < 127 for x in b)
+
+    for i in range(0, limit - 24, 2):
+        # 模式 A (v12, 4 对齐): u32 头 {19, 1, 2, N}
+        if i % 4 == 0 and u32(p, i) == 19 and u32(p, i + 4) == 1 and u32(p, i + 8) == 2:
+            N = u32(p, i + 12)
+            if 2 <= N <= 200:
+                s = p[i + 16:i + 16 + (N - 1)]
+                if _wordlike(s):
+                    found.append((i, s.decode('ascii')))
+                    continue
+        # 模式 B (v12 错位): u16 头 {.., 19@+2, 1@+6, 2@+10, N@+14}, 名@+18
+        if (u16(p, i) == 0 and u16(p, i + 2) == 19 and u16(p, i + 6) == 1
+                and u16(p, i + 10) == 2):
+            N = u16(p, i + 14)
+            if 2 <= N <= 200:
+                s = p[i + 18:i + 18 + (N - 1)]
+                if _wordlike(s):
+                    found.append((i, s.decode('ascii')))
+    # 注: v11 (db 11.05, 如 frame_assembly_1) 组件记录为 3 字段 u16 变长, 与 v12
+    # (db 12.03) 的 4×u32 结构不同; 模式 A/B 仅覆盖 v12, v11 组件名解析待后续补.
+    names = []
+    seen = set()
+    for off, nm in sorted(found):
+        if nm not in seen:
+            seen.add(nm)
+            names.append(nm)
+    return names
+
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -1566,6 +1612,8 @@ def decode_elements(p, row_map, row_count, max_rec=None):
                 got = got_c
         if got:
             records.extend((eid, cfg, nds) for eid, recs in got.items() for (cfg, nds) in recs)
+            for eid in got:
+                _ELEM_COMP[eid] = segid
     return records or None
 
 # ---------------------------------------------------------------------------
@@ -1765,12 +1813,19 @@ def _elems_to_list(recs):
         if key in seen:
             continue
         seen.add(key)
-        out.append(Elem(id=eid, config=cfg, nodes=list(nds)))
+        e = Elem(id=eid, config=cfg, nodes=list(nds))
+        e.comp = _ELEM_COMP.get(eid)
+        out.append(e)
     return out
+
 
 def decode(path, node_filter=None, elem_filter=None):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
+    _ELEM_COMP.clear()
+    comp_names = _parse_comps(p)
+    for i, nm in enumerate(comp_names):
+        model.comps[i + 1] = nm
     ns = find_node_section(p)
     ns_list = []
     nodes = {}
