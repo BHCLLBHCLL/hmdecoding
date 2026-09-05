@@ -516,13 +516,18 @@ def parse_nodes(p, cfg):
         if rec + stride > len(p):
             break
         if chain:
-            nid = u32(p, rec + 44) - 1
+            raw = u32(p, rec + 44)
+            nid = raw - 1
             x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
-            # 44B 链式记录: 尾段 nid 字段被其他数据块覆盖 (读回 0/乱值),
-            # 但坐标仍有效 — 隐含 nid = 前一条 + 1 (如 SEAT_MODEL/icw 尾段)
-            # nid 损坏 (<= prev 或越界, 如夹到元素段标记的乱值) 但坐标有效 → 顺序补号
+            # 字段跳号 (raw 相对前一条骤升 >1): 删除节点 id 复用, 该记录 id 纠正为跳号前字段值
+            # (SEAT_MODEL/seatbelt 删除残留: 文件存原始 id, HM 载入时把被删 id 复用给后继;
+            #  连续跳号时 prev_raw 即被删 id 的字段值)
+            if k > 0 and raw > prev_raw + 1:
+                nid = prev_raw
+            # 回绕/损坏 (尾段 nid 字段被其他数据块覆盖) 但坐标仍有效 → 顺序补号
             if (nid <= prev_nid or nid > 10_000_000) and abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9:
                 nid = prev_nid + 1
+            prev_raw = raw
         else:
             nid = u32(p, rec + idoff)
             x, y, z = d64(p, rec + xoff), d64(p, rec + xoff + 8), d64(p, rec + xoff + 16)
@@ -1828,16 +1833,32 @@ def decode(path, node_filter=None, elem_filter=None):
                 hi, count, base2, stride, idoff, chain = cfg
                 if chain:
                     if node_filter:
-                        # chain: row -> 第 row 个有效节点 id
+                        # chain: row -> 第 row 个有效节点 id (跳过删除节点)
                         for k in range(count):
                             if chain_idx < len(chain_valid):
                                 row += 1
                                 row_map[row] = chain_valid[chain_idx]
                                 chain_idx += 1
                     else:
+                        # chain: row -> @+44 字段纠正后的节点 id (含删除间隙)
+                        prev_raw = 0
+                        prev_nid = 0
                         for k in range(count):
+                            rec = base2 + k * stride
+                            if rec + stride > len(p):
+                                break
+                            if not (abs(d64(p, rec)) < 1e9 and abs(d64(p, rec + 8)) < 1e9 and abs(d64(p, rec + 16)) < 1e9):
+                                break
+                            raw = u32(p, rec + 44)
+                            nid = raw - 1
+                            if k > 0 and raw > prev_raw + 1:
+                                nid = prev_raw
+                            if nid <= prev_nid or nid > 10_000_000:
+                                nid = prev_nid + 1
                             row += 1
-                            row_map[row] = row
+                            row_map[row] = nid
+                            prev_raw = raw
+                            prev_nid = nid
                 else:
                     xoff = 24 if stride == 96 else 12
                     for k in range(count):
