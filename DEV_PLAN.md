@@ -65,8 +65,9 @@ hmdecoder.HMModel 当前实体: nodes / elements / display_points / geo_points /
 | 读 .hm 节点 | 92% | 52/92/56B-chain/68/96B 五布局；坐标 content 级 167 万节点对照仅剩 icw_ex1/2 链尾 33 坐标错；count 门禁 node-ok 119/123（4 文件 ±1 为 oracle 源差异，非解码 bug）；链式删除残留字节恢复 |
 | 读 .hm 元素 | 93% | elem-ok 123/123；strict content 91/91（eid/config/节点全对）；非 strict 79/91。剩: cfg55 MPC slave 列表删除引用（11 文件约 55 元素，truck 17/dummy 11/seat_deformer 11 等）+ seat_start family-1 cfg60（1 元素） |
 | 显示点 / 几何点 | 60% | 能显示，几乎不能编辑 |
-| 组件 / 材料 / 属性 | 20%（db 11.x 局部） | db 11.x frame_assembly 家族已解码（M3.2）: comp/mat/prop/group 名称+精确 id（含删除跳号）,
-  记录 [u32 19][u32 0][u32 name_len] + 名称, id=u16(off-16); truck 等大 id collector 结构未破（第三种格式） |
+| 组件 / 材料 / 属性 | 20%（db 11.x 局部） | db 11.x 已解码（M3.2）: comp/mat/prop/group 名称+精确 id（含删除跳号）,
+  记录 [u32 19][u32 0][u32 name_len] + 名称, id=u32(off-16); truck 大 id 第三种格式已破（段头 char='{', 名称允许 TAB 填充）,
+  非标准命名 mat/prop（CE_Locations_Dup）仍漏归类（前缀启发式），Sets 记录已扫入 others 未分列 |
 | loads / systems / vectors / groups / sets / titles | 0% | 未解析 —— Analysis 页上限约 0 |
 | 几何 BREP（线/面/体） | 5% | 仅点；无线/面/体 |
 | 求解卡片（card image） | 0% | 未解析（hwtemplex.dll + templates 在 HM 侧） |
@@ -193,7 +194,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 
 ### M3 — collector 解码与浏览器（10 周）· 域 3/6/7 · 完整度 40%→48% · 深度 L2+
 
-- [x] 3.1(部分) 解码 collector 段: db 11.x frame_assembly 家族 comp/mat/prop/group 名称+精确 id（M3.2 落地, bb8ae7e）; load/system/vector 与 truck 大 id 格式待破
+- [x] 3.1(部分) 解码 collector 段: db 11.x comp/mat/prop/group 名称+精确 id（M3.2 落地, bb8ae7e; truck 大 id 第三格式已破, id=u32(off-16) + TAB 填充名称, comps 313/313 on oracle）; load/system/vector 待分类（XtraNodes type 516/517 暂归 others）
 - [ ] 3.1 卡片引用/颜色解码（MAT/PROP 记录尾部 float 卡数据, 未对齐语义未解）
 - [x] 3.2(部分) 解码 Groups（C_Spotweld_1, type=1538 记录）；元素↔组件归属映射=M3.1 segid 已落地；Sets/Titles 待破
 - [ ] 3.3 Model Browser 官方文件夹树（Assemblies/Components/Materials/Properties/Sets/Groups/Load/System/Vector）+ 勾选显隐 + 右键 Create/Edit/Card

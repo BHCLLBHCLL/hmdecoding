@@ -1545,17 +1545,31 @@ def _parse_comps(p):
 # ---------------------------------------------------------------------------
 # v11 (db 11.05, 如 interfaces/lsdyna/frame_assembly_1) collector 全量解码 (M3.2)
 # ---------------------------------------------------------------------------
-def _scan_v11_records(p):
-    """单遍扫描 v11 collector 记录: 返回 (normal, groups), 各为按文件顺序的 (offset, name).
+def _rec_name(b):
+    """记录名提取: NUL 前 ASCII 段, 允许 TAB(0x09) 填充 (truck 的 FIL/BD-BED-FLO
+    等名称尾部带 \\t\\t\\t\\t\\t ), 返回去除尾 TAB/空格后的名称; 非名称返回 None."""
+    s = b.split(b"\x00")[0]
+    if not s:
+        return None
+    if not all((x >= 0x20 or x == 0x09) for x in s):
+        return None
+    try:
+        return s.decode('ascii').rstrip('\t ')
+    except UnicodeDecodeError:
+        return None
 
-    普通记录 (组件/材料/属性/装配/其它):
+
+def _scan_v11_records(p):
+    """单遍扫描 v11 collector 记录 (1 字节对齐漂移): 返回 [(off, kind, tval, name)].
+
+    A 型普通记录 (组件/材料/属性/装配/其它/Sets):
         [u32 19][u32 0][u32 name_len][name(name_len B, 含尾部 NUL)] + 变长属性/卡片数据.
-    组记录: 多一个 type 字段 1538 (0x0602):
-        [u32 19][u32 0][u16 1538][u16 name_len][u16 0][name...]
-    记录按 1 字节对齐漂移, 以 4 字节标记 19 (13 00 00 00) 全字节搜索 (bytes.find 加速).
+    B 型组/其它 collector 记录 (比 A 多 type 字段):
+        [u32 19][u32 0][u16 type][u16 name_len][u16 0][name...]
+    type: 1538 组 (FA 家族), 258/259 surface 组 (truck), 516/517 其它 collector
+    (XtraNodes/RigidWallPlan 等). 记录以 4 字节标记 19 (13 00 00 00) 全字节搜索.
     """
-    normal = []
-    groups = []
+    recs = []
     lim = min(len(p), 8_000_000)
     start = 0
     while True:
@@ -1563,37 +1577,50 @@ def _scan_v11_records(p):
         if i < 0:
             break
         if i + 16 <= len(p) and u32(p, i + 4) == 0:
-            nl = u32(p, i + 8)
-            npos = -1
-            if 2 <= nl <= 200:
-                npos = i + 12
-            elif u16(p, i + 8) == 1538 and 2 <= u16(p, i + 10) <= 200:
-                nl = u16(p, i + 10)
-                npos = i + 14
-            if npos >= 0:
-                b = p[npos:npos + nl]
-                s = b.split(b"\x00")[0]
-                if s and all(32 <= x < 127 for x in s) and any(65 <= x <= 122 for x in s):
-                    (groups if npos == i + 14 else normal).append((i, s.decode('ascii')))
+            name = None
+            # B 型优先: u16 type + u16 len + u16 0
+            if 2 <= u16(p, i + 10) <= 200 and u16(p, i + 12) == 0:
+                s = _rec_name(p[i + 14:i + 14 + u16(p, i + 10)])
+                if s is not None:
+                    name = ("B", u16(p, i + 8), s)
+            # A 型: u32 name_len
+            if name is None:
+                nl = u32(p, i + 8)
+                if 2 <= nl <= 200:
+                    s = _rec_name(p[i + 12:i + 12 + nl])
+                    if s is not None:
+                        name = ("A", nl, s)
+            if name:
+                recs.append((i, name[0], name[1], name[2]))
         start = i + 1
-    return normal, groups
+    return recs
+
+
+def _route_collector(nm, cid, mats, props, others):
+    """名称前缀启发式归类 (非标准命名会漏归类, 名称不丢仍进 others)."""
+    if nm.startswith('M_'):
+        mats[cid] = nm
+    elif nm.startswith('P_'):
+        props[cid] = nm
+    else:
+        others[cid] = nm
 
 
 def _parse_collectors_v11(p):
     """v11 collector 解码: 返回 (comps, mats, props, groups, others), 各为 {id: name}.
 
-    组件段头 = [7277][0][count][0][2][0]['C'(67)][0] + 20B preamble, 记录紧随其后.
-    材料/属性/组无独立段头(mat/prop 段仅有计数标记, 无 7277/type char), 靠记录扫描 + 名称前缀/type 字段分类:
-        M_ 前缀 -> 材料, P_ 前缀 -> 属性, type=1538 -> 组, 其余 -> 其它 (assembly/contact).
-    注: 名称前缀为启发式, 对非标准命名的 mat/prop (如 frame_assembly_3 的 mat 'CE_Locations_Dup')
-    会漏分类到 mats/props(但仍出现在 others, 名称未丢); 精确分类需 mat/prop 段 type 字段(未破).
-    id 精确取自每条记录起点前 16 字节 (u16), 天然包含被删除实体的跳号
+    组件段头 = [7277][count][2|0][char 'C'(0x43) 或 '{'(0x7B)][...] + preamble, 记录紧随其后.
+    (FA 家族 char='C'; truck 大 id 格式 char='{' — 第三种段头签名.)
+    记录 id 精确取自每条记录起点前 16 字节 (u32; FA 家族 id<65536 时 u16 相等,
+    truck 的 2000xxx/99999999 大 id 仅 u32 能取下), 天然包含被删除实体的跳号
     (如 frame_assembly_1 的 comp 13 / mat 1 删除, ids 自动得到 1..12,14..18 / 2..6).
+    材料/属性/组无独立段头, 靠记录扫描 + 名称前缀/type 字段分类:
+        M_ 前缀 -> 材料, P_ 前缀 -> 属性, B 型 type∈{1538,258,259} -> 组, 其余 -> 其它.
     """
-    recs, grecs = _scan_v11_records(p)
+    recs = _scan_v11_records(p)
     if not recs:
         return None
-    # 定位组件段头 (7277 + 2 + 'C'): 7277(0x1C6D) LE = 6D 1C
+    # 定位组件段头 (7277(0x1C6D) LE = 6D 1C)
     comp_start = None
     comp_count = 0
     lim = min(len(p), 8_000_000)
@@ -1602,42 +1629,34 @@ def _parse_collectors_v11(p):
         i = p.find(b"\x6d\x1c\x00\x00", start, lim)
         if i < 0:
             break
-        if (i + 16 <= len(p) and u16(p, i + 8) == 2 and u16(p, i + 10) == 0
-                and u16(p, i + 12) == 67 and u16(p, i + 14) == 0):
-            comp_count = u16(p, i + 4)
-            comp_start = i + 36
+        if (i + 16 <= len(p) and 0 < u32(p, i + 4) < 10_000_000
+                and u32(p, i + 8) in (0, 2) and u32(p, i + 12) in (0x43, 0x7B)):
+            comp_count = u32(p, i + 4)
+            comp_start = i + 20
             break
         start = i + 2
+    plain = [(o, t, n) for (o, k, t, n) in recs if k == "A"]
+    btype = [(o, t, n) for (o, k, t, n) in recs if k == "B"]
     comps = {}
     mats = {}
     props = {}
     others = {}
     if comp_start is not None and comp_count > 0:
-        comp_recs = [r for r in recs if r[0] >= comp_start]
-        # 每条记录自身的 id 存于记录起点前 16 字节 (u16), 精确含删除跳号
-        for off, nm in comp_recs[:comp_count]:
-            comps[u16(p, off - 16)] = nm
-        for off, nm in comp_recs[comp_count:]:
-            cid = u16(p, off - 16)
-            if nm.startswith('M_'):
-                mats[cid] = nm
-            elif nm.startswith('P_'):
-                props[cid] = nm
-            else:
-                others[cid] = nm
+        comp_recs = [(o, t, n) for (o, t, n) in plain if o >= comp_start]
+        for off, _, nm in comp_recs[:comp_count]:
+            comps[u32(p, off - 16)] = nm
+        for off, _, nm in comp_recs[comp_count:]:
+            _route_collector(nm, u32(p, off - 16), mats, props, others)
     else:
         # 无组件段头: 全部按前缀分类
-        for off, nm in recs:
-            cid = u16(p, off - 16)
-            if nm.startswith('M_'):
-                mats[cid] = nm
-            elif nm.startswith('P_'):
-                props[cid] = nm
-            else:
-                others[cid] = nm
+        for off, _, nm in plain:
+            _route_collector(nm, u32(p, off - 16), mats, props, others)
     groups = {}
-    for off, nm in grecs:
-        groups[u16(p, off - 16)] = nm
+    for off, t, nm in btype:
+        if t in (1538, 258, 259):
+            groups[u32(p, off - 16)] = nm
+        else:
+            others[u32(p, off - 16)] = nm
     return comps, mats, props, groups, others
 
 
