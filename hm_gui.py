@@ -742,6 +742,96 @@ class MoveNodeDialog(QDialog):
                                   (n.x + dx, n.y + dy, n.z + dz)))
         return CmdMoveNodes(moves) if moves else None
 
+class TransformDialog(QDialog):
+    """节点几何变换: 平移 / 绕轴旋转 / 缩放 / 平面镜像. 复用 CmdMoveNodes 支持撤销."""
+
+    def __init__(self, parent, model, nids, mode):
+        super().__init__(parent)
+        self.model = model
+        self.nids = sorted(nids)
+        self.mode = mode
+        title = {"translate": "平移节点", "rotate": "旋转节点",
+                 "scale": "缩放节点", "reflect": "镜像节点"}[mode]
+        self.setWindowTitle(title)
+        form = QFormLayout(self)
+        form.addRow(QLabel(f"对 {len(self.nids)} 个节点施加「{title}」:"))
+        self._f = {}
+        def add(name, val=0.0, rng=(-1e12, 1e12), dec=6):
+            sp = QDoubleSpinBox()
+            sp.setRange(*rng)
+            sp.setDecimals(dec)
+            sp.setValue(val)
+            self._f[name] = sp
+            form.addRow(name, sp)
+            return sp
+        if mode in ("translate",):
+            for a in "XYZ":
+                add(f"d{a}")
+        elif mode == "rotate":
+            self.cb_axis = QComboBox()
+            self.cb_axis.addItems(["绕 X 轴", "绕 Y 轴", "绕 Z 轴"])
+            form.addRow("轴:", self.cb_axis)
+            add("px"); add("py"); add("pz")
+            add("angle", 0.0, (-36000, 36000), 3)
+        elif mode == "scale":
+            add("cx"); add("cy"); add("cz")
+            add("sx", 1.0, (0.000001, 1e6)); add("sy", 1.0, (0.000001, 1e6)); add("sz", 1.0, (0.000001, 1e6))
+        elif mode == "reflect":
+            self.cb_plane = QComboBox()
+            self.cb_plane.addItems(["X=0 平面", "Y=0 平面", "Z=0 平面"])
+            form.addRow("镜像平面:", self.cb_plane)
+            add("px"); add("py"); add("pz")
+        bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        bb.accepted.connect(self.accept)
+        bb.rejected.connect(self.reject)
+        form.addRow(bb)
+
+    @staticmethod
+    def _rotate(p, axis, ang, center):
+        import math
+        a = math.radians(ang)
+        c, s = math.cos(a), math.sin(a)
+        x, y, z = p[0] - center[0], p[1] - center[1], p[2] - center[2]
+        if axis == 0:   # X
+            y, z = y * c - z * s, y * s + z * c
+        elif axis == 1: # Y
+            z, x = z * c - x * s, z * s + x * c
+        else:           # Z
+            x, y = x * c - y * s, x * s + y * c
+        return (x + center[0], y + center[1], z + center[2])
+
+    def command(self):
+        import math
+        moves = []
+        for nid in self.nids:
+            n = self.model.nodes.get(nid)
+            if n is None:
+                continue
+            old = (n.x, n.y, n.z)
+            if self.mode == "translate":
+                new = (n.x + self._f["dx"].value(), n.y + self._f["dy"].value(),
+                       n.z + self._f["dz"].value())
+            elif self.mode == "rotate":
+                axis = self.cb_axis.currentIndex()
+                center = (self._f["px"].value(), self._f["py"].value(), self._f["pz"].value())
+                new = self._rotate(old, axis, self._f["angle"].value(), center)
+            elif self.mode == "scale":
+                cx, cy, cz = self._f["cx"].value(), self._f["cy"].value(), self._f["cz"].value()
+                sx, sy, sz = self._f["sx"].value(), self._f["sy"].value(), self._f["sz"].value()
+                new = (cx + (n.x - cx) * sx, cy + (n.y - cy) * sy, cz + (n.z - cz) * sz)
+            else:  # reflect
+                pl = self.cb_plane.currentIndex()
+                px, py, pz = self._f["px"].value(), self._f["py"].value(), self._f["pz"].value()
+                if pl == 0:
+                    new = (2 * px - n.x, n.y, n.z)
+                elif pl == 1:
+                    new = (n.x, 2 * py - n.y, n.z)
+                else:
+                    new = (n.x, n.y, 2 * pz - n.z)
+            if new != old:
+                moves.append((nid, old, new))
+        return CmdMoveNodes(moves) if moves else None
+
 
 class AddNodeDialog(QDialog):
     def __init__(self, parent, model):
@@ -2479,6 +2569,24 @@ class HmMainWindow(QMainWindow):
         self.log(f"移动节点 {len(cmd.moves)} 个")
         self._after_edit(cmd)
 
+    def _transform_nodes(self, mode):
+        if not self._need_model():
+            return
+        nids = self.sel_nodes
+        if not nids:
+            QMessageBox.warning(self, APP_TITLE, "请先选择要变换的节点")
+            return
+        dlg = TransformDialog(self, self.model, nids, mode)
+        if dlg.exec_() != QDialog.Accepted:
+            return
+        cmd = dlg.command()
+        if cmd is None:
+            self.log("变换无位移 (参数未改变坐标)")
+            return
+        self.model.apply(cmd)
+        self.log(f"{mode}节点 {len(cmd.moves)} 个")
+        self._after_edit(cmd)
+
     def add_node_dialog(self):
         if not self._need_model():
             return
@@ -2622,6 +2730,9 @@ class HmMainWindow(QMainWindow):
             "distance": self._measure_distance,
             "points": self._toggle_disp,
             "translate": self.move_node_dialog,
+            "rotate": lambda: self._transform_nodes("rotate"),
+            "reflect": lambda: self._transform_nodes("reflect"),
+            "scale": lambda: self._transform_nodes("scale"),
             "numbers": self.select_by_id_dialog,
             "find": self.select_by_id_dialog,
             "renumber": self.renumber_element_dialog,
