@@ -41,7 +41,9 @@ class HMModel:
     mats: dict = field(default_factory=dict)    # 材料 id -> 名称 (M3.2)
     props: dict = field(default_factory=dict)   # 属性 id -> 名称 (M3.2)
     groups: dict = field(default_factory=dict)  # 组 id -> 名称 (M3.2)
-    others: dict = field(default_factory=dict)  # 其它 collector (assembly/contact 等) id -> 名称
+    others: list = field(default_factory=list)  # 其它 collector [(id, name)] 文件序 (M3.3)
+    # 注: others 用 list 不用 dict — HM 各实体类型 id 空间独立 (FA1 的 set id=1 与
+    # assembly id=1 并存), 按 id 键 dict 会互相覆盖丢数据 (assem_1/Model Info 被冲掉).
     db_version: float = 0.0
     node_count: int = 0
     elem_count: int = 0
@@ -1604,7 +1606,7 @@ def _route_collector(nm, cid, mats, props, others):
     elif nm.startswith('P_'):
         props[cid] = nm
     else:
-        others[cid] = nm
+        others.append((cid, nm))
 
 
 def _parse_collectors_v11(p):
@@ -1641,7 +1643,7 @@ def _parse_collectors_v11(p):
     comps = {}
     mats = {}
     props = {}
-    others = {}
+    others = []  # [(id, name)] 文件序; HM 各类型 id 空间独立, 不能按 id 合并
     if comp_start is not None and comp_count > 0:
         comp_recs = [(o, t, n) for (o, t, n) in plain if o >= comp_start]
         for off, _, nm in comp_recs[:comp_count]:
@@ -1657,7 +1659,7 @@ def _parse_collectors_v11(p):
         if t in (1538, 258, 259):
             groups[u32(p, off - 16)] = nm
         else:
-            others[u32(p, off - 16)] = nm
+            others.append((u32(p, off - 16), nm))
     return comps, mats, props, groups, others
 
 

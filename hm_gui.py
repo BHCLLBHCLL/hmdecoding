@@ -431,7 +431,7 @@ class EditableModel:
         self.mats = dict(model.mats)
         self.props = dict(model.props)
         self.groups = dict(model.groups)
-        self.others = dict(model.others)
+        self.others = list(model.others)   # [(id, name)] 文件序, 不按 id 合并
         self.source_path = source_path
         self.undo_stack = []
         self.redo_stack = []
@@ -1942,20 +1942,23 @@ class HmMainWindow(QMainWindow):
     def _collector_folders(self):
         """官方 Model Browser 类别文件夹数据: [(label, leaf_kind, {id: name}), ...].
 
-        非 comp 类别从 model.mats/props/groups/others 分流; Assemblies/Sets/Load
-        按名称模式识别 (与 M_/P_ 同类启发式), 未匹配项进 Others 且名称不丢.
+        非 comp 类别从 model.mats/props/groups/others 分流; Sets/Load/Assemblies
+        按名称模式识别 (与 M_/P_ 同类启发式, 已按 HM oracle 校准: truck sets=
+        Set_*/SLAVE_* 579/587, loadcols=Airbag* 2/2, assemblies=assem*; type 516
+        XtraNodes/RigidWallPlan 为 sets 族残影 (37/44 在 HM 已不存在), 留 Others
+        不进 Sets 以免幽灵计数), 未匹配项进 Others 且名称不丢.
         """
-        asm, sets, loads = {}, {}, {}
-        rest = {}
-        for cid, nm in self.model.others.items():
+        asm, sets, loads = [], [], []
+        rest = []
+        for cid, nm in self.model.others:
             if nm.startswith("assem"):
-                asm[cid] = nm
+                asm.append((cid, nm))
             elif nm.startswith(("Set_", "SLAVE_", "C_S^_")):
-                sets[cid] = nm
-            elif nm.startswith(("XtraNodes", "RigidWallPlan", "LoadCol")):
-                loads[cid] = nm
+                sets.append((cid, nm))
+            elif nm.startswith("Airbag"):
+                loads.append((cid, nm))
             else:
-                rest[cid] = nm
+                rest.append((cid, nm))
         return [
             ("Assemblies", "asm", asm),
             ("Components", "comp", None),          # 全量列, 单独处理
@@ -2005,8 +2008,10 @@ class HmMainWindow(QMainWindow):
                                     0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
                             it.addChild(child)
                     else:
-                        for cid in sorted(data):
-                            child = QTreeWidgetItem([f"{cid} {data[cid]}"])
+                        items = (sorted(data.items()) if isinstance(data, dict)
+                                 else sorted(data))
+                        for cid, nm in items:
+                            child = QTreeWidgetItem([f"{cid} {nm}"])
                             child.setData(0, Qt.UserRole, (kind, cid))
                             it.addChild(child)
                     root.addChild(it)
@@ -2154,11 +2159,15 @@ class HmMainWindow(QMainWindow):
                      "set": "Sets", "grp": "Groups", "load": "Load",
                      "sys": "System", "vec": "Vector", "other": "Others"}
             nm = None
-            for d in (self.model.mats, self.model.props, self.model.groups,
-                      self.model.others):
+            for d in (self.model.mats, self.model.props, self.model.groups):
                 if val in d:
                     nm = d[val]
                     break
+            if nm is None:
+                for oid, onm in self.model.others:
+                    if oid == val:
+                        nm = onm
+                        break
             self.info.setPlainText(
                 f"{store.get(kind, kind)} collector {val}\nName: {nm or ''}")
             self._fill_editor([("ID", val), ("Type", store.get(kind, kind)),
@@ -2230,11 +2239,11 @@ class HmMainWindow(QMainWindow):
         else:
             # Sets/Load/Assemblies 为 others 的视图分流; 命名提示前缀规则
             prefix = {"Assemblies": "assem_", "Sets": "Set_",
-                      "Load": "XtraNodes_"}.get(val, "")
+                      "Load": "Airbag"}.get(val, "")
             if prefix and not name.startswith(prefix.split("_")[0]):
                 self.log(f"{val} 名称未含 {prefix}* 前缀, 将落入 Others 文件夹")
-            cid = max(self.model.others, default=0) + 1
-            self.model.others[cid] = name
+            cid = max((oid for oid, _ in self.model.others), default=0) + 1
+            self.model.others.append((cid, name))
             self.log(f"创建 {val} 收集器 {cid} {name} (内存)")
         self._rebuild_tree()
         self._update_info()
@@ -2243,16 +2252,24 @@ class HmMainWindow(QMainWindow):
         store = {"comp": self.model.comps, "mat": self.model.mats,
                  "prop": self.model.props, "grp": self.model.groups}
         d = store.get(kind)
-        if d is None or val not in d:
-            d = self.model.others
-        if val not in d:
-            self.log("Edit: 该实体暂不支持 (节点/元素/几何编辑在其它面板)")
-            return
-        old = d[val]
+        if d is not None and val in d:
+            old = d[val]
+        else:
+            idx = next((i for i, (oid, _n) in enumerate(self.model.others)
+                        if oid == val), None)
+            if idx is None:
+                self.log("Edit: 该实体暂不支持 (节点/元素/几何编辑在其它面板)")
+                return
+            old = self.model.others[idx][1]
         new, ok = QInputDialog.getText(
             self, "Edit Collectors", "Name:", text=old)
         if ok and new.strip() and new.strip() != old:
-            d[val] = new.strip()
+            if d is not None and val in d:
+                d[val] = new.strip()
+            else:
+                idx = next(i for i, (oid, _n) in enumerate(self.model.others)
+                           if oid == val and _n == old)
+                self.model.others[idx] = (val, new.strip())
             self._rebuild_tree()
             self._update_info()
             self.log(f"重命名 collector {val}: {old} -> {new.strip()} (内存)")
