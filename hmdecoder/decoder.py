@@ -1825,6 +1825,7 @@ def decode(path, node_filter=None, elem_filter=None):
             # 多段行号续接构建全局 row_map
             row_map = {}
             row = 0
+            seen_nids = set()
             # node_filter (oracle 有效节点集合): 过滤删除节点,修正行号元素引用偏移
             if node_filter:
                 chain_valid = sorted(node_filter)
@@ -1869,6 +1870,10 @@ def decode(path, node_filter=None, elem_filter=None):
                         x = d64(p, rec + xoff)
                         if not (1 <= nid <= 10_000_000) or not (abs(x) < 1e9):
                             break
+                        if nid in seen_nids:
+                            # 相邻段重叠过扫 (如 molding1 56B 尾段首条 == 92B 主段末条)
+                            continue
+                        seen_nids.add(nid)
                         row += 1
                         row_map[row] = nid
             main_recs = None  # list[(eid, config, nodes)] 主路径记录
