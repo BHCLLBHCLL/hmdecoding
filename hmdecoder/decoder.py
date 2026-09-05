@@ -90,6 +90,7 @@ def find_node_section(p):
                 continue
             for stride, idoff, xoff, chain in NODE_LAYOUTS:
                 ok = 0; bad = 0
+                nz_x = 0
                 seen = set()
                 for k in range(min(count, 60)):
                     rec = base + k * stride
@@ -108,6 +109,8 @@ def find_node_section(p):
                     coord_ok = abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9 and max(abs(x), abs(y), abs(z)) > 1e-5
                     if 1 <= nid <= 10_000_000 and coord_ok and tailok:
                         ok += 1
+                        if abs(x) > 1e-6:
+                            nz_x += 1
                         seen.add(nid)
                     else:
                         bad += 1
@@ -118,9 +121,36 @@ def find_node_section(p):
                     continue
                 # 小 count 文件 (极小型模型) 阈值按 count 缩放 (count=2 时需 2)
                 need = max(1, min(count, max(3, int(min(count, 60) * 0.8))))
-                if ok >= need and (best is None or ok > best[0]):
-                    best = (ok, (hi, count, base, stride, idoff, chain))
-    if best and best[0] >= max(1, min(best[1][1], max(3, int(min(best[1][1], 60) * 0.8)))):
+                if ok < need:
+                    continue
+                # 完整流长验证: 真实节点头的 count 条记录全部连续有效; 假头 (如 [0x88] 撞上
+                # 元素区/其他段) 在进入非节点数据后即断 (stream_len << count). 以此区分真实段.
+                stream_len = ok
+                for k in range(60, count):
+                    rec = base + k * stride
+                    if rec + stride > len(p):
+                        break
+                    x = d64(p, rec + xoff)
+                    y = d64(p, rec + xoff + 8)
+                    z = d64(p, rec + xoff + 16)
+                    if chain:
+                        tailok = u32(p, rec + 48) == 0 and u32(p, rec + 52) == 0
+                        nid = u32(p, rec + 44) - 1
+                    else:
+                        tailok = True
+                        nid = u32(p, rec + idoff)
+                    if (1 <= nid <= 10_000_000 and tailok
+                            and abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9
+                            and max(abs(x), abs(y), abs(z)) > 1e-5):
+                        stream_len += 1
+                    else:
+                        break
+                # 平局改由首坐标非零数决出: 错位布局 (如 PW @+12=0 零填充) 读 (0,x,y) 仍通过
+                # coord_ok, 但首坐标全 0 (nz_x=0); 正确布局 (坐标 @+20) 首坐标展开 (nz_x 高).
+                score = (stream_len, nz_x)
+                if best is None or score > best[0]:
+                    best = (score, (hi, count, base, stride, idoff, chain))
+    if best and best[0][0] >= max(1, min(best[1][1], max(3, int(min(best[1][1], 60) * 0.8)))):
         return best[1]
     return find_node_section_struct(p)
 
@@ -472,7 +502,14 @@ def _scan_v13_node_segs(p, lim=10000.0):
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
-    xoff = 24 if stride == 96 else 12  # v13.03 96B 记录坐标 @+24
+    # 坐标偏移由布局 (stride, idoff) 决定: v13.03 96B @+24; idoff==8 布局 @+20 (@+12 零填充);
+    # 其余 52B/92B @+12.
+    if stride == 96:
+        xoff = 24
+    elif idoff == 8:
+        xoff = 20
+    else:
+        xoff = 12
     prev_nid = 0
     for k in range(count):
         rec = base + k * stride
