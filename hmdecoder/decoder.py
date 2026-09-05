@@ -45,6 +45,11 @@ class HMModel:
     elem_section: int = 0
     element_variant: str = ""
 
+    def comp_groups(self):
+        """元素按组件 id 分组: {comp_id: 元素数} (M3)."""
+        from collections import Counter
+        return dict(Counter(e.comp for e in self.elements if e.comp))
+
 def load_payload(path):
     raw = Path(path).read_bytes()
     assert raw[:4] == b"\x00\x00\x00\x00", "非标准前缀"

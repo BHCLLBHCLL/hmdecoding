@@ -1920,23 +1920,38 @@ class HmMainWindow(QMainWindow):
             root = QTreeWidgetItem(["Model"])
             root.setData(0, Qt.UserRole, ("info", None))
             self.tree.addTopLevelItem(root)
-            counts = self.model.config_groups()
-            it_comp = QTreeWidgetItem([f"Components ({len(counts)})"])
-            it_comp.setData(0, Qt.UserRole, ("comps", None))
-            for cfg in sorted(counts):
-                name, _nn, cat = config_info(cfg)
-                child = QTreeWidgetItem(
-                    [f"{cfg} {name} [{cat}] ({counts[cfg]})"])
-                child.setData(0, Qt.UserRole, ("group", cfg))
-                child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
-                visible = self._group_style.get(cfg, (None, True))[1]
-                child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
-                color = self._group_style.get(cfg, (None, None))[0]
-                if color:
-                    child.setBackground(
-                        0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
-                it_comp.addChild(child)
-            root.addChild(it_comp)
+            comp_groups = self.model.comp_groups()
+            if comp_groups:
+                # M3: 有组件数据时按组件分组 (id + 名称 + 元素数)
+                it_comp = QTreeWidgetItem([f"Components ({len(comp_groups)})"])
+                it_comp.setData(0, Qt.UserRole, ("comps", None))
+                for cid in sorted(comp_groups):
+                    nm = self.model.comps.get(cid, "")
+                    label = f"{cid} {nm}" if nm else f"component {cid}"
+                    child = QTreeWidgetItem([f"{label} ({comp_groups[cid]})"])
+                    child.setData(0, Qt.UserRole, ("comp", cid))
+                    child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+                    child.setCheckState(0, Qt.Checked)
+                    it_comp.addChild(child)
+                root.addChild(it_comp)
+            else:
+                counts = self.model.config_groups()
+                it_comp = QTreeWidgetItem([f"Components ({len(counts)})"])
+                it_comp.setData(0, Qt.UserRole, ("comps", None))
+                for cfg in sorted(counts):
+                    name, _nn, cat = config_info(cfg)
+                    child = QTreeWidgetItem(
+                        [f"{cfg} {name} [{cat}] ({counts[cfg]})"])
+                    child.setData(0, Qt.UserRole, ("group", cfg))
+                    child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+                    visible = self._group_style.get(cfg, (None, True))[1]
+                    child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
+                    color = self._group_style.get(cfg, (None, None))[0]
+                    if color:
+                        child.setBackground(
+                            0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
+                    it_comp.addChild(child)
+                root.addChild(it_comp)
             it_nodes = QTreeWidgetItem([f"Nodes ({len(self.model.nodes)})"])
             it_nodes.setData(0, Qt.UserRole, ("nodes", None))
             it_nodes.setFlags(it_nodes.flags() | Qt.ItemIsUserCheckable)
@@ -2043,6 +2058,10 @@ class HmMainWindow(QMainWindow):
             idxs = {i for i, e in enumerate(self.model.elements) if e.config == val}
             self._set_elem_selection(idxs, 0)
             self.log(f"已选择 config {val} 分组全部 {len(idxs)} 个单元")
+        elif kind == "comp" and self.model is not None:
+            idxs = {i for i, e in enumerate(self.model.elements) if e.comp == val}
+            self._set_elem_selection(idxs, 0)
+            self.log(f"已选择组件 {val} 全部 {len(idxs)} 个单元")
 
     # ---------------- 图层开关 ----------------
     def _toggle_nodes(self, *_a):
