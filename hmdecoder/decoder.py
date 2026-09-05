@@ -38,6 +38,10 @@ class HMModel:
     display_points: dict = field(default_factory=dict)
     geo_points: dict = field(default_factory=dict)
     comps: dict = field(default_factory=dict)  # 组件 id -> 名称 (collector 解码, M3)
+    mats: dict = field(default_factory=dict)    # 材料 id -> 名称 (M3.2)
+    props: dict = field(default_factory=dict)   # 属性 id -> 名称 (M3.2)
+    groups: dict = field(default_factory=dict)  # 组 id -> 名称 (M3.2)
+    others: dict = field(default_factory=dict)  # 其它 collector (assembly/contact 等) id -> 名称
     db_version: float = 0.0
     node_count: int = 0
     elem_count: int = 0
@@ -1538,6 +1542,103 @@ def _parse_comps(p):
     return names
 
 
+# ---------------------------------------------------------------------------
+# v11 (db 11.05, 如 interfaces/lsdyna/frame_assembly_1) collector 全量解码 (M3.2)
+# ---------------------------------------------------------------------------
+def _scan_v11_records(p):
+    """单遍扫描 v11 collector 记录: 返回 (normal, groups), 各为按文件顺序的 (offset, name).
+
+    普通记录 (组件/材料/属性/装配/其它):
+        [u32 19][u32 0][u32 name_len][name(name_len B, 含尾部 NUL)] + 变长属性/卡片数据.
+    组记录: 多一个 type 字段 1538 (0x0602):
+        [u32 19][u32 0][u16 1538][u16 name_len][u16 0][name...]
+    记录按 1 字节对齐漂移, 以 4 字节标记 19 (13 00 00 00) 全字节搜索 (bytes.find 加速).
+    """
+    normal = []
+    groups = []
+    lim = min(len(p), 8_000_000)
+    start = 0
+    while True:
+        i = p.find(b"\x13\x00\x00\x00", start, lim)
+        if i < 0:
+            break
+        if i + 16 <= len(p) and u32(p, i + 4) == 0:
+            nl = u32(p, i + 8)
+            npos = -1
+            if 2 <= nl <= 200:
+                npos = i + 12
+            elif u16(p, i + 8) == 1538 and 2 <= u16(p, i + 10) <= 200:
+                nl = u16(p, i + 10)
+                npos = i + 14
+            if npos >= 0:
+                b = p[npos:npos + nl]
+                s = b.split(b"\x00")[0]
+                if s and all(32 <= x < 127 for x in s) and any(65 <= x <= 122 for x in s):
+                    (groups if npos == i + 14 else normal).append((i, s.decode('ascii')))
+        start = i + 1
+    return normal, groups
+
+
+def _parse_collectors_v11(p):
+    """v11 collector 解码: 返回 (comps, mats, props, groups, others), 各为 {id: name}.
+
+    组件段头 = [7277][0][count][0][2][0]['C'(67)][0] + 20B preamble, 记录紧随其后.
+    材料/属性/组无独立段头, 靠记录扫描 + 名称前缀/type 字段分类:
+        M_ 前缀 -> 材料, P_ 前缀 -> 属性, type=1538 -> 组, 其余 -> 其它 (assembly/contact).
+    id 精确取自每条记录起点前 16 字节 (u16), 天然包含被删除实体的跳号
+    (如 frame_assembly_1 的 comp 13 / mat 1 删除, ids 自动得到 1..12,14..18 / 2..6).
+    """
+    recs, grecs = _scan_v11_records(p)
+    if not recs:
+        return None
+    # 定位组件段头 (7277 + 2 + 'C'): 7277(0x1C6D) LE = 6D 1C
+    comp_start = None
+    comp_count = 0
+    lim = min(len(p), 8_000_000)
+    start = 0
+    while True:
+        i = p.find(b"\x6d\x1c\x00\x00", start, lim)
+        if i < 0:
+            break
+        if (i + 16 <= len(p) and u16(p, i + 8) == 2 and u16(p, i + 10) == 0
+                and u16(p, i + 12) == 67 and u16(p, i + 14) == 0):
+            comp_count = u16(p, i + 4)
+            comp_start = i + 36
+            break
+        start = i + 2
+    comps = {}
+    mats = {}
+    props = {}
+    others = {}
+    if comp_start is not None and comp_count > 0:
+        comp_recs = [r for r in recs if r[0] >= comp_start]
+        # 每条记录自身的 id 存于记录起点前 16 字节 (u16), 精确含删除跳号
+        for off, nm in comp_recs[:comp_count]:
+            comps[u16(p, off - 16)] = nm
+        for off, nm in comp_recs[comp_count:]:
+            cid = u16(p, off - 16)
+            if nm.startswith('M_'):
+                mats[cid] = nm
+            elif nm.startswith('P_'):
+                props[cid] = nm
+            else:
+                others[cid] = nm
+    else:
+        # 无组件段头: 全部按前缀分类
+        for off, nm in recs:
+            cid = u16(p, off - 16)
+            if nm.startswith('M_'):
+                mats[cid] = nm
+            elif nm.startswith('P_'):
+                props[cid] = nm
+            else:
+                others[cid] = nm
+    groups = {}
+    for off, nm in grecs:
+        groups[u16(p, off - 16)] = nm
+    return comps, mats, props, groups, others
+
+
 def decode_elements(p, row_map, row_count, max_rec=None):
     segs = find_elem_segments(p)
     if not segs:
@@ -1828,9 +1929,16 @@ def decode(path, node_filter=None, elem_filter=None):
     p = load_payload(path)
     model = HMModel(db_version=d64(p, 4))
     _ELEM_COMP.clear()
-    comp_names = _parse_comps(p)
-    for i, nm in enumerate(comp_names):
-        model.comps[i + 1] = nm
+    if 11.0 <= model.db_version < 12.0:
+        # v11 (db 11.x, lsdyna 等) collector 全量解码: comp/mat/prop/group/其它
+        v11 = _parse_collectors_v11(p)
+        if v11:
+            model.comps, model.mats, model.props, model.groups, model.others = v11
+    else:
+        # v12+ (及旧格式 <11) 走 v12 模式 A/B
+        comp_names = _parse_comps(p)
+        for i, nm in enumerate(comp_names):
+            model.comps[i + 1] = nm
     ns = find_node_section(p)
     ns_list = []
     nodes = {}
