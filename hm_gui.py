@@ -38,7 +38,7 @@ from PyQt5.QtWidgets import (
     QAction, QApplication, QButtonGroup, QCheckBox, QComboBox, QDialog,
     QDialogButtonBox, QDoubleSpinBox, QFileDialog, QFormLayout, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QHeaderView, QInputDialog, QLabel,
-    QLineEdit, QMainWindow, QMessageBox, QPlainTextEdit, QProgressDialog,
+    QLineEdit, QMainWindow, QMenu, QMessageBox, QPlainTextEdit, QProgressDialog,
     QPushButton, QRadioButton, QSizePolicy, QSpinBox, QSplitter,
     QStackedWidget, QStyle, QTabWidget, QTableWidget, QTableWidgetItem,
     QTextBrowser, QToolBar, QToolButton, QTreeWidget, QTreeWidgetItem,
@@ -421,18 +421,26 @@ class EditableModel:
     def __init__(self, model=None, source_path=""):
         model = model or HMModel()
         self.nodes = dict(model.nodes)
-        self.elements = [Elem(e.id, list(e.nodes), e.config)
+        self.elements = [Elem(e.id, list(e.nodes), e.config, comp=e.comp)
                          for e in model.elements]
         self.display_points = dict(model.display_points)
         self.geo_points = dict(model.geo_points)
         self.db_version = model.db_version
         self.element_variant = model.element_variant
+        self.comps = dict(model.comps)     # M3.3 collector 数据随包装传递
+        self.mats = dict(model.mats)
+        self.props = dict(model.props)
+        self.groups = dict(model.groups)
+        self.others = dict(model.others)
         self.source_path = source_path
         self.undo_stack = []
         self.redo_stack = []
         self.dirty = False
 
     # ---------------- 查询 ----------------
+    def comp_groups(self):
+        return Counter(e.comp for e in self.elements if e.comp)
+
     def config_groups(self):
         return Counter(e.config for e in self.elements)
 
@@ -499,7 +507,9 @@ class EditableModel:
                        db_version=self.db_version,
                        node_count=len(self.nodes),
                        elem_count=len(self.elements),
-                       element_variant=self.element_variant)
+                       element_variant=self.element_variant,
+                       comps=self.comps, mats=self.mats, props=self.props,
+                       groups=self.groups, others=self.others)
 
     def to_dict(self):
         return {
@@ -509,11 +519,14 @@ class EditableModel:
             "source": self.source_path,
             "nodes": [[n.id, n.x, n.y, n.z]
                       for n in sorted(self.nodes.values(), key=lambda v: v.id)],
-            "elements": [[e.id, e.config, list(e.nodes)] for e in self.elements],
+            "elements": [[e.id, e.config, list(e.nodes), e.comp]
+                         for e in self.elements],
             "display_points": [[p.id, p.x, p.y, p.z]
                                for p in self.display_points.values()],
             "geo_points": [[p.id, p.x, p.y, p.z]
                            for p in self.geo_points.values()],
+            "comps": self.comps, "mats": self.mats,
+            "props": self.props, "groups": self.groups, "others": self.others,
         }
 
     def save_json(self, path):
@@ -529,12 +542,18 @@ class EditableModel:
                     element_variant=d.get("element_variant", "hmj"))
         m.nodes = {int(r[0]): Node(int(r[0]), float(r[1]), float(r[2]), float(r[3]))
                    for r in d.get("nodes", [])}
-        m.elements = [Elem(int(r[0]), [int(v) for v in r[2]], int(r[1]))
+        m.elements = [Elem(int(r[0]), [int(v) for v in r[2]], int(r[1]),
+                           comp=int(r[3]) if len(r) > 3 else 0)
                       for r in d.get("elements", [])]
         m.display_points = {int(r[0]): DisplayPoint(int(r[0]), float(r[1]), float(r[2]), float(r[3]))
                             for r in d.get("display_points", [])}
         m.geo_points = {int(r[0]): GeoPoint(int(r[0]), float(r[1]), float(r[2]), float(r[3]))
                         for r in d.get("geo_points", [])}
+        m.comps = {int(k): v for k, v in d.get("comps", {}).items()}
+        m.mats = {int(k): v for k, v in d.get("mats", {}).items()}
+        m.props = {int(k): v for k, v in d.get("props", {}).items()}
+        m.groups = {int(k): v for k, v in d.get("groups", {}).items()}
+        m.others = {int(k): v for k, v in d.get("others", {}).items()}
         m.node_count = len(m.nodes)
         m.elem_count = len(m.elements)
         em = cls(m, source_path=d.get("source", ""))
@@ -1288,6 +1307,8 @@ class HmMainWindow(QMainWindow):
         self.tree.itemChanged.connect(self._on_tree_item_changed)
         self.tree.itemSelectionChanged.connect(self._on_tree_selected)
         self.tree.itemDoubleClicked.connect(self._on_tree_double_clicked)
+        self.tree.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.tree.customContextMenuRequested.connect(self._on_tree_menu)
         ml.addWidget(self.tree, 1)
         tabs.addTab(model_tab, "Model")
         tabs.setCurrentIndex(2)
@@ -1808,23 +1829,23 @@ class HmMainWindow(QMainWindow):
         self._vpts.SetData(numpy_to_vtk(xyz if xyz.size else np.zeros((0, 3)),
                                         deep=True))
 
-        # 单元分组
-        by_cfg = {}
+        # 单元分组: 有 comps 按组件分组 (M3.3 comp 勾选显隐), 否则按 config
+        by_group = {}
         for i, e in enumerate(self.model.elements):
-            by_cfg.setdefault(e.config, []).append((i, e))
+            by_group.setdefault(self._group_key(e), []).append((i, e))
         total_skipped = 0
-        for gi, cfg in enumerate(sorted(by_cfg)):
-            grid, skipped = build_group_grid(self._vpts, self._nid2idx, by_cfg[cfg])
+        for gi, key in enumerate(sorted(by_group, key=lambda k: (k[0], k[1]))):
+            grid, skipped = build_group_grid(self._vpts, self._nid2idx, by_group[key])
             total_skipped += skipped
             color, visible = self._group_style.get(
-                cfg, (PALETTE[gi % len(PALETTE)], True))
-            self._group_style[cfg] = (color, visible)
-            g = GroupView(cfg, grid, color)
+                key, (PALETTE[gi % len(PALETTE)], True))
+            self._group_style[key] = (color, visible)
+            g = GroupView(key, grid, color)
             g.visible = visible
             g.actor.SetVisibility(visible)
             self._apply_display_mode(g.actor)
             self.renderer.AddActor(g.actor)
-            self._groups[cfg] = g
+            self._groups[key] = g
         if total_skipped:
             self.log(f"警告: {total_skipped} 个单元引用了缺失节点, 已跳过显示")
 
@@ -1912,29 +1933,87 @@ class HmMainWindow(QMainWindow):
         self._render()
 
     # ---------------- 模型树 ----------------
+    def _group_key(self, elem):
+        """元素的可视分组键: 有 comp collector 数据按组件, 否则按 config (M3.3)."""
+        if self.model.comps:
+            return ("comp", elem.comp or 0)
+        return ("cfg", elem.config)
+
+    def _collector_folders(self):
+        """官方 Model Browser 类别文件夹数据: [(label, leaf_kind, {id: name}), ...].
+
+        非 comp 类别从 model.mats/props/groups/others 分流; Assemblies/Sets/Load
+        按名称模式识别 (与 M_/P_ 同类启发式), 未匹配项进 Others 且名称不丢.
+        """
+        asm, sets, loads = {}, {}, {}
+        rest = {}
+        for cid, nm in self.model.others.items():
+            if nm.startswith("assem"):
+                asm[cid] = nm
+            elif nm.startswith(("Set_", "SLAVE_", "C_S^_")):
+                sets[cid] = nm
+            elif nm.startswith(("XtraNodes", "RigidWallPlan", "LoadCol")):
+                loads[cid] = nm
+            else:
+                rest[cid] = nm
+        return [
+            ("Assemblies", "asm", asm),
+            ("Components", "comp", None),          # 全量列, 单独处理
+            ("Materials", "mat", self.model.mats),
+            ("Properties", "prop", self.model.props),
+            ("Sets", "set", sets),
+            ("Groups", "grp", self.model.groups),
+            ("Load", "load", loads),
+            ("System", "sys", {}),
+            ("Vector", "vec", {}),
+            ("Others", "other", rest),
+        ]
+
     def _rebuild_tree(self):
-        """Model Browser: Components / Nodes / Elements / Geometry / …"""
+        """Model Browser: 官方文件夹树 (Assemblies/Components/Materials/…/Vector).
+
+        M3.3: comps 全量列出 (含无元素组件, id 含跳号), 勾选控制该组件元素显隐
+        (渲染按 comp 分组); 其余类别按名称启发式分流, 未匹配进 Others.
+        无 comp 数据 (v12+ 等) 回落到按 config 分组的旧树.
+        """
         self.tree.blockSignals(True)
         self.tree.clear()
         if self.model is not None:
             root = QTreeWidgetItem(["Model"])
             root.setData(0, Qt.UserRole, ("info", None))
             self.tree.addTopLevelItem(root)
-            comp_groups = self.model.comp_groups()
-            if comp_groups:
-                # M3: 有组件数据时按组件分组 (id + 名称 + 元素数)
-                it_comp = QTreeWidgetItem([f"Components ({len(comp_groups)})"])
-                it_comp.setData(0, Qt.UserRole, ("comps", None))
-                for cid in sorted(comp_groups):
-                    nm = self.model.comps.get(cid, "")
-                    label = f"{cid} {nm}" if nm else f"component {cid}"
-                    child = QTreeWidgetItem([f"{label} ({comp_groups[cid]})"])
-                    child.setData(0, Qt.UserRole, ("comp", cid))
-                    child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
-                    child.setCheckState(0, Qt.Checked)
-                    it_comp.addChild(child)
-                root.addChild(it_comp)
+            if self.model.comps:
+                # ---- M3.3 官方文件夹树 ----
+                cg = self.model.comp_groups()
+                for label, kind, data in self._collector_folders():
+                    it = QTreeWidgetItem([f"{label} ({len(self.model.comps) if label == 'Components' else len(data)})"])
+                    it.setData(0, Qt.UserRole, ("folder", label))
+                    if label == "Components":
+                        for cid in sorted(self.model.comps):
+                            nm = self.model.comps[cid]
+                            cnt = cg.get(cid, 0)
+                            child = QTreeWidgetItem([f"{cid} {nm} ({cnt})"])
+                            child.setData(0, Qt.UserRole, ("comp", cid))
+                            child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+                            key = ("comp", cid)
+                            color, visible = self._group_style.get(
+                                key, (PALETTE[cid % len(PALETTE)] if cid
+                                      else (0.60, 0.60, 0.60), True))
+                            child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
+                            if color:
+                                child.setBackground(
+                                    0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
+                            it.addChild(child)
+                    else:
+                        for cid in sorted(data):
+                            child = QTreeWidgetItem([f"{cid} {data[cid]}"])
+                            child.setData(0, Qt.UserRole, (kind, cid))
+                            it.addChild(child)
+                    root.addChild(it)
+                    # 大模型折叠 Components 防初次展开卡顿
+                    it.setExpanded(label != "Components" or len(self.model.comps) <= 64)
             else:
+                # ---- 旧树: 无 comp 数据按 config 分组折衷 (v12+ 等) ----
                 counts = self.model.config_groups()
                 it_comp = QTreeWidgetItem([f"Components ({len(counts)})"])
                 it_comp.setData(0, Qt.UserRole, ("comps", None))
@@ -1944,14 +2023,15 @@ class HmMainWindow(QMainWindow):
                         [f"{cfg} {name} [{cat}] ({counts[cfg]})"])
                     child.setData(0, Qt.UserRole, ("group", cfg))
                     child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
-                    visible = self._group_style.get(cfg, (None, True))[1]
+                    visible = self._group_style.get(("cfg", cfg), (None, True))[1]
                     child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
-                    color = self._group_style.get(cfg, (None, None))[0]
+                    color = self._group_style.get(("cfg", cfg), (None, None))[0]
                     if color:
                         child.setBackground(
                             0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
                     it_comp.addChild(child)
                 root.addChild(it_comp)
+                it_comp.setExpanded(True)
             it_nodes = QTreeWidgetItem([f"Nodes ({len(self.model.nodes)})"])
             it_nodes.setData(0, Qt.UserRole, ("nodes", None))
             it_nodes.setFlags(it_nodes.flags() | Qt.ItemIsUserCheckable)
@@ -1980,14 +2060,7 @@ class HmMainWindow(QMainWindow):
                                  else Qt.Unchecked)
                 it_geo.addChild(it)
             root.addChild(it_geo)
-            it_prop = QTreeWidgetItem(["Properties (0)"])
-            it_prop.setData(0, Qt.UserRole, ("props", None))
-            root.addChild(it_prop)
-            it_title = QTreeWidgetItem(["Titles (1)"])
-            it_title.setData(0, Qt.UserRole, ("titles", None))
-            root.addChild(it_title)
             root.setExpanded(True)
-            it_comp.setExpanded(True)
             it_geo.setExpanded(True)
         self.tree.blockSignals(False)
 
@@ -1995,13 +2068,24 @@ class HmMainWindow(QMainWindow):
         kind, val = item.data(0, Qt.UserRole) or (None, None)
         on = item.checkState(0) == Qt.Checked
         if kind == "group":
-            g = self._groups.get(val)
+            key = ("cfg", val)
+            g = self._groups.get(key)
             if g is not None:
                 g.visible = on
                 g.actor.SetVisibility(on)
-                color, _ = self._group_style.get(val, (None, True))
-                self._group_style[val] = (color, on)
+                color, _ = self._group_style.get(key, (None, True))
+                self._group_style[key] = (color, on)
                 self._render()
+        elif kind == "comp":
+            # M3.3: 组件勾选控制该组件元素显隐 (渲染按 comp 分组)
+            key = ("comp", val)
+            g = self._groups.get(key)
+            if g is not None:
+                g.visible = on
+                g.actor.SetVisibility(on)
+            color, _ = self._group_style.get(key, (None, True))
+            self._group_style[key] = (color, on)
+            self._render()
         elif kind == "nodes":
             self.act_show_nodes.setChecked(on)
             self._toggle_nodes()
@@ -2051,6 +2135,34 @@ class HmMainWindow(QMainWindow):
                 ("config", val), ("type", name), ("category", cat),
                 ("count", counts.get(val, 0)), ("nodes/elem", nn or "var"),
             ])
+        elif kind == "comp":
+            nm = self.model.comps.get(val, "")
+            cnt = self.model.comp_groups().get(val, 0)
+            self.info.setPlainText(
+                f"Component {val}  {nm}\nElements: {cnt}\n"
+                f"(double-click to select all elements, checkbox to show/hide)")
+            self._fill_editor([
+                ("ID", val), ("Type", "Component"),
+                ("Name", nm), ("Elements", cnt),
+            ])
+        elif kind == "folder":
+            self.info.setPlainText(f"Model Browser / {val}\n"
+                                   f"(右键 Create/Edit/Card)")
+        elif kind in ("asm", "mat", "prop", "set", "grp", "load", "sys",
+                      "vec", "other"):
+            store = {"asm": "Assemblies", "mat": "Materials", "prop": "Properties",
+                     "set": "Sets", "grp": "Groups", "load": "Load",
+                     "sys": "System", "vec": "Vector", "other": "Others"}
+            nm = None
+            for d in (self.model.mats, self.model.props, self.model.groups,
+                      self.model.others):
+                if val in d:
+                    nm = d[val]
+                    break
+            self.info.setPlainText(
+                f"{store.get(kind, kind)} collector {val}\nName: {nm or ''}")
+            self._fill_editor([("ID", val), ("Type", store.get(kind, kind)),
+                               ("Name", nm or "")])
 
     def _on_tree_double_clicked(self, item, _col):
         kind, val = item.data(0, Qt.UserRole) or (None, None)
@@ -2062,6 +2174,88 @@ class HmMainWindow(QMainWindow):
             idxs = {i for i, e in enumerate(self.model.elements) if e.comp == val}
             self._set_elem_selection(idxs, 0)
             self.log(f"已选择组件 {val} 全部 {len(idxs)} 个单元")
+
+    # ---------------- 右键菜单 (Create / Edit / Card) ----------------
+    def _on_tree_menu(self, pos):
+        item = self.tree.itemAt(pos)
+        if item is None or self.model is None:
+            return
+        menu = QMenu(self)
+        act_create = menu.addAction("Create…")
+        act_edit = menu.addAction("Edit…")
+        menu.addSeparator()
+        act_card = menu.addAction("Card…")
+        act = menu.exec_(self.tree.viewport().mapToGlobal(pos))
+        if act is None:
+            return
+        kind, val = item.data(0, Qt.UserRole) or (None, None)
+        if act is act_create:
+            self._create_collector(kind, val)
+        elif act is act_edit:
+            self._edit_collector(kind, val, item.text(0))
+        elif act is act_card:
+            QMessageBox.information(
+                self, "Card Editor",
+                "卡片数据引用已定位但语义未解码 (M6.1 计划).\n"
+                "MAT/PROP 记录尾部 float 卡数据的语义映射待 hwtemplex.dll 模板对照.")
+
+    def _create_collector(self, kind, val):
+        if kind != "folder":
+            self.log("Create: 请选中文件夹项")
+            return
+        if val in ("System", "Vector", "Others"):
+            self.log(f"Create: {val} 记录类型解码未覆盖, 暂不支持创建")
+            return
+        name, ok = QInputDialog.getText(self, f"Create {val}", "Name:")
+        if not ok or not name.strip():
+            return
+        name = name.strip()
+        if val == "Components":
+            cid = max(self.model.comps, default=0) + 1
+            self.model.comps[cid] = name
+            self._group_style[("comp", cid)] = (None, True)
+            self.log(f"创建组件 {cid} {name} (内存, 无写回)")
+        elif val == "Materials":
+            cid = max(self.model.mats, default=0) + 1
+            self.model.mats[cid] = name
+            self.log(f"创建材料 {cid} {name} (内存)")
+        elif val == "Properties":
+            cid = max(self.model.props, default=0) + 1
+            self.model.props[cid] = name
+            self.log(f"创建属性 {cid} {name} (内存)")
+        elif val == "Groups":
+            cid = max(self.model.groups, default=0) + 1
+            self.model.groups[cid] = name
+            self.log(f"创建组 {cid} {name} (内存)")
+        else:
+            # Sets/Load/Assemblies 为 others 的视图分流; 命名提示前缀规则
+            prefix = {"Assemblies": "assem_", "Sets": "Set_",
+                      "Load": "XtraNodes_"}.get(val, "")
+            if prefix and not name.startswith(prefix.split("_")[0]):
+                self.log(f"{val} 名称未含 {prefix}* 前缀, 将落入 Others 文件夹")
+            cid = max(self.model.others, default=0) + 1
+            self.model.others[cid] = name
+            self.log(f"创建 {val} 收集器 {cid} {name} (内存)")
+        self._rebuild_tree()
+        self._update_info()
+
+    def _edit_collector(self, kind, val, old_label):
+        store = {"comp": self.model.comps, "mat": self.model.mats,
+                 "prop": self.model.props, "grp": self.model.groups}
+        d = store.get(kind)
+        if d is None or val not in d:
+            d = self.model.others
+        if val not in d:
+            self.log("Edit: 该实体暂不支持 (节点/元素/几何编辑在其它面板)")
+            return
+        old = d[val]
+        new, ok = QInputDialog.getText(
+            self, "Edit Collectors", "Name:", text=old)
+        if ok and new.strip() and new.strip() != old:
+            d[val] = new.strip()
+            self._rebuild_tree()
+            self._update_info()
+            self.log(f"重命名 collector {val}: {old} -> {new.strip()} (内存)")
 
     # ---------------- 图层开关 ----------------
     def _toggle_nodes(self, *_a):
@@ -2818,51 +3012,51 @@ class HmMainWindow(QMainWindow):
         if self.model is None or not self.sel_elems:
             self.log("isolate: select elements first")
             return
-        keep = {self.model.elements[i].config for i in self.sel_elems}
-        for cfg, g in self._groups.items():
-            on = cfg in keep
+        keep = {self._group_key(self.model.elements[i]) for i in self.sel_elems}
+        for key, g in self._groups.items():
+            on = key in keep
             g.visible = on
             g.actor.SetVisibility(on)
-            color, _ = self._group_style.get(cfg, (None, True))
-            self._group_style[cfg] = (color, on)
+            color, _ = self._group_style.get(key, (None, True))
+            self._group_style[key] = (color, on)
         self._rebuild_tree()
         self._render()
-        self.log(f"isolate configs {sorted(keep)}")
+        self.log(f"isolate groups {sorted(map(str, keep))}")
 
     def _mask_hide(self):
         if self.model is None or not self.sel_elems:
             self.log("hide: select elements first")
             return
-        hide = {self.model.elements[i].config for i in self.sel_elems}
-        for cfg in hide:
-            g = self._groups.get(cfg)
+        hide = {self._group_key(self.model.elements[i]) for i in self.sel_elems}
+        for key in hide:
+            g = self._groups.get(key)
             if g is None:
                 continue
             g.visible = False
             g.actor.SetVisibility(False)
-            color, _ = self._group_style.get(cfg, (None, True))
-            self._group_style[cfg] = (color, False)
+            color, _ = self._group_style.get(key, (None, True))
+            self._group_style[key] = (color, False)
         self._rebuild_tree()
         self._render()
-        self.log(f"hide configs {sorted(hide)}")
+        self.log(f"hide groups {sorted(map(str, hide))}")
 
     def _mask_show_all(self):
-        for cfg, g in self._groups.items():
+        for key, g in self._groups.items():
             g.visible = True
             g.actor.SetVisibility(True)
-            color, _ = self._group_style.get(cfg, (None, True))
-            self._group_style[cfg] = (color, True)
+            color, _ = self._group_style.get(key, (None, True))
+            self._group_style[key] = (color, True)
         self._rebuild_tree()
         self._render()
         self.log("show all components")
 
     def _mask_reverse(self):
-        for cfg, g in self._groups.items():
+        for key, g in self._groups.items():
             on = not g.visible
             g.visible = on
             g.actor.SetVisibility(on)
-            color, _ = self._group_style.get(cfg, (None, True))
-            self._group_style[cfg] = (color, on)
+            color, _ = self._group_style.get(key, (None, True))
+            self._group_style[key] = (color, on)
         self._rebuild_tree()
         self._render()
 

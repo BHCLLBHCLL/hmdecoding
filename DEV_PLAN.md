@@ -197,7 +197,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 - [x] 3.1(部分) 解码 collector 段: db 11.x comp/mat/prop/group 名称+精确 id（M3.2 落地, bb8ae7e; truck 大 id 第三格式已破, id=u32(off-16) + TAB 填充名称, comps 313/313 on oracle）; load/system/vector 待分类（XtraNodes type 516/517 暂归 others）
 - [ ] 3.1 卡片引用/颜色解码（MAT/PROP 记录尾部 float 卡数据, 未对齐语义未解）
 - [x] 3.2(部分) 解码 Groups（C_Spotweld_1, type=1538 记录）；元素↔组件归属映射=M3.1 segid 已落地；Sets/Titles 待破
-- [ ] 3.3 Model Browser 官方文件夹树（Assemblies/Components/Materials/Properties/Sets/Groups/Load/System/Vector）+ 勾选显隐 + 右键 Create/Edit/Card
+- [x] 3.3 Model Browser 官方文件夹树（Assemblies/Components/Materials/Properties/Sets/Groups/Load/System/Vector）+ 组件勾选显隐（渲染按 comp 分组, comps 全量含无元素） + 右键 Create/Edit/Card（内存级; Card 为占位对话框, 卡数据 M6.1 未解码; Sets/Load 分流为名称启发式, 精确分类待记录 type 字段; System/Vector 空文件夹占位）
 - [ ] 3.4 Entity Editor 可编辑（名称/ID/颜色）；组件颜色驱动 VTK
 - [ ] 3.5 可视化: color by component/config；toolbar Collectors 组（当前 comp/mat/prop/loadcol）
 - [ ] 3.6 收尾元素解码边界: cfg55 MPC 非 strict 79→91/91、seat_start cfg60、icw 链尾 33 坐标

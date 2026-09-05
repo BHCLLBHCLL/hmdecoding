@@ -1568,9 +1568,10 @@ def _scan_v11_records(p):
         [u32 19][u32 0][u16 type][u16 name_len][u16 0][name...]
     type: 1538 组 (FA 家族), 258/259 surface 组 (truck), 516/517 其它 collector
     (XtraNodes/RigidWallPlan 等). 记录以 4 字节标记 19 (13 00 00 00) 全字节搜索.
+    扫描全文件 (truck 的 Set_/SLAVE_ 记录位于 23MB 区, 8M 上限会切掉).
     """
     recs = []
-    lim = min(len(p), 8_000_000)
+    lim = len(p)
     start = 0
     while True:
         i = p.find(b"\x13\x00\x00\x00", start, lim)
