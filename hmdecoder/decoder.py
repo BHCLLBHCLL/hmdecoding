@@ -689,6 +689,7 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                                     got = (fp, nslave + 1, [master] + sl, 56)
                                     break
                         nodes_off = rec + fp + 4
+                        cfgv = (u32(p, rec + fp) >> 16) - 256
                         n = 0
                         while n < 12 and nodes_off + 4 * n + 4 <= len(p) and u32(p, nodes_off + 4 * n) != 0:
                             n += 1
@@ -698,9 +699,12 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                             continue
                         if u32(p, nodes_off + 4 * n) != 0:
                             continue
+                        # cfg60 固定 2 节点 (@+32 计数字段会被误当第 3 节点): 特判截断
+                        if cfgv == 60 and n > 2:
+                            n = 2
                         nds = [u32(p, nodes_off + 4 * j) for j in range(n)]
                         if all(1 <= r <= row_count for r in nds):
-                            got = (prelen, n, nds, (u32(p, rec + fp) >> 16) - 256)
+                            got = (prelen, n, nds, cfgv)
                             break
                     if got:
                         break
