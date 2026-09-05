@@ -13,6 +13,8 @@
 
 当前代码: hm_gui.py（2565 行，8 区骨架）+ hmdecoder/decoder.py（核心差分逆向解码器）。
 
+12 维度功能完整度与深度分析见 docs/gap_analysis.md（双口径实测: 完整度% + 深度 L1-L4，整体 27.8%，主战层 = 读端 + oracle 流水线）。
+
 ---
 
 ## 0. v2 刷新要点（相对 v1 的变化）
@@ -164,81 +166,111 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 
 ---
 
-## 5. 到 100% 的分期路线图
+## 5. 到 100% 的详细多阶段开发规划（M1–M8，12 域对齐）
 
 原则: 先解码、再内核、再面板深度、最后求解生态与写回。GUI 按钮可提前铺齐（完整度），深度必须跟数据走。
+每个里程碑含: 目标域/任务清单/验收门禁（证据）/预估周期。完整度与深度轨迹引自 docs/gap_analysis.md §5。
 
-### Phase 0 — 基线冻结与 catalog（1–2 周）· 目标深度 ~22%
-- 本文件为范围基线；爬 help###.htm + 解析 .mac + hmmenu.set strings → 生成 hm_gui/catalog.json
-- 入口自动回归测试（菜单/按钮清单，防回退）
-- 完成定义: 200+ 面板 + 宏页按钮的机器可读状态表（含深度分）
+### M1 — 基线 catalog + 面板级 oracle 骨架（2 周）· 域 5/6/12 · 完整度 28%→33%
 
-### Phase 1 — 网格编辑工具闭环（6–8 周）· 目标深度 ~30%
-- Tool 页做实: Translate/Rotate/Reflect/Scale/Project/Position/Permute（多实体、预览、命令栈）
-- Organize（改 config/伪组件）、Delete 面板、Detach、Replace、Split/Combine（2D）
-- Numbers（屏幕 ID）、Find（节点↔单元）、Count 官方分类、Edges/Faces/Features 查询
-- Check Elems + Quality Index 只读（长宽比/歪斜/雅可比）
-- Normals/Reverse；选择过滤器（by config/by ID/displayed）
-- 完成定义: 对 WS_3.2 完成「选-变-查-删-撤销」全流程不开 HyperMesh
+- [ ] 1.1 爬 help/hm/topics/panels/help###.htm（200+ 面板按钮级规格）→ 生成 hm_gui/catalog.json（面板名/页/按钮/输入类型/状态: missing|nyi|shallow|partial|done）
+- [ ] 1.2 解析 hm/bin/win64/*.mac（*createbutton 文本）→ 宏菜单页/按钮/工具提示入 catalog
+- [ ] 1.3 hmmenu.set strings 提取 → 与 catalog 交叉校验（页↔按钮映射）
+- [ ] 1.4 入口自动回归测试: 遍历 catalog 断言每按钮有接线或灰显 NYI（防入口回退），并入 gui_pick_final 冒烟
+- [ ] 1.5 面板级 oracle 骨架: hmbatch Tcl 无头驱动 3 个示范面板（nodes/translate/renumber），录制「输入→模型变化」快照（脚本 scripts/panel_oracle.tcl + 比对器）
+- 验收门禁: catalog.json 覆盖 200+ 面板与 5 宏页；冒烟 ALL PASS；3 面板 oracle 快照可重放
 
-### Phase 2 — collector 解码与浏览器（8–12 周）· 目标深度 ~42%
-- 解码 Component/Material/Property/Load/System/Vector/Set/Title 段（对 hmbatch Tcl oracle）
-- Model Browser 官方文件夹 + 勾选显隐 + 右键 Create/Edit/Card
-- Entity Editor 可编辑（名称/ID/颜色），组件颜色驱动 VTK
-- Visualization: color by component/config
-- 收尾 cfg55 MPC 非 strict（79→91/91）
-- 完成定义: 教程模型的组件数/名称与 HM Model Browser 一致（oracle 对照脚本）
+### M2 — 网格编辑工具闭环（6 周）· 域 7/11 · 完整度 33%→40% · 深度 L2
 
-### Phase 3 — 几何显示与 Geom 页（10–14 周）· 目标深度 ~55%
-- 解码 points/lines/surfaces/solids（或从显示网格重建特征边）
-- Geom 页: nodes(on geom)/points/lines/surfaces/solids 的 create/edit 子集
-- Distance/Length/Mass Calc 对几何+网格
-- 完成定义: 打开含几何教程模型，Geom 页与 HM 显示一致
+- [ ] 2.1 Tool 页全量: rotate/reflect/scale/project/position/permute（多实体、N1/N2 预览、命令栈可撤销）
+- [ ] 2.2 organize（改 config/伪组件）、delete 面板（by id/window/collector）、detach、replace
+- [ ] 2.3 2D 编辑: split/combine/order change（四/三边形）
+- [ ] 2.4 numbers（屏幕 ID 标注）、find（节点↔单元关联）、count 官方分类、edges/faces/features 查询
+- [ ] 2.5 质量只读: check elems + qualityindex（长宽比/歪斜/雅可比/翘曲），报告进 Entity Editor
+- [ ] 2.6 选择过滤器: by config/by ID range/displayed only + 隐藏线拾取
+- 验收门禁: WS_3.2 全流程「选-变-查-删-撤销」不开 HyperMesh 完成；每面板 M1.5 的 oracle 快照比对 PASS
 
-### Phase 4 — 求解生态（12–16 周）· 目标深度 ~70%
-- 卡片解码（hwtemplex 对照 + templates）: card image、config edit
-- Analysis 页: constraints/forces/moments/pressures/temperatures/velocities/accelerations + loadcols/systems/loadsteps/output blocks/control cards
-- Solver Browser/Loadsteps Browser
-- 导出对齐官方 writer（INP/K 用官方模板）
-- 完成定义: 建一个带 BC/载荷/卡片的小模型，导出文件与 HM 官方模板 diff 通过
+### M3 — collector 解码与浏览器（10 周）· 域 3/6/7 · 完整度 40%→48% · 深度 L2+
 
-### Phase 5 — .hm 写回（8–12 周）· 目标深度 ~80%
-- 反向编码器: nodes/elements/collectors/cards 段写回（差分验证: 写→hmbatch 读→oracle 计数一致）
-- round-trip 测试: decode→encode→decode 全等
-- 完成定义: 任意教程模型 decode→改一处→encode，hmbatch 打开后 oracle 计数/坐标全对
+- [ ] 3.1 定位并解码 collector 段: Component/Material/Property/Load/System/Vector collector（对 hmbatch oracle 逐实体: id/名称/颜色/卡片引用）
+- [ ] 3.2 解码 Sets/Groups/Titles；元素↔组件归属映射
+- [ ] 3.3 Model Browser 官方文件夹树（Assemblies/Components/Materials/Properties/Sets/Groups/Load/System/Vector）+ 勾选显隐 + 右键 Create/Edit/Card
+- [ ] 3.4 Entity Editor 可编辑（名称/ID/颜色）；组件颜色驱动 VTK
+- [ ] 3.5 可视化: color by component/config；toolbar Collectors 组（当前 comp/mat/prop/loadcol）
+- [ ] 3.6 收尾元素解码边界: cfg55 MPC 非 strict 79→91/91、seat_start cfg60、icw 链尾 33 坐标
+- 验收门禁: 教程模型组件数/名称与 HM Model Browser oracle 对照一致；非 strict content 91/91；节点坐标全对
 
-### Phase 6 — 网格生成（16–24 周）· 目标深度 ~88%
-- 2D automesh（advancing front/paving 自研或移植）、smooth、QI 修复
-- 3D tetramesh（自研或调用 tetrameshdll.dll 导出接口）、hex/solid map
-- Shrink wrap、midsurface 派生
-- 完成定义: 对几何面生成与 HM 同量级质量的 2D/3D 网格
+### M4 — 几何解码与 Geom 页（10 周）· 域 4/11 · 完整度 48%→55% · 深度 L2
 
-### Phase 7 — 后处理与收尾（8–12 周）· 目标深度 ~100%
-- Post 页: contour/deformed/vector/isosurfaces/section cut/legend/animate（需结果文件解码: .h3d/.res）
-- XYPlots、多视口、裁剪、隐藏线
-- Morphing/Connectors 按教程收尾
-- 完成定义: 打开结果文件完成 contour 工作流
+- [ ] 4.1 解码几何实体: points/lines/surfaces/solids（段结构 + oracle 计数/拓扑对照）
+- [ ] 4.2 几何可视化: 线框/着色面/边特征显示；与网格叠加显隐
+- [ ] 4.3 Geom 页 create 子集: nodes(on geometry)/points/lines（两节点/on surface）/circles/arcs
+- [ ] 4.4 Geom 页 edit 子集: line edit（combine/split/trim 基础）、point edit、edge edit
+- [ ] 4.5 distance/length/mass calc 对几何+网格
+- 验收门禁: 含几何教程模型（bottle/arm2D 等）解码几何与 HM 计数一致；Geom 页创建线/面并导出 STEP 重开验证
+
+### M5 — .hm 写端（10 周）· 域 2/8 · 完整度 55%→62% · 深度 L2+
+
+- [ ] 5.1 反向编码器最小集: 节点段（5 布局）+ 元素段（A/B 型）写回
+- [ ] 5.2 差分验证环: 写 → hmbatch 读 → oracle 计数/坐标/元素内容一致（count+content+coords 三门禁复用）
+- [ ] 5.3 collector/几何段写回（随 M3/M4 结构）
+- [ ] 5.4 round-trip 测试: decode→encode→decode 三同（任意 123 文件样本）
+- [ ] 5.5 编辑保存链路: GUI 改一处（移动节点/改组件）→ 存 .hm → hmbatch 重开验证
+- 验收门禁: 20 个代表文件 round-trip 全等；三门禁写后 PASS
+
+### M6 — 求解生态（12 周）· 域 9/8 · 完整度 62%→70% · 深度 L2
+
+- [ ] 6.1 卡片解码: card image（hwtemplex.dll + templates 对照）: PSHELL/PSOLID/MAT1/CQUAD4 等先 4 张
+- [ ] 6.2 Analysis 页: constraints/forces/moments/pressures/temperatures/velocities/accelerations + loadcols/systems/loadsteps/output blocks/control cards
+- [ ] 6.3 Solver Browser + Loadsteps Browser
+- [ ] 6.4 导出对齐官方模板: INP（Abaqus）先一个求解器，diff 官方 lsdyna/optistruct writer 的输出风格
+- 验收门禁: 建带 BC/载荷/卡片的小模型，导出 INP 与 HM 导出逐行 diff（关键卡片）通过
+
+### M7 — 网格生成（14 周）· 域 10 · 完整度 70%→77% · 深度 L2（产物对拍口径）
+
+- [ ] 7.1 2D automesh: paving/advancing front 自研基础版 + 尺寸/偏置控制
+- [ ] 7.2 smooth（Laplacian 基础）+ QI 修复（长宽比/歪斜局部翻边）
+- [ ] 7.3 3D tetramesh: Delaunay + 质量优化基础版（或调用 tetrameshdll.dll 导出接口，许可风险备选）
+- [ ] 7.4 hex/solid map 基础（映射法拉伸）
+- [ ] 7.5 产物量化对拍: 同几何同尺寸下与 HM 产物比较单元数/质量分布直方图（对拍报告脚本）
+- 验收门禁: 对 bottle/arm2D 几何生成网格，质量分布与 HM 同量级（非数值等价，见 gap_analysis §2 口径）
+
+### M8 — 后处理与收尾（8 周）· 域 9/7 · 完整度 77%→88% · 深度 L2+
+
+- [ ] 8.1 结果解码: .h3d/.res（先位移/应力两个场量）
+- [ ] 8.2 Post 页: contour/deformed/vector/isosurfaces/section cut/legend/animate
+- [ ] 8.3 XYPlots: curves/plots（时间历程）
+- [ ] 8.4 多视口/窗体/球面裁剪/隐藏线（域 7 收尾）
+- [ ] 8.5 Morphing/Connectors 按教程收尾（浅层）
+- 验收门禁: 打开 HM 导出的结果文件完成 contour 工作流，与 HM Post 同工程截图对照
+
+**最终态: 完整度 ~88%（余 12% = 边界项: 网格内核数值等价豁免 + 求解器广度裁剪，入册 docs/NYI_INVENTORY.md），深度 L2+ 全覆盖、域 1/12 达 L3+。**
 
 ---
 
-## 6. 指标追踪（每阶段汇报）
+## 6. 指标追踪（每里程碑汇报，12 域口径）
 
-| 门禁 | 基线(v2) | 目标 |
-|---|---|---|
-| count 门禁（123 文件） | node 119/123 · elem 123/123 | node 123/123 |
-| 元素内容级 strict | 91/91 | 91/91（不回退） |
-| 元素内容级非 strict | 79/91 | 91/91（Phase 2 收尾） |
-| 节点坐标 content | 167 万节点，剩 icw 尾 33 | 全对 |
-| catalog 面板状态 | 待建 | 200+ 面板全建 + 深度分 |
-| 写回 round-trip | 0% | Phase 5 100% |
+完整度/深度逐域轨迹见 docs/gap_analysis.md §0/§3；里程碑门禁:
+
+| 门禁 | 基线 | M3 | M5 | M8 |
+|---|---|---|---|---|
+| 12 域完整度均分 | 27.8% | 48% | 62% | 88% |
+| count 门禁（123 文件） | node 119/123 · elem 123/123 | 不变 | 写后 PASS | 写后 PASS |
+| 元素内容级 strict | 91/91 | 91/91 | 91/91 | 91/91 |
+| 元素内容级非 strict | 79/91 | 91/91（M3.6） | 91/91 | 91/91 |
+| 节点坐标 content | 剩 icw 尾 33 | 全对（M3.6） | 全对 | 全对 |
+| catalog 面板状态 | 待建 | 200+ 全建 | 全建+深度分 | 全建+深度分 |
+| 面板级 oracle | 未建 | 全量接线（M3 起） | 全量 | 全量 |
+| 写回 round-trip | 0% | — | 20 文件全等 | 全等 |
 
 ## 7. 风险与依赖
 
 1. 核心 200 面板行为在 hmobj.dll（C++ 二进制）——无源码；行为规格只能靠 help HTML + Tcl oracle 差分重建，深度 1.0 的验收成本高（每面板需 oracle 场景）。
-2. 网格生成算法体量大（automesh/tetra 是工业级内核）——自研只能达可用级，1.0 等价需大量调参或调用官方 DLL（许可风险）。
-3. 卡片/模板生态广（每求解器一套 templates）——Phase 4 需按求解器优先级裁剪（Abaqus/OptiStruct 先行）。
+2. 网格生成算法体量大（automesh/tetra 是工业级内核）——自研只能达可用级；与官方数值等价不在目标内（gap_analysis §2 口径: 产物量化对拍）。
+3. 卡片/模板生态广（每求解器一套 templates）——M6 按求解器优先级裁剪（Abaqus 先行）。
 4. 写回格式未验证——目前只验证过读；写回需从 hwio 层逆向或差分试错。
-5. 人力: 每 Phase 的完成定义以 oracle 对照脚本为准，不以主观感受为准。
+5. 人力: 每里程碑的验收门禁以 oracle 对照脚本为准，不以主观感受为准。
+6. 边界项（求解器广度、CATIA 类导入、网格内核数值等价豁免）统一入册 docs/NYI_INVENTORY.md，随里程碑扫描再生，不丢账。
 
 ---
 
