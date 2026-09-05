@@ -1583,8 +1583,10 @@ def _parse_collectors_v11(p):
     """v11 collector 解码: 返回 (comps, mats, props, groups, others), 各为 {id: name}.
 
     组件段头 = [7277][0][count][0][2][0]['C'(67)][0] + 20B preamble, 记录紧随其后.
-    材料/属性/组无独立段头, 靠记录扫描 + 名称前缀/type 字段分类:
+    材料/属性/组无独立段头(mat/prop 段仅有计数标记, 无 7277/type char), 靠记录扫描 + 名称前缀/type 字段分类:
         M_ 前缀 -> 材料, P_ 前缀 -> 属性, type=1538 -> 组, 其余 -> 其它 (assembly/contact).
+    注: 名称前缀为启发式, 对非标准命名的 mat/prop (如 frame_assembly_3 的 mat 'CE_Locations_Dup')
+    会漏分类到 mats/props(但仍出现在 others, 名称未丢); 精确分类需 mat/prop 段 type 字段(未破).
     id 精确取自每条记录起点前 16 字节 (u16), 天然包含被删除实体的跳号
     (如 frame_assembly_1 的 comp 13 / mat 1 删除, ids 自动得到 1..12,14..18 / 2..6).
     """
