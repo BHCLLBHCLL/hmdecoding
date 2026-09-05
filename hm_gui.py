@@ -526,7 +526,8 @@ class EditableModel:
             "geo_points": [[p.id, p.x, p.y, p.z]
                            for p in self.geo_points.values()],
             "comps": self.comps, "mats": self.mats,
-            "props": self.props, "groups": self.groups, "others": self.others,
+            "props": self.props, "groups": self.groups,
+            "others": [[i, n] for i, n in self.others],
         }
 
     def save_json(self, path):
@@ -553,7 +554,7 @@ class EditableModel:
         m.mats = {int(k): v for k, v in d.get("mats", {}).items()}
         m.props = {int(k): v for k, v in d.get("props", {}).items()}
         m.groups = {int(k): v for k, v in d.get("groups", {}).items()}
-        m.others = {int(k): v for k, v in d.get("others", {}).items()}
+        m.others = [(int(r[0]), r[1]) for r in d.get("others", [])]
         m.node_count = len(m.nodes)
         m.elem_count = len(m.elements)
         em = cls(m, source_path=d.get("source", ""))
