@@ -1222,6 +1222,7 @@ class HmMainWindow(QMainWindow):
         # 选择状态: 单元用模型索引, 节点用 id
         self.sel_elems = set()
         self.sel_nodes = set()
+        self.sel_geo_points = set()
 
         self._build_menus()
         self._build_toolbar()
@@ -1847,6 +1848,7 @@ class HmMainWindow(QMainWindow):
         self._elem_hl_actor = self._node_hl_actor = self._geo_hl_actor = None
         self.sel_elems.clear()
         self.sel_nodes.clear()
+        self.sel_geo_points.clear()
 
         if self.model is None:
             self._rebuild_tree()
@@ -2662,6 +2664,8 @@ class HmMainWindow(QMainWindow):
                 f"命中 0 (遗漏 {len(miss)}); 输入范围或 id 越界.")
             self.statusBar().showMessage(f"Geom point edit: 命中 0")
             return
+        # 持久化选集: 让后续 Geom / length 面板可直接消费
+        self.sel_geo_points = set(hit)
         # Entity Editor 摘要: 按选中 id 升序列坐标
         lines = [f"Geom points selected: {len(hit)}"]
         for i in hit[:200]:
@@ -3072,6 +3076,7 @@ class HmMainWindow(QMainWindow):
             # 与 display points (展示用 marker) 概念不同.
             "points": self._toggle_geo,
             "point edit": self.select_geo_point_dialog,
+            "length": self._measure_geo_length,
             "translate": self.move_node_dialog,
             "rotate": lambda: self._transform_nodes("rotate"),
             "reflect": lambda: self._transform_nodes("reflect"),
@@ -3122,6 +3127,54 @@ class HmMainWindow(QMainWindow):
         d = ((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2) ** 0.5
         self.log(f"distance {nids[0]}-{nids[1]} = {d:.8g}")
         self.statusBar().showMessage(f"distance = {d:.8g}")
+
+    def _measure_geo_length(self):
+        """Geom / length 面板: 选中几何点 id 两两成对累计长度.
+
+        HyperMesh 2019 该面板对 *lengthmark (lines) 求和, 但 line record 解码
+        仍在 NYI-M4-2. 这里用几何点端点对 (按 id 排序后两两配对) 给出等价的
+        "总长度"近似, 用 *lengthmark 选择集输入. 仅对 db 11.05 规整点有效.
+        """
+        if not self._need_model():
+            return
+        # 收集选中集 (节点优先; 若无节点则尝试几何点 id 输入框)
+        if not self.sel_geo_points:
+            from PyQt5.QtWidgets import QInputDialog
+            text, ok = QInputDialog.getText(self, "Geom / length",
+                "输入几何点 id (范围/逗号分隔), 例如 1,3,5-12:")
+            if not ok or not text.strip():
+                return
+            ids = sorted(_parse_id_list(text))
+            ids = [i for i in ids if i in self.model.geo_points]
+        else:
+            ids = sorted(self.sel_geo_points)
+        if len(ids) < 2:
+            self.log("length: 需要至少 2 个几何点 id")
+            self.statusBar().showMessage("Geom / length: id 数 < 2")
+            return
+        # 两两配对 (HyperMesh 习惯: 按 id 升序, 相邻为一段)
+        total = 0.0
+        segs = []
+        for a, b in zip(ids[0::2], ids[1::2]):
+            pa, pb = self.model.geo_points[a], self.model.geo_points[b]
+            d = ((pa.x - pb.x) ** 2 + (pa.y - pb.y) ** 2
+                 + (pa.z - pb.z) ** 2) ** 0.5
+            total += d
+            segs.append((a, b, d))
+        leftover = ids[len(segs) * 2:]
+        # Entity Editor 摘要
+        lines = [f"Geom / length: {len(segs)} 段, 总长 {total:.8g}"]
+        if leftover:
+            lines.append(f"  警告: {len(leftover)} 个 id 未配对 (奇数): {leftover[:10]}"
+                         + ("..." if len(leftover) > 10 else ""))
+        for a, b, d in segs[:200]:
+            lines.append(f"  {a:>6} -> {b:<6}  L={d:.6f}")
+        if len(segs) > 200:
+            lines.append(f"  ... 共 {len(segs)} 段, 仅显示前 200")
+        self.info.setPlainText("\n".join(lines))
+        self.log(f"Geom / length: {len(segs)} 段, 总长 {total:.8g} "
+                 f"(未配对 {len(leftover)})")
+        self.statusBar().showMessage(f"Geom / length = {total:.8g}")
 
     def _count_selection(self):
         self.log(f"count: nodes={len(self.sel_nodes)} elems={len(self.sel_elems)} "
