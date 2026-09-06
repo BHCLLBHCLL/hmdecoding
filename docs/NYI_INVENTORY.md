@@ -94,12 +94,38 @@
 
 ---
 
-## M5 — 写端 / 逆向编码（待启动）
+## M5 — 写端 / 逆向编码（部分落地）
 
-- **NYI-M5-1** `.hm` 写入端整体缺位（domain 2, 0%）。
-- **NYI-M5-2** Round-trip 校验缺位。
+### NYI-M5-1 完整 .hm 二进制写端 (collector 段 / 92B 节点 / B 型元素段 / 多版本)
 
-> 重启条件待 M4 收尾后评估。
+- **触发场景**：调用 `hmdecoder.hm_writer.encode_minimal_db11_05()` 之外的写端能力。
+- **当前行为**：`hmdecoder.hm_writer` v0 已能写出 52B 布局 A 节点段 + 元素段 A 型锚；
+  自家 `decode()` 能 round-trip 节点坐标全等（如 WS_3.2_3d_tetra_finish.hm 6408/6408 PASS）。
+  但 collector (comps/mats/props/groups)、几何点、92B/56B 节点布局、元素段 B 型（链式 eid）、
+  db ≥ 13 多版本兼容均未实现。`scripts/m5_roundtrip.py` JSON 路径全等。
+- **何时重启**：
+  (a) collector 段逆向完成（HM 内部标签名格式未知，需 oracle）；
+  (b) 92B 节点布局样本 ≥ 3 个 oracle；
+  (c) 元素段 B 型样本 ≥ 3 个 oracle；
+  (d) hmbatch 端到端验证：encode → hmbatch 读 → 计数/坐标/单元内容三同。
+- **已知证据**：
+  - `hmdecoder/hm_writer.py:encode_minimal_db11_05` v0 实现；
+  - `scripts/m5_roundtrip.py` JSON 三同门禁脚本；
+  - 当前覆盖: WS_3.2_3d_tetra_finish.hm 节点段 6408/6408 全等。
+
+### NYI-M5-2 编辑保存链路 (GUI → .hm 直写 → hmbatch 重开验证)
+
+- **触发场景**：GUI 改一处（移动节点/改组件名）→ `Save Project (.hmj)` 落盘 → hmbatch 读回比对。
+- **当前行为**：GUI Save 路径是 `.hmj` JSON，不直接写 .hm 二进制；
+  `hmdecoder/hm_writer.py` v0 不被 GUI 调用。
+- **何时重启**：
+  (a) NYI-M5-1 collector 段写端完成；
+  (b) M3.4 Entity Editor 可写字段完成；
+  (c) GUI `Save Project (.hmj)` 菜单额外提供 "Save .hm (v0)" 子项；
+  (d) hmbatch 端到端回归: GUI 编辑 → 落盘 → hmbatch 重开比对 oracle 一致。
+- **已知证据**：
+  - 现有 `save_hmj` (HMModel → JSON) 路径 OK；
+  - `EditableModel.apply(cmd)` 命令栈已支持 undo/redo (M3.3)。
 
 ---
 
@@ -137,4 +163,7 @@
 
 - 2026-09-06 创建本文件（M4.1 收尾 + M4.2 Geom 页接线），按 DEV_PLAN.md §7 item 6 入册
   M4 全家族 NYI（NYI-M4-1..5）+ M1-M3 历史边界 + M5-M8 待启动占位。
+- 2026-09-06 M4.3 落地（Geom/length 长度汇总）；NYI-M4-1..5 维持登记。
+- 2026-09-06 M5 部分落地：hm_writer.py v0 (节点段 52B + 元素段 A 型锚) + m5_roundtrip.py 三同门禁。
+  NYI-M5-1/2 从"待启动"转为"部分落地"：节点段 round-trip 全等，collector/几何/B型元素 NYI 维持。
 - 后续每次重启 NYI 项目，需在变更记录追加 commit hash / oracle 增量 / 覆盖率。
