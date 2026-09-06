@@ -514,6 +514,48 @@ def _scan_v13_node_segs(p, lim=10000.0):
             segs.append((None, len(r), r[0], 96, 12, False))
     return segs
 
+def _shifted_node_sig(p, pos):
+    """56B 移位节点记录签名: [pad4=0][id@+4][pad8=0][x@+16][y@+24][z@+32] (icw 链尾布局)."""
+    if pos + 56 > len(p):
+        return None
+    if u32(p, pos) != 0 or u32(p, pos + 8) != 0 or u32(p, pos + 12) != 0:
+        return None
+    nid = u32(p, pos + 4)
+    if not 1 <= nid <= 10_000_000:
+        return None
+    x, y, z = d64(p, pos + 16), d64(p, pos + 24), d64(p, pos + 32)
+    if not (abs(x) < 1e9 and abs(y) < 1e9 and abs(z) < 1e9):
+        return None
+    return nid, x, y, z
+
+
+def _scan_shifted_tail(p, pos, remaining, prev_nid):
+    """链段尾漂移流扫描 (icw_ex1/2): 正则 56B 链记录 (坐标@+0, id@+44) 在段尾切换为
+    [pad4][id@+4][pad8][x@+16][y@+24][z@+32][tail16] 布局, 且每 4 条夹 16B interlude
+    (02 00 00 00|handle|0|handle), 记录相对 56B 窗口逐条漂移 16B. 从漂移起点按字节
+    推进: 签名命中读节点, 否则 pos+16 命中则跳过 interlude, 再否则流结束.
+    验收 >=2 条且 id 自 prev_nid 上升, 防正则记录坐标 denormal 的假阳性.
+    返回 {nid: Node} 或 None (签名不符)."""
+    nodes = {}
+    last = prev_nid
+    while pos + 56 <= len(p) and len(nodes) < remaining:
+        sig = _shifted_node_sig(p, pos)
+        if sig is None:
+            if _shifted_node_sig(p, pos + 16) is not None:
+                pos += 16  # interlude
+                continue
+            break
+        nid, x, y, z = sig
+        if nid <= last:
+            break
+        nodes[nid] = Node(nid, x, y, z)
+        last = nid
+        pos += 56
+    if len(nodes) < 2 or min(nodes) <= prev_nid:
+        return None
+    return nodes
+
+
 def parse_nodes(p, cfg):
     hi, count, base, stride, idoff, chain = cfg
     nodes = {}
@@ -534,6 +576,13 @@ def parse_nodes(p, cfg):
             raw = u32(p, rec + 44)
             nid = raw - 1
             x, y, z = d64(p, rec), d64(p, rec + 8), d64(p, rec + 16)
+            # 尾段漂移 (icw_ex1/2): id 字段归零且常规 x 读点落入 pad (denormal) -> 记录流
+            # 已切换为移位布局, 交字节流扫描器接管剩余记录
+            if raw == 0 and abs(x) < 1e-5:
+                tail = _scan_shifted_tail(p, rec, count - len(nodes), prev_nid)
+                if tail:
+                    nodes.update(tail)
+                    break
             # 字段跳号 (raw 相对前一条骤升 >1): 删除节点 id 复用, 该记录 id 纠正为跳号前字段值
             # (SEAT_MODEL/seatbelt 删除残留: 文件存原始 id, HM 载入时把被删 id 复用给后继;
             #  连续跳号时 prev_raw 即被删 id 的字段值)

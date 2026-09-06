@@ -62,7 +62,7 @@ hmdecoder.HMModel 当前实体: nodes / elements / display_points / geo_points /
 
 | 数据能力 | 深度 | 现状与缺口 |
 |---|---|---|
-| 读 .hm 节点 | 92% | 52/92/56B-chain/68/96B 五布局；坐标 content 级 167 万节点对照仅剩 icw_ex1/2 链尾 33 坐标错；count 门禁 node-ok 119/123（4 文件 ±1 为 oracle 源差异，非解码 bug）；链式删除残留字节恢复 |
+| 读 .hm 节点 | 95% | 52/92/56B-chain/68/96B 五布局；坐标 content 级 167 万节点全对（M3.6 闭环: icw_ex1/2 链尾 33 坐标 — 段尾记录切换 [pad4][id@+4][pad8][x@+16] 移位布局+16B interlude 漂移, 字节流扫描器接管）；count 门禁 node-ok 119/123（4 文件 ±1 为 oracle 源差异，非解码 bug）；链式删除残留字节恢复 |
 | 读 .hm 元素 | 93% | elem-ok 123/123；strict content 91/91（eid/config/节点全对）；非 strict 82/91。剩 9 文件全为 cfg55 MPC oracle 导出剪枝（纯 dn: truck 17/dummy 11/seat_deformer 11 等, binary 按记录 n 取真值, oracle 集不含超读 slave）+ seat_start family-1 cfg60（1 dn） |
 | 显示点 / 几何点 | 60% | 能显示，几乎不能编辑 |
 | 组件 / 材料 / 属性 | 20%（db 11.x 局部） | db 11.x 已解码（M3.2）: comp/mat/prop/group 名称+精确 id（含删除跳号）,
