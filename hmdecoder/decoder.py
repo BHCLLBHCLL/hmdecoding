@@ -1696,10 +1696,15 @@ def _parse_collectors_v11(p):
         if i < 0:
             break
         if (i + 16 <= len(p) and 0 < u32(p, i + 4) < 10_000_000
-                and u32(p, i + 8) in (0, 2) and u32(p, i + 12) in (0x43, 0x7B)):
-            comp_count = u32(p, i + 4)
-            comp_start = i + 20
-            break
+                and u32(p, i + 8) in (0, 2)):
+            # Y 值 (u32@+12) 随模型/组件卡类型变化 (FA 'C'(0x43)/truck '{'(0x7B)/bracket '='(0x3D)),
+            # 不作类型判据; 改用"段头后确有记录跟随"验证, 防误抓非 collector 的 X∈{0,2} 段.
+            cnt = u32(p, i + 4)
+            after = [r for r in recs if r[0] >= i + 20]
+            if after and len(after) >= max(1, int(cnt * 0.5)):
+                comp_count = cnt
+                comp_start = i + 20
+                break
         start = i + 2
     plain = [(o, t, n) for (o, k, t, n) in recs if k == "A"]
     btype = [(o, t, n) for (o, k, t, n) in recs if k == "B"]
