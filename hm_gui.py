@@ -33,8 +33,11 @@ from pathlib import Path
 import numpy as np
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QThread, QTimer, pyqtSignal
-from PyQt5.QtGui import QColor, QFont, QIcon, QPainter, QPen, QPixmap
+from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF, QThread, QTimer, pyqtSignal
+from PyQt5.QtGui import (
+    QBrush, QColor, QFont, QIcon, QLinearGradient, QPainter, QPainterPath,
+    QPen, QPixmap, QPolygon,
+)
 from PyQt5.QtWidgets import (
     QAction, QApplication, QButtonGroup, QCheckBox, QComboBox, QDialog,
     QDialogButtonBox, QDoubleSpinBox, QFileDialog, QFormLayout, QFrame,
@@ -57,14 +60,36 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from hmdecoder import decode, Elem, HMModel, Node  # noqa: E402
 from hmdecoder.decoder import DisplayPoint, GeoPoint  # noqa: E402
 
-APP_TITLE = "HyperMesh - hmdecoder"
+APP_TITLE = "HyperMesh 2019"
+HM_PROFILE_DEFAULT = "Abaqus (Explicit)"
 ALTAIR_ROOT = Path(r"C:/Program Files/Altair/2019")
 HM_HELP_UI = ALTAIR_ROOT / "help" / "hm" / "topics" / "chapter_heads" / "workspace_hm_classic_r.htm"
 HM_HELP_PANELS = ALTAIR_ROOT / "help" / "hm" / "topics" / "panels" / "panels_r.htm"
 
-# HyperMesh 2019 经典工作区配色 (参考 hmopengl + pphdecoding 浅色 CAE 风格)
-HM_BG_TOP = (0.46, 0.56, 0.70)
-HM_BG_BOT = (0.84, 0.87, 0.91)
+# 视口渐变: 对齐 HM 2019 打开案例时的深蓝建模窗口 (顶 #334C66 → 底 #1A2633)
+HM_BG_DARK_TOP = (0.200, 0.298, 0.400)
+HM_BG_DARK_BOT = (0.102, 0.149, 0.200)
+HM_BG_LIGHT_TOP = (0.46, 0.56, 0.70)
+HM_BG_LIGHT_BOT = (0.84, 0.87, 0.91)
+HM_BG_TOP = HM_BG_DARK_TOP
+HM_BG_BOT = HM_BG_DARK_BOT
+
+HM_PAGE_LABELS = {
+    "Geom": "Geometry", "1D": "1D", "2D": "2D", "3D": "3D",
+    "Analysis": "Analysis", "Tool": "Tool", "Post": "Post",
+}
+
+# 材料库预置 (求解器卡片语义未解码时的参考目录)
+HM_MAT_LIBRARY = (
+    ("Steel", "MAT1", 7.85e-9, 210000.0, 0.30),
+    ("Aluminum", "MAT1", 2.70e-9, 70000.0, 0.33),
+    ("Titanium", "MAT1", 4.43e-9, 110000.0, 0.32),
+    ("Cast Iron", "MAT1", 7.20e-9, 120000.0, 0.26),
+    ("ABS", "MAT1", 1.05e-9, 2300.0, 0.35),
+    ("Rubber", "HYPER", 1.10e-9, 10.0, 0.49),
+    ("Glass", "MAT1", 2.50e-9, 70000.0, 0.23),
+    ("Copper", "MAT1", 8.96e-9, 110000.0, 0.34),
+)
 
 # 底部面板页: 官方 page menu (help/hm/topics/panels/panels_r.htm + 2019 截图)
 # 每页是列列表, 每列自上而下的面板名. 已实现的面板会打开对应功能, 其余提示 NYI.
@@ -120,35 +145,41 @@ HM_PANEL_PAGES = {
 }
 
 HM_QSS = """
-QMainWindow { background: #e4e4e4; }
+QMainWindow { background: #f0f0f0; }
 QMenuBar { background: #f0f0f0; border-bottom: 1px solid #b8b8b8; padding: 1px; }
-QMenuBar::item { padding: 3px 8px; }
+QMenuBar::item { padding: 3px 9px; }
 QMenuBar::item:selected { background: #cde4f7; }
 QMenu { background: #f7f7f7; border: 1px solid #a0a0a0; }
+QMenu::item { padding: 3px 22px 3px 10px; }
 QMenu::item:selected { background: #cde4f7; color: #000; }
 QToolBar { background: #ececec; border: none; border-bottom: 1px solid #c0c0c0;
-           spacing: 2px; padding: 2px; }
+           spacing: 1px; padding: 1px 3px; }
 QToolBar QToolButton {
-    padding: 3px 6px; margin: 1px;
+    padding: 2px 3px; margin: 1px;
     border: 1px solid transparent; border-radius: 2px;
 }
 QToolBar QToolButton:hover { background: #d6ebf8; border: 1px solid #7eb6d9; }
 QToolBar QToolButton:pressed { background: #b8d8ef; }
 QToolBar QToolButton:checked { background: #b8d8ef; border: 1px solid #5a9ac6; }
 QStatusBar { background: #ececec; border-top: 1px solid #b8b8b8; }
+QStatusBar QLabel { padding: 0 6px; }
 QSplitter::handle { background: #c4c4c4; width: 3px; height: 3px; }
 QTabWidget::pane { border: 1px solid #9a9a9a; background: #ffffff; }
 QTabBar::tab {
     background: #d8d8d8; border: 1px solid #9a9a9a; border-bottom: none;
-    padding: 3px 12px; margin-right: 1px;
+    padding: 3px 11px; margin-right: 1px;
 }
 QTabBar::tab:selected { background: #ffffff; font-weight: bold; }
 QTreeWidget, QPlainTextEdit, QTextBrowser, QTableWidget {
     background: #ffffff; border: none; font-size: 11px;
 }
+QTreeWidget#HmModelTree::item { height: 18px; padding: 1px 2px; }
+QTreeWidget#HmModelTree::item:selected { background: #cde4f7; color: #111; }
+QTreeWidget#HmModelTree::item:hover { background: #e8f3fb; }
 QHeaderView::section {
-    background: #e8e8e8; border: 1px solid #c0c0c0; padding: 2px 4px;
-    font-weight: bold;
+    background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
+        stop:0 #f6f6f6, stop:1 #e0e0e0);
+    border: 1px solid #c0c0c0; padding: 2px 5px; font-weight: bold;
 }
 #PaneTitleBar {
     background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
@@ -156,16 +187,27 @@ QHeaderView::section {
     color: white; font-weight: bold; font-size: 11px; padding: 3px 6px;
 }
 #PaneFrame { background: #ffffff; border: 1px solid #9a9a9a; }
+#ViewStrip {
+    background: #d8d8d8; border-right: 1px solid #9a9a9a;
+}
+#GfxBar {
+    background: #e4e4e4; border-top: 1px solid #b0b0b0;
+    border-bottom: 1px solid #9a9a9a;
+}
 #HmPanelBar { background: #dcdcdc; border-top: 1px solid #9a9a9a; }
 QPushButton#HmPanelBtn {
-    background: #d0d0d0; border: 1px solid #7a7a7a;
-    padding: 3px 8px; min-width: 78px; min-height: 18px; font-size: 11px;
+    background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
+        stop:0 #f3f3f3, stop:1 #c6c6c6);
+    border: 1px solid #7a7a7a; border-top-color: #efefef;
+    border-left-color: #efefef;
+    padding: 2px 7px; min-width: 78px; min-height: 17px; font-size: 11px;
 }
 QPushButton#HmPanelBtn:hover { background: #e8e8e8; }
 QPushButton#HmPanelBtn:pressed, QPushButton#HmPanelBtn:checked {
     background: #b8d0e8; border: 1px solid #3d7eaf;
 }
 QRadioButton#HmPageRadio { font-size: 11px; padding: 1px 2px; }
+QComboBox { padding: 1px 4px; min-height: 18px; }
 QLabel#ModelOverlay {
     color: #1a1a1a; background: transparent; font-size: 11px;
     font-family: "Segoe UI", Arial;
@@ -245,9 +287,9 @@ def vtk_cell_type(config, n):
     return None  # RIGIDLINK/RBE3 等变长: 扇形展开 (首节点 -> 其余)
 
 
-# 分组调色板 (定性配色, 循环使用)
+# 分组调色板 (首色对齐 HM 2019 案例的洋红网格)
 PALETTE = [
-    (0.80, 0.47, 0.65), (0.36, 0.62, 0.85), (0.45, 0.78, 0.45),
+    (0.82, 0.28, 0.70), (0.36, 0.62, 0.85), (0.45, 0.78, 0.45),
     (0.93, 0.68, 0.30), (0.75, 0.55, 0.85), (0.40, 0.80, 0.75),
     (0.90, 0.45, 0.35), (0.60, 0.75, 0.35), (0.55, 0.55, 0.80),
     (0.85, 0.80, 0.40), (0.50, 0.70, 0.55), (0.80, 0.60, 0.50),
@@ -3089,6 +3131,8 @@ class HmMainWindow(QMainWindow):
             "isolate": self._mask_isolate,
             "edit element": self.add_element_dialog,
             "elem types": self._show_elem_types,
+            # M7.2 Laplacian smooth 骨架 (NYI-M7-1/3/4: automesh/tetramesh/hex 未实现)
+            "smooth": self._apply_laplacian_smooth,
             # M6 Card image 骨架 (NYI-M6-1: 真实卡数据需 hmbatch oracle)
             "card edit": self._show_card_templates_dialog,
             "control cards": self._show_card_templates_dialog,
@@ -3245,6 +3289,40 @@ class HmMainWindow(QMainWindow):
                        "G3": 12, "G4": 13},
         }
         return format_card_text(name, examples.get(name, {}))
+
+    def _apply_laplacian_smooth(self):
+        """2D / smooth 面板: Laplacian 平滑 (M7.2 骨架).
+
+        NYI-M7-1: 2D automesh (需几何 record 解码) 未实现.
+        NYI-M7-3: tetramesh (需 Delaunay 工业级内核) 未实现.
+        当前实现: 基于现有单元拓扑 Laplacian 平滑 (不依赖几何 record).
+        """
+        if not self._need_model():
+            return
+        from PyQt5.QtWidgets import QInputDialog
+        iters, ok = QInputDialog.getInt(self, "Laplacian smooth (M7.2)",
+            "迭代次数 (建议 3-10):", 5, 1, 50, 1)
+        if not ok:
+            return
+        try:
+            from hmdecoder.mesher import laplacian_smooth_2d, smooth_quality_report
+        except ImportError:
+            QMessageBox.warning(self, APP_TITLE, "mesher 模块未就绪")
+            return
+        before = {nid: (n.x, n.y, n.z) for nid, n in self.model.nodes.items()}
+        after = laplacian_smooth_2d(self.model, iterations=iters)
+        # 报告到 Entity Editor
+        lines = [
+            f"Laplacian smooth: iterations={iters}",
+            smooth_quality_report(self.model, before, after),
+            "",
+            "(NYI-M7-1/3/4: automesh/tetramesh/hex 仍未实现; "
+            "当前为纯拓扑 Laplacian 平滑骨架, 不依赖几何 record)",
+        ]
+        self.info.setPlainText("\n".join(lines))
+        self.log(f"Laplacian smooth: iters={iters}, "
+                 f"interior_disp={smooth_quality_report(self.model, before, after)}")
+        self.statusBar().showMessage(f"smooth: {iters} iter (preview only)")
 
     def _mask_isolate(self):
         if self.model is None or not self.sel_elems:
