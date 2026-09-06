@@ -35,8 +35,7 @@ import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF, QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import (
-    QBrush, QColor, QFont, QIcon, QLinearGradient, QPainter, QPainterPath,
-    QPen, QPixmap, QPolygon,
+    QBrush, QColor, QFont, QIcon, QPainter, QPen, QPixmap, QPolygon,
 )
 from PyQt5.QtWidgets import (
     QAction, QApplication, QButtonGroup, QCheckBox, QComboBox, QDialog,
@@ -1077,71 +1076,568 @@ class HmView(QVTKRenderWindowInteractor):
         self.sig_move.emit()
 
 
+class HmIcons:
+    """矢量图标工厂 (参考 pphdecoding AppIcons): 工具栏 / 模型树 / 视口条共用缓存."""
+
+    _cache = {}
+    _FOLDER = {
+        "folder_asm": ("#e8a317", "#ffd966", "#8a5a00"),
+        "folder_comp": ("#2e75b6", "#5b9bd5", "#1f4e79"),
+        "folder_mat": ("#43a047", "#81c784", "#1b5e20"),
+        "folder_prop": ("#f9a825", "#ffe082", "#f57f17"),
+        "folder_set": ("#8e24aa", "#ce93d8", "#4a148c"),
+        "folder_grp": ("#00897b", "#80cbc4", "#004d40"),
+        "folder_load": ("#e53935", "#ef9a9a", "#b71c1c"),
+        "folder_sys": ("#607d8b", "#b0bec5", "#37474f"),
+        "folder_vec": ("#00acc1", "#80deea", "#006064"),
+        "folder_other": ("#8d6e63", "#d7ccc8", "#4e342e"),
+        "folder_title": ("#eceff1", "#ffffff", "#78909c"),
+        "folder_nodes": ("#1565c0", "#90caf9", "#0d47a1"),
+        "folder_elems": ("#ad1457", "#f48fb1", "#880e4f"),
+        "folder_geo": ("#6d4c41", "#bcaaa4", "#3e2723"),
+    }
+
+    @classmethod
+    def get(cls, name, size=20):
+        key = (name, size)
+        if key not in cls._cache:
+            cls._cache[key] = QIcon(cls._paint(name, size))
+        return cls._cache[key]
+
+    @classmethod
+    def swatch(cls, rgb, size=16):
+        key = ("swatch", tuple(round(float(c), 4) for c in rgb[:3]), size)
+        if key not in cls._cache:
+            pm = QPixmap(size, size)
+            pm.fill(Qt.transparent)
+            p = QPainter(pm)
+            p.setRenderHint(QPainter.Antialiasing)
+            m = max(2, size // 8)
+            p.setPen(QPen(QColor("#333333"), 1))
+            p.setBrush(QBrush(QColor.fromRgbF(*rgb[:3])))
+            p.drawRoundedRect(m, m, size - 2 * m, size - 2 * m, 2, 2)
+            p.end()
+            cls._cache[key] = QIcon(pm)
+        return cls._cache[key]
+
+    @classmethod
+    def _paint(cls, name, size):
+        pm = QPixmap(size, size)
+        pm.fill(Qt.transparent)
+        p = QPainter(pm)
+        p.setRenderHint(QPainter.Antialiasing, True)
+        m = max(1, size // 10)
+        r = QRectF(m, m, size - 2 * m, size - 2 * m)
+        if name in cls._FOLDER:
+            tab, body, edge = cls._FOLDER[name]
+            cls._draw_folder(p, r, tab, body, edge)
+        else:
+            drawer = getattr(cls, f"_draw_{name}", None)
+            if drawer:
+                drawer(p, r, size)
+            else:
+                cls._draw_generic(p, r, size)
+        p.end()
+        return pm
+
+    @staticmethod
+    def _pen(color, w=1.5):
+        pen = QPen(QColor(color))
+        pen.setWidthF(w)
+        pen.setJoinStyle(Qt.RoundJoin)
+        pen.setCapStyle(Qt.RoundCap)
+        return pen
+
+    @classmethod
+    def _draw_folder(cls, p, r, tab, body, edge):
+        p.setPen(cls._pen(edge, 1.15))
+        p.setBrush(QBrush(QColor(tab)))
+        p.drawRoundedRect(QRectF(r.left(), r.top(), r.width() * 0.46,
+                                 r.height() * 0.30), 1.4, 1.4)
+        p.setBrush(QBrush(QColor(body)))
+        p.drawRoundedRect(QRectF(r.left(), r.top() + r.height() * 0.22,
+                                 r.width(), r.height() * 0.70), 1.6, 1.6)
+
+    @classmethod
+    def _draw_generic(cls, p, r, _s=0):
+        p.setPen(cls._pen("#555"))
+        p.setBrush(QBrush(QColor("#dde3ea")))
+        p.drawRoundedRect(r, 3, 3)
+
+    @classmethod
+    def _draw_new(cls, p, r, _s):
+        p.setPen(cls._pen("#37474f", 1.3))
+        p.setBrush(QBrush(QColor("#fff")))
+        p.drawRoundedRect(r, 1.5, 1.5)
+        p.setBrush(QBrush(QColor("#eceff1")))
+        fold = QPolygon([
+            QPoint(int(r.right() - r.width() * 0.38), int(r.top())),
+            QPoint(int(r.right()), int(r.top() + r.height() * 0.38)),
+            QPoint(int(r.right() - r.width() * 0.38),
+                   int(r.top() + r.height() * 0.38)),
+        ])
+        p.drawPolygon(fold)
+
+    @classmethod
+    def _draw_open(cls, p, r, _s):
+        cls._draw_folder(p, r, "#f4c542", "#ffd966", "#2e75b6")
+
+    @classmethod
+    def _draw_save(cls, p, r, _s):
+        p.setPen(cls._pen("#1f4e79", 1.2))
+        p.setBrush(QBrush(QColor("#5b9bd5")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setBrush(QBrush(QColor("#fff")))
+        p.drawRect(QRectF(r.left() + r.width() * 0.22, r.top(),
+                          r.width() * 0.56, r.height() * 0.36))
+        p.setBrush(QBrush(QColor("#eaf2fb")))
+        p.drawRoundedRect(QRectF(r.left() + r.width() * 0.18,
+                                 r.top() + r.height() * 0.48,
+                                 r.width() * 0.64, r.height() * 0.40), 1, 1)
+
+    @classmethod
+    def _draw_print(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#90a4ae")))
+        p.drawRoundedRect(QRectF(r.left(), r.top() + r.height() * 0.28,
+                                 r.width(), r.height() * 0.42), 2, 2)
+        p.setBrush(QBrush(QColor("#fff")))
+        p.drawRect(QRectF(r.left() + r.width() * 0.22, r.top(),
+                          r.width() * 0.56, r.height() * 0.34))
+        p.drawRect(QRectF(r.left() + r.width() * 0.18,
+                          r.top() + r.height() * 0.58,
+                          r.width() * 0.64, r.height() * 0.34))
+
+    @classmethod
+    def _draw_undo(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 2.0))
+        p.setBrush(Qt.NoBrush)
+        p.drawArc(r.toRect(), 40 * 16, 250 * 16)
+        cx, cy = r.center().x(), r.center().y()
+        tip = QPolygon([
+            QPoint(int(r.left()), int(cy)),
+            QPoint(int(r.left() + r.width() * 0.32), int(cy - r.height() * 0.28)),
+            QPoint(int(r.left() + r.width() * 0.32), int(cy + r.height() * 0.08)),
+        ])
+        p.setBrush(QBrush(QColor("#1565c0")))
+        p.setPen(Qt.NoPen)
+        p.drawPolygon(tip)
+
+    @classmethod
+    def _draw_redo(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 2.0))
+        p.setBrush(Qt.NoBrush)
+        p.drawArc(r.toRect(), 250 * 16, 250 * 16)
+        cx, cy = r.center().x(), r.center().y()
+        tip = QPolygon([
+            QPoint(int(r.right()), int(cy)),
+            QPoint(int(r.right() - r.width() * 0.32), int(cy - r.height() * 0.28)),
+            QPoint(int(r.right() - r.width() * 0.32), int(cy + r.height() * 0.08)),
+        ])
+        p.setBrush(QBrush(QColor("#1565c0")))
+        p.setPen(Qt.NoPen)
+        p.drawPolygon(tip)
+
+    @classmethod
+    def _draw_fit(cls, p, r, _s):
+        p.setPen(cls._pen("#37474f", 1.6))
+        p.setBrush(Qt.NoBrush)
+        s = r.width() * 0.28
+        for x, y, sx, sy in (
+            (r.left(), r.top(), 1, 1), (r.right(), r.top(), -1, 1),
+            (r.left(), r.bottom(), 1, -1), (r.right(), r.bottom(), -1, -1),
+        ):
+            p.drawLine(QPoint(int(x), int(y)), QPoint(int(x + sx * s), int(y)))
+            p.drawLine(QPoint(int(x), int(y)), QPoint(int(x), int(y + sy * s)))
+        p.setBrush(QBrush(QColor("#90a4ae")))
+        p.drawEllipse(r.adjusted(r.width() * 0.28, r.height() * 0.28,
+                                 -r.width() * 0.28, -r.height() * 0.28))
+
+    @classmethod
+    def _draw_rotate(cls, p, r, _s):
+        p.setPen(cls._pen("#6a1b9a", 1.5))
+        p.setBrush(Qt.NoBrush)
+        p.drawEllipse(r.adjusted(2, 2, -2, -2))
+        p.drawLine(QPoint(int(r.center().x()), int(r.top() + 2)),
+                   QPoint(int(r.center().x()), int(r.center().y())))
+        p.setBrush(QBrush(QColor("#8e24aa")))
+        p.drawEllipse(QRectF(r.center().x() - 2, r.center().y() - 2, 4, 4))
+
+    @classmethod
+    def _draw_pan(cls, p, r, _s):
+        p.setPen(cls._pen("#37474f", 1.5))
+        cx, cy = int(r.center().x()), int(r.center().y())
+        p.drawLine(QPoint(int(r.left()), cy), QPoint(int(r.right()), cy))
+        p.drawLine(QPoint(cx, int(r.top())), QPoint(cx, int(r.bottom())))
+
+    @classmethod
+    def _draw_zoom(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 1.4))
+        p.setBrush(QBrush(QColor("#bbdefb")))
+        p.drawEllipse(r.adjusted(0, 0, -r.width() * 0.22, -r.height() * 0.22))
+        p.setPen(cls._pen("#1565c0", 2.0))
+        p.drawLine(QPoint(int(r.right() - r.width() * 0.28),
+                          int(r.bottom() - r.height() * 0.28)),
+                   QPoint(int(r.right()), int(r.bottom())))
+
+    @classmethod
+    def _draw_box(cls, p, r, _s):
+        pen = cls._pen("#2e7d32", 1.3)
+        pen.setStyle(Qt.DashLine)
+        p.setPen(pen)
+        p.setBrush(QBrush(QColor(46, 125, 50, 40)))
+        p.drawRect(r.adjusted(1, 2, -1, -2))
+
+    @classmethod
+    def _draw_shaded(cls, p, r, _s):
+        p.setPen(cls._pen("#1a237e", 1.2))
+        p.setBrush(QBrush(QColor("#c2185b")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left()), int(r.bottom())),
+            QPoint(int(r.center().x()), int(r.top())),
+            QPoint(int(r.right()), int(r.bottom())),
+        ]))
+
+    @classmethod
+    def _draw_wire(cls, p, r, _s):
+        p.setPen(cls._pen("#1a237e", 1.2))
+        p.setBrush(Qt.NoBrush)
+        pts = QPolygon([
+            QPoint(int(r.left()), int(r.bottom())),
+            QPoint(int(r.center().x()), int(r.top())),
+            QPoint(int(r.right()), int(r.bottom())),
+        ])
+        p.drawPolygon(pts)
+        p.drawLine(QPoint(int(r.center().x()), int(r.top())),
+                   QPoint(int(r.center().x()), int(r.bottom())))
+
+    @classmethod
+    def _draw_hidden(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#b0bec5")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left()), int(r.bottom())),
+            QPoint(int(r.center().x()), int(r.top())),
+            QPoint(int(r.right()), int(r.bottom())),
+        ]))
+        p.setPen(cls._pen("#eceff1", 1.4))
+        p.drawLine(QPoint(int(r.left() + 2), int(r.bottom() - 3)),
+                   QPoint(int(r.right() - 2), int(r.bottom() - 3)))
+
+    @classmethod
+    def _draw_points(cls, p, r, _s):
+        p.setPen(Qt.NoPen)
+        p.setBrush(QBrush(QColor("#1565c0")))
+        for fx, fy in ((0.25, 0.28), (0.72, 0.32), (0.48, 0.70)):
+            p.drawEllipse(QPointF(r.left() + r.width() * fx,
+                                  r.top() + r.height() * fy), 2.2, 2.2)
+
+    @classmethod
+    def _draw_del(cls, p, r, _s):
+        p.setPen(cls._pen("#c62828", 2.0))
+        p.drawLine(QPoint(int(r.left() + 1), int(r.top() + 1)),
+                   QPoint(int(r.right() - 1), int(r.bottom() - 1)))
+        p.drawLine(QPoint(int(r.right() - 1), int(r.top() + 1)),
+                   QPoint(int(r.left() + 1), int(r.bottom() - 1)))
+
+    @classmethod
+    def _draw_help(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 1.3))
+        p.setBrush(QBrush(QColor("#bbdefb")))
+        p.drawEllipse(r)
+        p.setPen(cls._pen("#0d47a1", 1.2))
+        p.setFont(QFont("Segoe UI", max(7, int(r.height() * 0.55)), QFont.Bold))
+        p.drawText(r.toRect(), Qt.AlignCenter, "?")
+
+    @classmethod
+    def _draw_find(cls, p, r, _s):
+        cls._draw_zoom(p, r, _s)
+
+    @classmethod
+    def _draw_mask(cls, p, r, _s):
+        p.setPen(cls._pen("#6d4c41", 1.2))
+        p.setBrush(QBrush(QColor("#d7ccc8")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setBrush(QBrush(QColor("#8d6e63")))
+        p.drawRect(QRectF(r.left(), r.top(), r.width() * 0.45, r.height()))
+
+    @classmethod
+    def _draw_isolate(cls, p, r, _s):
+        p.setPen(cls._pen("#ef6c00", 1.2))
+        p.setBrush(QBrush(QColor("#ffe0b2")))
+        p.drawEllipse(r)
+        p.setBrush(QBrush(QColor("#ef6c00")))
+        p.drawEllipse(r.adjusted(r.width() * 0.28, r.height() * 0.28,
+                                 -r.width() * 0.28, -r.height() * 0.28))
+
+    @classmethod
+    def _draw_numbers(cls, p, r, _s):
+        p.setPen(cls._pen("#37474f", 1.1))
+        p.setBrush(QBrush(QColor("#fff9c4")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setFont(QFont("Segoe UI", max(6, int(r.height() * 0.5)), QFont.Bold))
+        p.drawText(r.toRect(), Qt.AlignCenter, "12")
+
+    @classmethod
+    def _draw_count(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 1.1))
+        p.setBrush(QBrush(QColor("#e3f2fd")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setFont(QFont("Segoe UI", max(6, int(r.height() * 0.45)), QFont.Bold))
+        p.drawText(r.toRect(), Qt.AlignCenter, "N")
+
+    @classmethod
+    def _draw_front(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#90caf9")))
+        p.drawRect(r.adjusted(2, 2, -2, -2))
+
+    @classmethod
+    def _draw_top(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#a5d6a7")))
+        p.drawRect(r.adjusted(1, r.height() * 0.28, -1, -r.height() * 0.28))
+
+    @classmethod
+    def _draw_side(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#ffcc80")))
+        p.drawRect(r.adjusted(r.width() * 0.28, 1, -r.width() * 0.28, -1))
+
+    @classmethod
+    def _draw_iso(cls, p, r, _s):
+        p.setPen(cls._pen("#37474f", 1.15))
+        p.setBrush(QBrush(QColor("#90caf9")))
+        cx, cy = r.center().x(), r.center().y()
+        top = QPolygon([
+            QPoint(int(cx), int(r.top())),
+            QPoint(int(r.right()), int(cy - r.height() * 0.12)),
+            QPoint(int(cx), int(cy + r.height() * 0.08)),
+            QPoint(int(r.left()), int(cy - r.height() * 0.12)),
+        ])
+        p.drawPolygon(top)
+        p.setBrush(QBrush(QColor("#64b5f6")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left()), int(cy - r.height() * 0.12)),
+            QPoint(int(cx), int(cy + r.height() * 0.08)),
+            QPoint(int(cx), int(r.bottom())),
+            QPoint(int(r.left()), int(r.bottom() - r.height() * 0.18)),
+        ]))
+        p.setBrush(QBrush(QColor("#42a5f5")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(cx), int(cy + r.height() * 0.08)),
+            QPoint(int(r.right()), int(cy - r.height() * 0.12)),
+            QPoint(int(r.right()), int(r.bottom() - r.height() * 0.18)),
+            QPoint(int(cx), int(r.bottom())),
+        ]))
+
+    @classmethod
+    def _draw_pick(cls, p, r, _s):
+        p.setPen(cls._pen("#333", 1.3))
+        p.setBrush(QBrush(QColor("#fff")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left() + 1), int(r.top() + 1)),
+            QPoint(int(r.left() + 1), int(r.bottom() - r.height() * 0.15)),
+            QPoint(int(r.left() + r.width() * 0.38), int(r.bottom() - r.height() * 0.38)),
+            QPoint(int(r.right() - 1), int(r.bottom() - 1)),
+        ]))
+
+    @classmethod
+    def _draw_section(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#b0bec5")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setPen(cls._pen("#c62828", 2.0))
+        p.drawLine(QPoint(int(r.left()), int(r.top() + r.height() * 0.7)),
+                   QPoint(int(r.right()), int(r.top() + r.height() * 0.3)))
+
+    @classmethod
+    def _draw_measure(cls, p, r, _s):
+        p.setPen(cls._pen("#6a1b9a", 1.4))
+        p.drawLine(QPoint(int(r.left()), int(r.bottom() - 2)),
+                   QPoint(int(r.right()), int(r.top() + 2)))
+        p.drawLine(QPoint(int(r.left()), int(r.bottom() - 5)),
+                   QPoint(int(r.left()), int(r.bottom())))
+        p.drawLine(QPoint(int(r.right()), int(r.top())),
+                   QPoint(int(r.right()), int(r.top() + 5)))
+
+    @classmethod
+    def _draw_refresh(cls, p, r, _s):
+        p.setPen(cls._pen("#2e7d32", 1.8))
+        p.setBrush(Qt.NoBrush)
+        p.drawArc(r.toRect(), 50 * 16, 260 * 16)
+
+    @classmethod
+    def _draw_filter(cls, p, r, _s):
+        p.setPen(cls._pen("#455a64", 1.2))
+        p.setBrush(QBrush(QColor("#90a4ae")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left()), int(r.top() + 1)),
+            QPoint(int(r.right()), int(r.top() + 1)),
+            QPoint(int(r.center().x() + r.width() * 0.12), int(r.center().y())),
+            QPoint(int(r.center().x() + r.width() * 0.12), int(r.bottom())),
+            QPoint(int(r.center().x() - r.width() * 0.12), int(r.bottom())),
+            QPoint(int(r.center().x() - r.width() * 0.12), int(r.center().y())),
+        ]))
+
+    @classmethod
+    def _draw_create(cls, p, r, _s):
+        p.setPen(cls._pen("#2e7d32", 2.0))
+        cx, cy = int(r.center().x()), int(r.center().y())
+        p.drawLine(QPoint(int(r.left() + 2), cy), QPoint(int(r.right() - 2), cy))
+        p.drawLine(QPoint(cx, int(r.top() + 2)), QPoint(cx, int(r.bottom() - 2)))
+
+    @classmethod
+    def _draw_ent_node(cls, p, r, _s):
+        p.setPen(cls._pen("#1565c0", 1.2))
+        p.setBrush(QBrush(QColor("#42a5f5")))
+        p.drawEllipse(r.adjusted(r.width() * 0.22, r.height() * 0.22,
+                                 -r.width() * 0.22, -r.height() * 0.22))
+
+    @classmethod
+    def _draw_ent_line(cls, p, r, _s):
+        p.setPen(cls._pen("#ef6c00", 2.0))
+        p.drawLine(QPoint(int(r.left() + 1), int(r.bottom() - 2)),
+                   QPoint(int(r.right() - 1), int(r.top() + 2)))
+
+    @classmethod
+    def _draw_ent_surf(cls, p, r, _s):
+        p.setPen(cls._pen("#2e7d32", 1.2))
+        p.setBrush(QBrush(QColor("#81c784")))
+        p.drawRoundedRect(r.adjusted(1, 3, -1, -3), 2, 2)
+
+    @classmethod
+    def _draw_ent_solid(cls, p, r, _s):
+        cls._draw_iso(p, r, _s)
+
+    @classmethod
+    def _draw_ent_elem(cls, p, r, _s):
+        cls._draw_shaded(p, r, _s)
+
+    @classmethod
+    def _draw_color_mode(cls, p, r, _s):
+        colors = ("#e91e63", "#2196f3", "#4caf50", "#ff9800")
+        cells = (
+            QRectF(r.left(), r.top(), r.width() * 0.48, r.height() * 0.48),
+            QRectF(r.left() + r.width() * 0.52, r.top(),
+                   r.width() * 0.48, r.height() * 0.48),
+            QRectF(r.left(), r.top() + r.height() * 0.52,
+                   r.width() * 0.48, r.height() * 0.48),
+            QRectF(r.left() + r.width() * 0.52, r.top() + r.height() * 0.52,
+                   r.width() * 0.48, r.height() * 0.48),
+        )
+        p.setPen(cls._pen("#455a64", 0.8))
+        for cell, c in zip(cells, colors):
+            p.setBrush(QBrush(QColor(c)))
+            p.drawRoundedRect(cell, 1, 1)
+
+    @classmethod
+    def _draw_mesh(cls, p, r, _s):
+        p.setPen(cls._pen("#ad1457", 1.15))
+        p.setBrush(QBrush(QColor("#f48fb1")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.left()), int(r.bottom())),
+            QPoint(int(r.center().x()), int(r.top())),
+            QPoint(int(r.right()), int(r.bottom())),
+        ]))
+        p.drawLine(QPoint(int(r.center().x()), int(r.top())),
+                   QPoint(int(r.center().x()), int(r.bottom())))
+
+    @classmethod
+    def _draw_leaf_prop(cls, p, r, _s):
+        p.setPen(cls._pen("#f9a825", 1.2))
+        p.setBrush(QBrush(QColor("#fff59d")))
+        p.drawRoundedRect(r, 2, 2)
+        p.setPen(cls._pen("#f57f17", 1.1))
+        for i in range(3):
+            y = r.top() + r.height() * (0.30 + i * 0.22)
+            p.drawLine(QPoint(int(r.left() + 3), int(y)),
+                       QPoint(int(r.right() - 3), int(y)))
+
+    @classmethod
+    def _draw_leaf_mat(cls, p, r, _s):
+        p.setPen(cls._pen("#2e7d32", 1.2))
+        p.setBrush(QBrush(QColor("#81c784")))
+        cx, cy = r.center().x(), r.center().y()
+        w, h = r.width() * 0.40, r.height() * 0.40
+        p.drawPolygon(QPolygon([
+            QPoint(int(cx), int(cy - h)), QPoint(int(cx + w), int(cy)),
+            QPoint(int(cx), int(cy + h)), QPoint(int(cx - w), int(cy)),
+        ]))
+
+    @classmethod
+    def _draw_leaf_title(cls, p, r, _s):
+        p.setPen(cls._pen("#78909c", 1.15))
+        p.setBrush(QBrush(QColor("#fff")))
+        p.drawRoundedRect(r, 1.5, 1.5)
+        p.setFont(QFont("Segoe UI", max(6, int(r.height() * 0.5)), QFont.Bold))
+        p.setPen(cls._pen("#546e7a", 1.0))
+        p.drawText(r.toRect(), Qt.AlignCenter, "T")
+
+    @classmethod
+    def _draw_leaf_set(cls, p, r, _s):
+        p.setPen(cls._pen("#6a1b9a", 1.2))
+        p.setBrush(QBrush(QColor("#ce93d8")))
+        p.drawEllipse(r.adjusted(2, 2, -2, -2))
+
+    @classmethod
+    def _draw_leaf_load(cls, p, r, _s):
+        p.setPen(cls._pen("#b71c1c", 1.3))
+        p.setBrush(QBrush(QColor("#ef9a9a")))
+        p.drawPolygon(QPolygon([
+            QPoint(int(r.center().x()), int(r.top())),
+            QPoint(int(r.right()), int(r.bottom() - 1)),
+            QPoint(int(r.left()), int(r.bottom() - 1)),
+        ]))
+
+    @classmethod
+    def _draw_leaf_asm(cls, p, r, _s):
+        p.setPen(cls._pen("#e65100", 1.2))
+        p.setBrush(QBrush(QColor("#ffcc80")))
+        p.drawRoundedRect(r.adjusted(1, 3, -1, -3), 2, 2)
+
+    @classmethod
+    def _draw_leaf_node(cls, p, r, _s):
+        cls._draw_ent_node(p, r, _s)
+
+    @classmethod
+    def _draw_leaf_elem(cls, p, r, _s):
+        cls._draw_ent_elem(p, r, _s)
+
+    @classmethod
+    def _draw_leaf_disp(cls, p, r, _s):
+        p.setPen(cls._pen("#00838f", 1.2))
+        p.setBrush(QBrush(QColor("#80deea")))
+        p.drawEllipse(r.adjusted(3, 3, -3, -3))
+
+    @classmethod
+    def _draw_leaf_geo(cls, p, r, _s):
+        p.setPen(cls._pen("#5d4037", 1.4))
+        cx, cy = int(r.center().x()), int(r.center().y())
+        p.drawLine(QPoint(int(r.left() + 1), cy), QPoint(int(r.right() - 1), cy))
+        p.drawLine(QPoint(cx, int(r.top() + 1)), QPoint(cx, int(r.bottom() - 1)))
+        p.setBrush(QBrush(QColor("#8d6e63")))
+        p.drawEllipse(QRectF(r.center().x() - 2, r.center().y() - 2, 4, 4))
+
+
 def hm_icon(kind, size=20):
-    """绘制与 HyperMesh 工具栏相近的 20px 线框图标 (无需外部资源)."""
-    pm = QPixmap(size, size)
-    pm.fill(Qt.transparent)
-    p = QPainter(pm)
-    p.setRenderHint(QPainter.Antialiasing)
-    pen = QPen(QColor("#2b4c6f"))
-    pen.setWidthF(1.5)
-    p.setPen(pen)
-    p.setBrush(Qt.NoBrush)
-    s = size
-    if kind == "new":
-        p.drawRect(4, 3, 11, 14)
-        p.drawLine(11, 3, 11, 8)
-        p.drawLine(11, 8, 15, 8)
-    elif kind == "open":
-        p.setBrush(QColor("#f4d27a"))
-        p.drawRect(3, 8, 14, 8)
-        p.drawRect(3, 5, 6, 3)
-    elif kind == "save":
-        p.setBrush(QColor("#3d7eaf"))
-        p.drawRoundedRect(3, 3, 14, 14, 1, 1)
-        p.setBrush(QColor("#e8e8e8"))
-        p.drawRect(6, 3, 8, 5)
-    elif kind == "undo":
-        p.drawArc(4, 5, 12, 10, 40 * 16, 250 * 16)
-        p.drawLine(4, 7, 4, 12)
-        p.drawLine(4, 12, 8, 12)
-    elif kind == "redo":
-        p.drawArc(4, 5, 12, 10, 250 * 16, 250 * 16)
-        p.drawLine(16, 7, 16, 12)
-        p.drawLine(12, 12, 16, 12)
-    elif kind == "fit":
-        p.drawRect(4, 4, 12, 12)
-        p.drawLine(4, 4, 8, 8)
-        p.drawLine(16, 4, 12, 8)
-        p.drawLine(4, 16, 8, 12)
-        p.drawLine(16, 16, 12, 12)
-    elif kind == "rotate":
-        p.drawEllipse(5, 5, 10, 10)
-        p.drawLine(10, 5, 10, 10)
-        p.drawLine(10, 10, 14, 12)
-    elif kind == "box":
-        p.setPen(QPen(QColor("#2b4c6f"), 1, Qt.DashLine))
-        p.drawRect(4, 5, 12, 10)
-    elif kind == "shaded":
-        p.setBrush(QColor("#8eb4d8"))
-        p.drawPolygon(QtGui.QPolygon([
-            QtCore.QPoint(4, 14), QtCore.QPoint(10, 4), QtCore.QPoint(16, 14)]))
-    elif kind == "wire":
-        p.drawPolygon(QtGui.QPolygon([
-            QtCore.QPoint(4, 14), QtCore.QPoint(10, 4), QtCore.QPoint(16, 14)]))
-        p.drawLine(4, 14, 16, 14)
-        p.drawLine(10, 4, 10, 14)
-    elif kind == "del":
-        p.setPen(QPen(QColor("#a33"), 2))
-        p.drawLine(5, 5, 15, 15)
-        p.drawLine(15, 5, 5, 15)
-    elif kind == "help":
-        p.drawEllipse(4, 4, 12, 12)
-        f = QFont("Segoe UI", 10, QFont.Bold)
-        p.setFont(f)
-        p.drawText(pm.rect(), Qt.AlignCenter, "?")
-    p.end()
-    return QIcon(pm)
+    """兼容入口: 工具栏 / 旧调用走 HmIcons 缓存."""
+    return HmIcons.get(kind, size)
+
+
+FOLDER_ICONS = {
+    "Assemblies": "folder_asm", "Components": "folder_comp",
+    "Materials": "folder_mat", "Properties": "folder_prop",
+    "Sets": "folder_set", "Groups": "folder_grp", "Load": "folder_load",
+    "System": "folder_sys", "Vector": "folder_vec", "Others": "folder_other",
+    "Titles": "folder_title",
+}
+LEAF_ICONS = {
+    "asm": "leaf_asm", "mat": "leaf_mat", "prop": "leaf_prop",
+    "set": "leaf_set", "grp": "leaf_set", "load": "leaf_load",
+    "sys": "folder_sys", "vec": "folder_vec", "other": "folder_other",
+    "title": "leaf_title",
+}
 
 
 class HmPanelBar(QFrame):
@@ -1229,10 +1725,12 @@ class HmPanelBar(QFrame):
 class HmMainWindow(QMainWindow):
     def __init__(self, path=None):
         super().__init__()
-        self.setWindowTitle(APP_TITLE)
+        self.setWindowTitle(f"HyperMesh 2019 - {HM_PROFILE_DEFAULT}")
+        self.setWindowIcon(HmIcons.get("mesh", 32))
         self.resize(1600, 960)
         self.setAcceptDrops(True)
         self.setStyleSheet(HM_QSS)
+        self._user_profile = HM_PROFILE_DEFAULT
 
         self.model = None              # EditableModel
         self.loader = None
@@ -1242,8 +1740,10 @@ class HmMainWindow(QMainWindow):
         self._pick_target = "元素"      # 元素 | 节点
         self._interact = "旋转"         # 旋转 | 框选
         self._press_pos = None
-        self._bg_dark = False          # 默认 HyperMesh 浅色视口
+        self._bg_dark = True           # 默认对齐 HM 2019 深蓝视口
         self._current_page = "Geom"
+        self._scale_actor = None
+        self._color_mode = "By Comp"
 
         # VTK 对象
         self._vpts = None              # 共享 vtkPoints
@@ -1289,13 +1789,18 @@ class HmMainWindow(QMainWindow):
         vl.setContentsMargins(0, 0, 0, 0)
         vl.setSpacing(0)
         # QVTK 必须直接创建在最终父控件上; 再 SetParent 会丢掉 OpenGL 上下文.
-        self.vtk_widget = HmView(view_host)
+        view_row = QWidget()
+        hl = QHBoxLayout(view_row)
+        hl.setContentsMargins(0, 0, 0, 0)
+        hl.setSpacing(0)
+        hl.addWidget(self._build_view_strip())
+        self.vtk_widget = HmView(view_row)
         self.vtk_widget.sig_press.connect(self._on_qt_press)
         self.vtk_widget.sig_release.connect(self._on_qt_release)
         self.vtk_widget.sig_move.connect(self._on_qt_move)
         self.renderer = vtk.vtkRenderer()
-        self.renderer.SetBackground(*HM_BG_BOT)
-        self.renderer.SetBackground2(*HM_BG_TOP)
+        self.renderer.SetBackground(*HM_BG_DARK_BOT)
+        self.renderer.SetBackground2(*HM_BG_DARK_TOP)
         self.renderer.GradientBackgroundOn()
         self.vtk_widget.GetRenderWindow().AddRenderer(self.renderer)
         self._anno = vtk.vtkCornerAnnotation()
@@ -1303,10 +1808,13 @@ class HmMainWindow(QMainWindow):
         self._anno.SetNonlinearFontScaleFactor(1)
         self._anno.SetMaximumFontSize(13)
         self._anno.SetText(vtk.vtkCornerAnnotation.UpperRight, "Model Info:")
-        self._anno.GetTextProperty().SetColor(0.08, 0.08, 0.10)
+        self._anno.GetTextProperty().SetColor(1.0, 1.0, 1.0)
         self._anno.GetTextProperty().SetFontFamilyToArial()
         self.renderer.AddViewProp(self._anno)
-        vl.addWidget(self.vtk_widget, 1)
+        self._setup_scale_bar()
+        hl.addWidget(self.vtk_widget, 1)
+        vl.addWidget(view_row, 1)
+        vl.addWidget(self._build_gfx_toolbar())
 
         mid = QSplitter(Qt.Vertical)
         mid.addWidget(view_host)
@@ -1326,14 +1834,143 @@ class HmMainWindow(QMainWindow):
         hsplit.setSizes([280, 1280])
         self.setCentralWidget(hsplit)
 
+    def _icon_action(self, kind, tip, slot, checkable=False):
+        a = QAction(HmIcons.get(kind), tip, self)
+        a.setToolTip(tip)
+        if checkable:
+            a.setCheckable(True)
+        a.triggered.connect(slot)
+        return a
+
+    def _build_view_strip(self):
+        """视口左侧竖条: 对齐 HM 建模窗口边缘的选择/剖切图标."""
+        strip = QToolBar()
+        strip.setObjectName("ViewStrip")
+        strip.setOrientation(Qt.Vertical)
+        strip.setMovable(False)
+        strip.setIconSize(QtCore.QSize(18, 18))
+        strip.setFixedWidth(28)
+        for kind, tip, slot in (
+            ("pick", "Pick", lambda: self.target_combo.setCurrentText("元素")),
+            ("ent_node", "Nodes", lambda: self.target_combo.setCurrentText("节点")),
+            ("rotate", "Rotate center", lambda: self.interact_combo.setCurrentText("旋转")),
+            ("box", "Window select", lambda: self.interact_combo.setCurrentText("框选")),
+            ("section", "Section cut", lambda: self._nyi("section cut")),
+            ("measure", "Distance", self._measure_distance),
+            ("iso", "Isometric", lambda: self.view_along((1, 1, 1), (0, 0, 1))),
+            ("fit", "Fit", self.fit_view),
+        ):
+            strip.addAction(self._icon_action(kind, tip, slot))
+        return strip
+
+    def _build_gfx_toolbar(self):
+        """视口与面板之间的选择/着色子工具条 (By Comp, 实体过滤器)."""
+        bar = QWidget()
+        bar.setObjectName("GfxBar")
+        bar.setFixedHeight(28)
+        row = QHBoxLayout(bar)
+        row.setContentsMargins(6, 2, 6, 2)
+        row.setSpacing(4)
+        row.addWidget(QLabel("Auto"))
+        self.sel_filter_combo = QComboBox()
+        self.sel_filter_combo.addItems(["Auto", "elems", "nodes", "surfs", "lines", "solids"])
+        self.sel_filter_combo.setFixedWidth(72)
+        self.sel_filter_combo.currentTextChanged.connect(self._on_sel_filter)
+        row.addWidget(self.sel_filter_combo)
+        for kind, tip, text in (
+            ("ent_node", "nodes", "节点"),
+            ("ent_line", "lines", None),
+            ("ent_surf", "surfaces", None),
+            ("ent_solid", "solids", None),
+            ("ent_elem", "elems", "元素"),
+        ):
+            btn = QToolButton()
+            btn.setIcon(HmIcons.get(kind, 16))
+            btn.setToolTip(tip)
+            btn.setAutoRaise(True)
+            if text:
+                btn.clicked.connect(lambda _=False, t=text: self.target_combo.setCurrentText(t))
+            else:
+                btn.clicked.connect(lambda _=False, n=tip: self._nyi(f"select {n}"))
+            row.addWidget(btn)
+        row.addWidget(QFrame())
+        row.addWidget(QLabel("Color"))
+        self.color_combo = QComboBox()
+        self.color_combo.addItems(["By Comp", "By Config", "By Elem Type", "Single"])
+        self.color_combo.setFixedWidth(96)
+        self.color_combo.currentTextChanged.connect(self._on_color_mode)
+        row.addWidget(self.color_combo)
+        for kind, tip, slot in (
+            ("shaded", "Shaded + edges", lambda: self.set_display_mode(1)),
+            ("wire", "Wireframe", lambda: self.set_display_mode(2)),
+            ("hidden", "Hidden line", lambda: self.set_display_mode(0)),
+            ("points", "Points", lambda: self.set_display_mode(3)),
+            ("ent_node", "Toggle nodes", self._toolbar_toggle_nodes),
+        ):
+            btn = QToolButton()
+            btn.setIcon(HmIcons.get(kind, 16))
+            btn.setToolTip(tip)
+            btn.setAutoRaise(True)
+            btn.clicked.connect(slot)
+            row.addWidget(btn)
+        row.addStretch(1)
+        return bar
+
+    def _on_sel_filter(self, text):
+        if text == "nodes":
+            self.target_combo.setCurrentText("节点")
+        elif text in ("Auto", "elems"):
+            self.target_combo.setCurrentText("元素")
+
+    def _on_color_mode(self, text):
+        self._color_mode = text
+        self.log(f"Color mode: {text}")
+        if self.model is not None:
+            self._rebuild_scene(fit=False)
+
+    def _toolbar_toggle_nodes(self):
+        self.act_show_nodes.setChecked(not self.act_show_nodes.isChecked())
+        self._toggle_nodes()
+
+    def _setup_scale_bar(self):
+        """视口右下比例尺, 对齐 HM 2019 的 100L 标尺."""
+        self._scale_actor = None
+        try:
+            sc = vtk.vtkLegendScaleActor()
+            if hasattr(sc, "AllAxesOff"):
+                sc.AllAxesOff()
+            for name, on in (("SetTopAxisVisibility", 0),
+                             ("SetLeftAxisVisibility", 0),
+                             ("SetRightAxisVisibility", 0),
+                             ("SetBottomAxisVisibility", 1)):
+                if hasattr(sc, name):
+                    getattr(sc, name)(on)
+            if hasattr(sc, "LegendVisibilityOn"):
+                sc.LegendVisibilityOn()
+            for getter in ("GetLegendTitleProperty", "GetLegendLabelProperty"):
+                if hasattr(sc, getter):
+                    prop = getattr(sc, getter)()
+                    prop.SetColor(1, 1, 1)
+                    prop.SetFontFamilyToArial()
+            if hasattr(sc, "GetBottomAxis"):
+                try:
+                    sc.GetBottomAxis().GetProperty().SetColor(1, 1, 1)
+                except Exception:
+                    pass
+            self.renderer.AddViewProp(sc)
+            self._scale_actor = sc
+        except Exception:
+            self._scale_actor = None
+
     def _build_tab_area(self):
-        """左侧 Tab Area: Utility / Mask / Model + Entity Editor.
+        """左侧 Tab Area: Utility / Mask / Model / Materials + Entity Editor.
 
         官方: 'The tab area organizes browsers, Utility menus ... and other
         functionality not shown in the panel area.'
         """
         tabs = QTabWidget()
         tabs.setDocumentMode(True)
+        self.left_tabs = tabs
 
         # Utility
         util = QWidget()
@@ -1379,9 +2016,30 @@ class HmMainWindow(QMainWindow):
         ml = QVBoxLayout(model_tab)
         ml.setContentsMargins(0, 0, 0, 0)
         ml.setSpacing(0)
+        brow = QToolBar()
+        brow.setIconSize(QtCore.QSize(16, 16))
+        brow.setMovable(False)
+        for kind, tip, slot in (
+            ("refresh", "Refresh", self._rebuild_tree),
+            ("find", "Find", self._find_in_tree),
+            ("filter", "Filter empty folders", self._toggle_empty_folders),
+            ("create", "Create collector", self._tree_create_selected),
+            ("del", "Delete", self._tree_delete_selected),
+        ):
+            brow.addAction(self._icon_action(kind, tip, slot))
+        ml.addWidget(brow)
         self.tree = QTreeWidget()
-        self.tree.setHeaderLabels(["Model"])
+        self.tree.setObjectName("HmModelTree")
+        self.tree.setHeaderLabels(["Entities", "ID", "Include"])
+        self.tree.setColumnCount(3)
         self.tree.setRootIsDecorated(True)
+        self.tree.setUniformRowHeights(True)
+        self.tree.setAlternatingRowColors(True)
+        self.tree.setAnimated(True)
+        self.tree.setIconSize(QtCore.QSize(16, 16))
+        self.tree.setColumnWidth(0, 168)
+        self.tree.setColumnWidth(1, 42)
+        self.tree.setColumnWidth(2, 52)
         self.tree.itemChanged.connect(self._on_tree_item_changed)
         self.tree.itemSelectionChanged.connect(self._on_tree_selected)
         self.tree.itemDoubleClicked.connect(self._on_tree_double_clicked)
@@ -1389,6 +2047,9 @@ class HmMainWindow(QMainWindow):
         self.tree.customContextMenuRequested.connect(self._on_tree_menu)
         ml.addWidget(self.tree, 1)
         tabs.addTab(model_tab, "Model")
+
+        # Materials library
+        tabs.addTab(self._build_material_library(), "Materials")
         tabs.setCurrentIndex(2)
 
         wrap = QWidget()
@@ -1396,13 +2057,13 @@ class HmMainWindow(QMainWindow):
         wv = QVBoxLayout(wrap)
         wv.setContentsMargins(0, 0, 0, 0)
         wv.setSpacing(0)
-        tbar = QLabel("Tab Area  /  Model Browser")
+        tbar = QLabel("Tab Area")
         tbar.setObjectName("PaneTitleBar")
         wv.addWidget(tbar)
         wv.addWidget(tabs, 3)
 
         # Entity Editor (Name Value)
-        ee_title = QLabel("Name Value  /  Entity Editor")
+        ee_title = QLabel("Name Value")
         ee_title.setObjectName("PaneTitleBar")
         wv.addWidget(ee_title)
         self.info = QTextBrowser()
@@ -1416,9 +2077,144 @@ class HmMainWindow(QMainWindow):
         self.editor_table.verticalHeader().setVisible(False)
         self.editor_table.setMinimumHeight(90)
         wv.addWidget(self.editor_table, 1)
-        wrap.setMinimumWidth(240)
-        wrap.setMaximumWidth(420)
+        wrap.setMinimumWidth(260)
+        wrap.setMaximumWidth(440)
         return wrap
+
+    def _build_material_library(self):
+        """材料库: 预置卡片 + 模型内已解码 collectors."""
+        page = QWidget()
+        vl = QVBoxLayout(page)
+        vl.setContentsMargins(4, 4, 4, 4)
+        vl.setSpacing(4)
+        head = QHBoxLayout()
+        head.addWidget(QLabel("Material Library"))
+        self.mat_search = QLineEdit()
+        self.mat_search.setPlaceholderText("Filter…")
+        self.mat_search.textChanged.connect(self._filter_mat_table)
+        head.addWidget(self.mat_search, 1)
+        vl.addLayout(head)
+        self.mat_table = QTableWidget(0, 5)
+        self.mat_table.setHorizontalHeaderLabels(
+            ["Name", "Type", "Density", "E", "Nu"])
+        self.mat_table.horizontalHeader().setStretchLastSection(True)
+        self.mat_table.verticalHeader().setVisible(False)
+        self.mat_table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.mat_table.setIconSize(QtCore.QSize(16, 16))
+        self.mat_table.itemSelectionChanged.connect(self._on_mat_selected)
+        vl.addWidget(self.mat_table, 1)
+        row = QHBoxLayout()
+        assign = QPushButton("Assign to Component")
+        assign.setObjectName("HmPanelBtn")
+        assign.clicked.connect(self._assign_material)
+        row.addWidget(assign)
+        row.addStretch(1)
+        vl.addLayout(row)
+        self._refresh_mat_table()
+        return page
+
+    def _refresh_mat_table(self):
+        rows = []
+        if self.model is not None:
+            for mid, nm in sorted(self.model.mats.items()):
+                rows.append((nm, "collector", mid, "", "", True))
+        for name, typ, dens, e, nu in HM_MAT_LIBRARY:
+            rows.append((name, typ, dens, e, nu, False))
+        self.mat_table.setRowCount(len(rows))
+        icon = HmIcons.get("leaf_mat", 16)
+        for i, rec in enumerate(rows):
+            name, typ = rec[0], rec[1]
+            it = QTableWidgetItem(name)
+            it.setIcon(icon)
+            it.setData(Qt.UserRole, rec)
+            self.mat_table.setItem(i, 0, it)
+            self.mat_table.setItem(i, 1, QTableWidgetItem(str(typ)))
+            if rec[-1]:
+                self.mat_table.setItem(i, 2, QTableWidgetItem(str(rec[2])))
+                self.mat_table.setItem(i, 3, QTableWidgetItem(""))
+                self.mat_table.setItem(i, 4, QTableWidgetItem(""))
+            else:
+                self.mat_table.setItem(i, 2, QTableWidgetItem(f"{rec[2]:.3g}"))
+                self.mat_table.setItem(i, 3, QTableWidgetItem(f"{rec[3]:.4g}"))
+                self.mat_table.setItem(i, 4, QTableWidgetItem(f"{rec[4]:.2f}"))
+
+    def _filter_mat_table(self, text):
+        q = (text or "").strip().lower()
+        for i in range(self.mat_table.rowCount()):
+            it = self.mat_table.item(i, 0)
+            hide = bool(q) and q not in (it.text() if it else "").lower()
+            self.mat_table.setRowHidden(i, hide)
+
+    def _on_mat_selected(self):
+        items = self.mat_table.selectedItems()
+        if not items:
+            return
+        rec = items[0].data(Qt.UserRole)
+        if not rec:
+            return
+        if rec[-1]:
+            self._fill_editor([
+                ("Name", rec[0]), ("Type", "Material collector"),
+                ("ID", rec[2]),
+            ])
+        else:
+            self._fill_editor([
+                ("Name", rec[0]), ("Card", rec[1]),
+                ("Density", rec[2]), ("E", rec[3]), ("Nu", rec[4]),
+            ])
+
+    def _assign_material(self):
+        items = self.mat_table.selectedItems()
+        if not items:
+            self.log("Material Library: select a material first")
+            return
+        name = items[0].text()
+        self.log(f"Material Library: assign '{name}' "
+                 "(card write-back not available in this decoder)")
+        self.statusBar().showMessage(f"Assigned {name} (preview only)")
+
+    def _show_material_library(self):
+        if hasattr(self, "left_tabs"):
+            for i in range(self.left_tabs.count()):
+                if self.left_tabs.tabText(i) == "Materials":
+                    self.left_tabs.setCurrentIndex(i)
+                    break
+
+    def _find_in_tree(self):
+        q, ok = QInputDialog.getText(self, "Find", "Entity name / ID:")
+        if not ok or not (q or "").strip():
+            return
+        q = q.strip().lower()
+
+        def walk(item):
+            if q in item.text(0).lower() or q == item.text(1).lower():
+                self.tree.setCurrentItem(item)
+                self.tree.scrollToItem(item)
+                return True
+            for i in range(item.childCount()):
+                if walk(item.child(i)):
+                    return True
+            return False
+
+        for i in range(self.tree.topLevelItemCount()):
+            if walk(self.tree.topLevelItem(i)):
+                return
+        self.log(f"Find: no match for '{q}'")
+
+    def _toggle_empty_folders(self):
+        for i in range(self.tree.topLevelItemCount()):
+            it = self.tree.topLevelItem(i)
+            kind, val = it.data(0, Qt.UserRole) or (None, None)
+            if kind == "folder" and it.childCount() == 0:
+                it.setHidden(not it.isHidden())
+
+    def _tree_create_selected(self):
+        item = self.tree.currentItem()
+        kind, val = (item.data(0, Qt.UserRole) if item else (None, None)) or (None, None)
+        self._create_collector(kind or "folder", val or "Components")
+
+    def _tree_delete_selected(self):
+        self.log("Delete collector: binary .hm write-back is not supported")
 
     def _build_menus(self):
         # 菜单顺序对齐 HyperMesh 2019 截图 / menubar_overview_r.htm
@@ -1531,8 +2327,10 @@ class HmMainWindow(QMainWindow):
         for name in ("connectors", "spotweld", "welds"):
             self._add_action(m_conn, name,
                              lambda _c=False, pn=name: self._on_panel_clicked("1D", pn))
-        mb.addMenu("&Materials").addAction(
-            self._nyi_action("Materials collector"))
+        m_mat = mb.addMenu("&Materials")
+        self._add_action(m_mat, "Material Library…", self._show_material_library)
+        self._add_action(m_mat, "Materials collector",
+                         lambda: self._focus_tree_folder("Materials"))
         mb.addMenu("&Properties").addAction(
             self._nyi_action("Properties collector"))
         _page_menu("&BCs", "Analysis")
@@ -1572,22 +2370,46 @@ class HmMainWindow(QMainWindow):
         tb.setMovable(False)
         tb.setIconSize(QtCore.QSize(20, 20))
         for kind, tip, slot in (
+            ("new", "New", lambda: self._nyi("File / New")),
             ("open", "Open .hm", self.open_hm_dialog),
             ("save", "Save project", self.save_hmj),
+            ("print", "Print / snapshot", self._snapshot_view),
+        ):
+            tb.addAction(self._icon_action(kind, tip, slot))
+        tb.addSeparator()
+        for kind, tip, slot in (
             ("undo", "Undo", self.undo),
             ("redo", "Redo", self.redo),
+            ("find", "Find", self._find_in_tree),
+            ("mask", "Mask", self._mask_hide),
+            ("isolate", "Isolate", self._mask_isolate),
+            ("numbers", "Numbers", self.select_by_id_dialog),
+            ("count", "Count", self._count_selection),
+            ("help", "Help", self.open_hm_ui_help),
         ):
-            a = QAction(hm_icon(kind), tip, self)
-            a.triggered.connect(slot)
-            tb.addAction(a)
-        tb.addSeparator()
+            tb.addAction(self._icon_action(kind, tip, slot))
 
         tb2 = self.addToolBar("Visualization")
         tb2.setMovable(False)
         tb2.setIconSize(QtCore.QSize(20, 20))
-        a = QAction(hm_icon("fit"), "Fit", self)
-        a.triggered.connect(self.fit_view)
-        tb2.addAction(a)
+        for kind, tip, slot in (
+            ("fit", "Fit", self.fit_view),
+            ("front", "Front", lambda: self.view_along((0, 1, 0), (0, 0, 1))),
+            ("top", "Top", lambda: self.view_along((0, 0, -1), (0, 1, 0))),
+            ("side", "Right", lambda: self.view_along((1, 0, 0), (0, 0, 1))),
+            ("iso", "Isometric", lambda: self.view_along((1, 1, 1), (0, 0, 1))),
+            ("pan", "Pan (middle mouse)", lambda: self.log("Pan: hold middle mouse")),
+            ("zoom", "Zoom (wheel)", lambda: self.log("Zoom: mouse wheel")),
+            ("rotate", "Rotate (trackball)",
+             lambda: self.interact_combo.setCurrentText("旋转")),
+            ("box", "Window select",
+             lambda: self.interact_combo.setCurrentText("框选")),
+            ("shaded", "Shaded + edges", lambda: self.set_display_mode(1)),
+            ("wire", "Wireframe", lambda: self.set_display_mode(2)),
+            ("hidden", "Shaded", lambda: self.set_display_mode(0)),
+            ("del", "Delete", self.delete_selected),
+        ):
+            tb2.addAction(self._icon_action(kind, tip, slot))
         tb2.addSeparator()
         tb2.addWidget(QLabel("  Display: "))
         self.mode_combo = QComboBox()
@@ -1605,25 +2427,22 @@ class HmMainWindow(QMainWindow):
         self.interact_combo.addItems(["旋转", "框选"])
         self.interact_combo.currentTextChanged.connect(self._set_interact_mode)
         tb2.addWidget(self.interact_combo)
-        tb2.addSeparator()
-        a = QAction(hm_icon("rotate"), "Rotate (trackball)", self)
-        a.triggered.connect(lambda: self.interact_combo.setCurrentText("旋转"))
-        tb2.addAction(a)
-        a = QAction(hm_icon("box"), "Window select", self)
-        a.triggered.connect(lambda: self.interact_combo.setCurrentText("框选"))
-        tb2.addAction(a)
-        a = QAction(hm_icon("del"), "Delete", self)
-        a.triggered.connect(self.delete_selected)
-        tb2.addAction(a)
 
     def _build_statusbar(self):
         self.statusBar().showMessage("Ready")
-        self.page_label = QLabel("Geom")
+        self.page_label = QLabel("Geometry")
+        self.comp_swatch = QLabel()
+        self.comp_swatch.setFixedSize(12, 12)
+        self.comp_name = QLabel("")
         self.coord_label = QLabel("")
         self.count_label = QLabel("")
+        self.model_label = QLabel("Model")
         self.statusBar().addPermanentWidget(self.page_label)
+        self.statusBar().addPermanentWidget(self.comp_swatch)
+        self.statusBar().addPermanentWidget(self.comp_name)
         self.statusBar().addPermanentWidget(self.coord_label, 1)
         self.statusBar().addPermanentWidget(self.count_label)
+        self.statusBar().addPermanentWidget(self.model_label)
 
     def _add_action(self, menu, text, slot, shortcut=None):
         a = QAction(text, self)
@@ -1747,11 +2566,13 @@ class HmMainWindow(QMainWindow):
                  f"显示点 {len(self.model.display_points)}, "
                  f"几何点 {len(self.model.geo_points)}, "
                  f"DB v{self.model.db_version}, 变体 {self.model.element_variant}")
-        self.setWindowTitle(f"{APP_TITLE} - {Path(path).name}")
+        self._refresh_title(path)
         self.sel_elems.clear()
         self.sel_nodes.clear()
         self._set_model_info(path)
         self._rebuild_scene(fit=True)
+        self._refresh_mat_table()
+        self._update_status_comp()
         self._update_edit_actions()
 
     def _on_load_failed(self, err):
@@ -1769,11 +2590,13 @@ class HmMainWindow(QMainWindow):
             return
         self.log(f"工程已打开: {path} (节点 {len(self.model.nodes)}, "
                  f"单元 {len(self.model.elements)})")
-        self.setWindowTitle(f"{APP_TITLE} - {Path(path).name}")
+        self._refresh_title(path)
         self.sel_elems.clear()
         self.sel_nodes.clear()
         self._set_model_info(path)
         self._rebuild_scene(fit=True)
+        self._refresh_mat_table()
+        self._update_status_comp()
         self._update_edit_actions()
 
     def save_hmj(self, save_as=False):
@@ -1917,8 +2740,21 @@ class HmMainWindow(QMainWindow):
         for gi, key in enumerate(sorted(by_group, key=lambda k: (k[0], k[1]))):
             grid, skipped = build_group_grid(self._vpts, self._nid2idx, by_group[key])
             total_skipped += skipped
-            color, visible = self._group_style.get(
-                key, (PALETTE[gi % len(PALETTE)], True))
+            _old, visible = self._group_style.get(key, (None, True))
+            if key[0] == "comp":
+                base = (PALETTE[key[1] % len(PALETTE)] if key[1]
+                        else (0.60, 0.60, 0.60))
+            else:
+                base = PALETTE[gi % len(PALETTE)]
+            mode = getattr(self, "_color_mode", "By Comp")
+            if mode == "Single":
+                color = PALETTE[0]
+            elif mode in ("By Config", "By Elem Type") and key[0] == "comp":
+                cfgs = [e.config for _i, e in by_group[key]]
+                color = (PALETTE[Counter(cfgs).most_common(1)[0][0] % len(PALETTE)]
+                         if cfgs else base)
+            else:
+                color = base
             self._group_style[key] = (color, visible)
             g = GroupView(key, grid, color)
             g.visible = visible
@@ -2052,8 +2888,15 @@ class HmMainWindow(QMainWindow):
             ("Others", "other", rest),
         ]
 
+    def _mk_tree_item(self, text, kind, val, icon=None, eid="", include=""):
+        it = QTreeWidgetItem([text, str(eid) if eid != "" else "", include])
+        it.setData(0, Qt.UserRole, (kind, val))
+        if icon is not None:
+            it.setIcon(0, icon)
+        return it
+
     def _rebuild_tree(self):
-        """Model Browser: 官方文件夹树 (Assemblies/Components/Materials/…/Vector).
+        """Model Browser: Entities / ID / Include 三列, 按层级配图标.
 
         M3.3: comps 全量列出 (含无元素组件, id 含跳号), 勾选控制该组件元素显隐
         (渲染按 comp 分组); 其余类别按名称启发式分流, 未匹配进 Others.
@@ -2062,92 +2905,97 @@ class HmMainWindow(QMainWindow):
         self.tree.blockSignals(True)
         self.tree.clear()
         if self.model is not None:
-            root = QTreeWidgetItem(["Model"])
-            root.setData(0, Qt.UserRole, ("info", None))
-            self.tree.addTopLevelItem(root)
             if self.model.comps:
-                # ---- M3.3 官方文件夹树 ----
                 cg = self.model.comp_groups()
                 for label, kind, data in self._collector_folders():
-                    it = QTreeWidgetItem([f"{label} ({len(self.model.comps) if label == 'Components' else len(data)})"])
-                    it.setData(0, Qt.UserRole, ("folder", label))
+                    n = (len(self.model.comps) if label == "Components"
+                         else len(data))
+                    it = self._mk_tree_item(
+                        f"{label} ({n})", "folder", label,
+                        HmIcons.get(FOLDER_ICONS.get(label, "folder_other"), 16))
                     if label == "Components":
                         for cid in sorted(self.model.comps):
                             nm = self.model.comps[cid]
                             cnt = cg.get(cid, 0)
-                            child = QTreeWidgetItem([f"{cid} {nm} ({cnt})"])
-                            child.setData(0, Qt.UserRole, ("comp", cid))
-                            child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
                             key = ("comp", cid)
                             color, visible = self._group_style.get(
                                 key, (PALETTE[cid % len(PALETTE)] if cid
                                       else (0.60, 0.60, 0.60), True))
-                            child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
-                            if color:
-                                child.setBackground(
-                                    0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
+                            child = self._mk_tree_item(
+                                f"{nm} ({cnt})", "comp", cid,
+                                HmIcons.swatch(color or (0.6, 0.6, 0.6)),
+                                eid=cid, include="0")
+                            child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
+                            child.setCheckState(
+                                0, Qt.Checked if visible else Qt.Unchecked)
                             it.addChild(child)
                     else:
                         items = (sorted(data.items()) if isinstance(data, dict)
                                  else sorted(data))
+                        leaf_icon = HmIcons.get(LEAF_ICONS.get(kind, "folder_other"), 16)
                         for cid, nm in items:
-                            child = QTreeWidgetItem([f"{cid} {nm}"])
-                            child.setData(0, Qt.UserRole, (kind, cid))
-                            it.addChild(child)
-                    root.addChild(it)
-                    # 大模型折叠 Components 防初次展开卡顿
-                    it.setExpanded(label != "Components" or len(self.model.comps) <= 64)
+                            it.addChild(self._mk_tree_item(
+                                nm, kind, cid, leaf_icon, eid=cid, include="0"))
+                    self.tree.addTopLevelItem(it)
+                    it.setExpanded(label == "Components" and len(self.model.comps) <= 64)
             else:
-                # ---- 旧树: 无 comp 数据按 config 分组折衷 (v12+ 等) ----
                 counts = self.model.config_groups()
-                it_comp = QTreeWidgetItem([f"Components ({len(counts)})"])
-                it_comp.setData(0, Qt.UserRole, ("comps", None))
+                it_comp = self._mk_tree_item(
+                    f"Components ({len(counts)})", "comps", None,
+                    HmIcons.get("folder_comp", 16))
                 for cfg in sorted(counts):
                     name, _nn, cat = config_info(cfg)
-                    child = QTreeWidgetItem(
-                        [f"{cfg} {name} [{cat}] ({counts[cfg]})"])
-                    child.setData(0, Qt.UserRole, ("group", cfg))
+                    color = self._group_style.get(("cfg", cfg), (None, None))[0]
+                    if color is None:
+                        color = PALETTE[cfg % len(PALETTE)]
+                    child = self._mk_tree_item(
+                        f"{name} [{cat}] ({counts[cfg]})", "group", cfg,
+                        HmIcons.swatch(color), eid=cfg, include="0")
                     child.setFlags(child.flags() | Qt.ItemIsUserCheckable)
                     visible = self._group_style.get(("cfg", cfg), (None, True))[1]
                     child.setCheckState(0, Qt.Checked if visible else Qt.Unchecked)
-                    color = self._group_style.get(("cfg", cfg), (None, None))[0]
-                    if color:
-                        child.setBackground(
-                            0, QtGui.QBrush(QtGui.QColor.fromRgbF(*color)))
                     it_comp.addChild(child)
-                root.addChild(it_comp)
+                self.tree.addTopLevelItem(it_comp)
                 it_comp.setExpanded(True)
-            it_nodes = QTreeWidgetItem([f"Nodes ({len(self.model.nodes)})"])
-            it_nodes.setData(0, Qt.UserRole, ("nodes", None))
+
+            it_title = self._mk_tree_item(
+                "Titles (1)", "folder", "Titles", HmIcons.get("folder_title", 16))
+            it_title.addChild(self._mk_tree_item(
+                "Model", "title", 1, HmIcons.get("leaf_title", 16), eid=1, include="0"))
+            self.tree.addTopLevelItem(it_title)
+
+            it_nodes = self._mk_tree_item(
+                f"Nodes ({len(self.model.nodes)})", "nodes", None,
+                HmIcons.get("folder_nodes", 16))
             it_nodes.setFlags(it_nodes.flags() | Qt.ItemIsUserCheckable)
             it_nodes.setCheckState(0, Qt.Checked if self.act_show_nodes.isChecked()
                                    else Qt.Unchecked)
-            root.addChild(it_nodes)
-            it_elems = QTreeWidgetItem([f"Elements ({len(self.model.elements)})"])
-            it_elems.setData(0, Qt.UserRole, ("elems", None))
-            root.addChild(it_elems)
-            it_geo = QTreeWidgetItem(["Geometry"])
-            it_geo.setData(0, Qt.UserRole, ("geofolder", None))
+            self.tree.addTopLevelItem(it_nodes)
+            self.tree.addTopLevelItem(self._mk_tree_item(
+                f"Elements ({len(self.model.elements)})", "elems", None,
+                HmIcons.get("folder_elems", 16)))
+            it_geo = self._mk_tree_item(
+                "Geometry", "geofolder", None, HmIcons.get("folder_geo", 16))
             if self.model.display_points:
-                it = QTreeWidgetItem(
-                    [f"Display Points ({len(self.model.display_points)})"])
-                it.setData(0, Qt.UserRole, ("disp", None))
+                it = self._mk_tree_item(
+                    f"Display Points ({len(self.model.display_points)})",
+                    "disp", None, HmIcons.get("leaf_disp", 16))
                 it.setFlags(it.flags() | Qt.ItemIsUserCheckable)
                 it.setCheckState(0, Qt.Checked if self.act_show_disp.isChecked()
                                  else Qt.Unchecked)
                 it_geo.addChild(it)
             if self.model.geo_points:
-                it = QTreeWidgetItem(
-                    [f"Geometry Points ({len(self.model.geo_points)})"])
-                it.setData(0, Qt.UserRole, ("geo", None))
+                it = self._mk_tree_item(
+                    f"Geometry Points ({len(self.model.geo_points)})",
+                    "geo", None, HmIcons.get("leaf_geo", 16))
                 it.setFlags(it.flags() | Qt.ItemIsUserCheckable)
                 it.setCheckState(0, Qt.Checked if self.act_show_geo.isChecked()
                                  else Qt.Unchecked)
                 it_geo.addChild(it)
-            root.addChild(it_geo)
-            root.setExpanded(True)
+            self.tree.addTopLevelItem(it_geo)
             it_geo.setExpanded(True)
         self.tree.blockSignals(False)
+        self._update_status_comp()
 
     def _on_tree_item_changed(self, item, _col):
         kind, val = item.data(0, Qt.UserRole) or (None, None)
@@ -2228,8 +3076,12 @@ class HmMainWindow(QMainWindow):
                 f"(double-click to select all elements, checkbox to show/hide)")
             self._fill_editor([
                 ("ID", val), ("Type", "Component"),
-                ("Name", nm), ("Elements", cnt),
+                ("Name", nm), ("Elements", cnt), ("Include", 0),
             ])
+            self._update_status_comp(val)
+        elif kind == "title":
+            self.info.setPlainText("Title collector: Model")
+            self._fill_editor([("ID", val), ("Type", "Title"), ("Name", "Model")])
         elif kind == "folder":
             self.info.setPlainText(f"Model Browser / {val}\n"
                                    f"(右键 Create/Edit/Card)")
@@ -2390,9 +3242,8 @@ class HmMainWindow(QMainWindow):
             for i in range(item.childCount()):
                 walk(item.child(i))
 
-        root = self.tree.topLevelItem(0)
-        if root is not None:
-            walk(root)
+        for i in range(self.tree.topLevelItemCount()):
+            walk(self.tree.topLevelItem(i))
         self.tree.blockSignals(False)
 
     def _toggle_axes(self, on):
@@ -2446,21 +3297,85 @@ class HmMainWindow(QMainWindow):
     def _set_background(self, dark):
         self._bg_dark = bool(dark)
         if self._bg_dark:
-            self.renderer.SetBackground(0.13, 0.15, 0.19)
-            self.renderer.SetBackground2(0.23, 0.26, 0.32)
-            if self._anno:
-                self._anno.GetTextProperty().SetColor(0.95, 0.95, 0.95)
+            self.renderer.SetBackground(*HM_BG_DARK_BOT)
+            self.renderer.SetBackground2(*HM_BG_DARK_TOP)
+            fg = (1.0, 1.0, 1.0)
         else:
-            self.renderer.SetBackground(*HM_BG_BOT)
-            self.renderer.SetBackground2(*HM_BG_TOP)
-            if self._anno:
-                self._anno.GetTextProperty().SetColor(0.08, 0.08, 0.10)
+            self.renderer.SetBackground(*HM_BG_LIGHT_BOT)
+            self.renderer.SetBackground2(*HM_BG_LIGHT_TOP)
+            fg = (0.08, 0.08, 0.10)
+        if self._anno:
+            self._anno.GetTextProperty().SetColor(*fg)
+        if self._scale_actor is not None:
+            for getter in ("GetLegendTitleProperty", "GetLegendLabelProperty"):
+                if hasattr(self._scale_actor, getter):
+                    getattr(self._scale_actor, getter)().SetColor(*fg)
         self._render()
 
     def _set_model_info(self, path):
         text = f"Model Info: {path}" if path else "Model Info:"
         if self._anno is not None:
             self._anno.SetText(vtk.vtkCornerAnnotation.UpperRight, text)
+
+    def _refresh_title(self, path=None):
+        if path:
+            name = Path(path).name
+        elif self.model is not None and getattr(self.model, "source_path", None):
+            name = Path(self.model.source_path).name
+        else:
+            name = "HyperMesh"
+        self.setWindowTitle(f"{name} - HyperMesh 2019 - {self._user_profile}")
+
+    def _update_status_comp(self, cid=None):
+        if self.model is None or not getattr(self.model, "comps", None):
+            self.comp_swatch.clear()
+            self.comp_name.setText("")
+            return
+        if cid is None:
+            items = self.tree.selectedItems() if hasattr(self, "tree") else []
+            if items:
+                kind, val = items[0].data(0, Qt.UserRole) or (None, None)
+                if kind == "comp":
+                    cid = val
+            if cid is None:
+                cid = next(iter(sorted(self.model.comps)), None)
+        if cid is None:
+            return
+        name = self.model.comps.get(cid, "")
+        color, _vis = self._group_style.get(
+            ("comp", cid), (PALETTE[cid % len(PALETTE)], True))
+        pm = QPixmap(12, 12)
+        pm.fill(QColor.fromRgbF(*(color or (0.6, 0.6, 0.6))))
+        self.comp_swatch.setPixmap(pm)
+        self.comp_name.setText(name)
+
+    def _focus_tree_folder(self, label):
+        if hasattr(self, "left_tabs"):
+            self.left_tabs.setCurrentIndex(2)
+        for i in range(self.tree.topLevelItemCount()):
+            it = self.tree.topLevelItem(i)
+            kind, val = it.data(0, Qt.UserRole) or (None, None)
+            if kind == "folder" and val == label:
+                self.tree.setCurrentItem(it)
+                it.setExpanded(True)
+                return
+
+    def _snapshot_view(self):
+        if not hasattr(self, "vtk_widget"):
+            return
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Save snapshot", "view.png", "PNG (*.png)")
+        if not path:
+            return
+        w2i = vtk.vtkWindowToImageFilter()
+        w2i.SetInput(self.vtk_widget.GetRenderWindow())
+        w2i.ReadFrontBufferOff()
+        w2i.Update()
+        writer = vtk.vtkPNGWriter()
+        writer.SetFileName(path)
+        writer.SetInputConnection(w2i.GetOutputPort())
+        writer.Write()
+        self.log(f"Snapshot: {path}")
 
     # ---------------- 拾取与选择 ----------------
     def _set_pick_target(self, text):
@@ -3101,7 +4016,7 @@ class HmMainWindow(QMainWindow):
     # ---------------- 底部面板 / Mask / 帮助 ----------------
     def _on_page_changed(self, page):
         self._current_page = page
-        self.page_label.setText(page)
+        self.page_label.setText(HM_PAGE_LABELS.get(page, page))
         self.statusBar().showMessage(f"{page} page")
         self.log(f"Panel page: {page}")
 
@@ -3133,6 +4048,8 @@ class HmMainWindow(QMainWindow):
             "elem types": self._show_elem_types,
             # M7.2 Laplacian smooth 骨架 (NYI-M7-1/3/4: automesh/tetramesh/hex 未实现)
             "smooth": self._apply_laplacian_smooth,
+            # M8.2 Post contour 占位 (NYI-M8-1: .h3d/.res 解码需 hmbatch oracle)
+            "contour": self._show_pseudo_contour,
             # M6 Card image 骨架 (NYI-M6-1: 真实卡数据需 hmbatch oracle)
             "card edit": self._show_card_templates_dialog,
             "control cards": self._show_card_templates_dialog,
@@ -3324,6 +4241,42 @@ class HmMainWindow(QMainWindow):
                  f"interior_disp={smooth_quality_report(self.model, before, after)}")
         self.statusBar().showMessage(f"smooth: {iters} iter (preview only)")
 
+    def _show_pseudo_contour(self):
+        """Post / contour 面板: 伪 contour 演示 (M8.2 骨架).
+
+        NYI-M8-1: .h3d/.res 结果文件解码未实现 (需第三方格式逆向).
+        当前: 用节点坐标派生伪标量场 (距包围盒中心距离 / z_height / id_modulo),
+        显示场量统计 + band 分布到 Entity Editor.
+        """
+        if not self._need_model():
+            return
+        try:
+            from hmdecoder.hm_post import (
+                pseudo_contour_field, color_band, field_stats, FIELD_MODES)
+        except ImportError:
+            QMessageBox.warning(self, APP_TITLE, "hm_post 模块未就绪")
+            return
+        from PyQt5.QtWidgets import QInputDialog
+        mode, ok = QInputDialog.getItem(self, "Pseudo contour (M8.2 骨架)",
+            "场量模式 (无结果文件时演示):", FIELD_MODES, 0, False)
+        if not ok or not mode:
+            return
+        field = pseudo_contour_field(self.model, mode)
+        bands = color_band(field, n_bands=10)
+        from collections import Counter
+        bd = sorted(Counter(bands.values()).items())
+        lines = [
+            f"Pseudo contour: mode={mode}",
+            f"Field stats: {field_stats(field)}",
+            f"Band distribution (10 bands): {bd}",
+            "",
+            "(NYI-M8-1: .h3d/.res 结果文件解码未实现; 当前为伪 contour 占位)",
+            "(NYI-M8-2: section cut / deformed / vector 仍 NYI)",
+        ]
+        self.info.setPlainText("\n".join(lines))
+        self.log(f"Post / contour: {mode} -> {field_stats(field)}")
+        self.statusBar().showMessage(f"contour (pseudo): {mode}")
+
     def _mask_isolate(self):
         if self.model is None or not self.sel_elems:
             self.log("isolate: select elements first")
@@ -3377,11 +4330,17 @@ class HmMainWindow(QMainWindow):
         self._render()
 
     def _show_user_profile(self):
-        QMessageBox.information(
-            self, "User Profile",
-            "hmdecoder profile (read-only HyperMesh database)\n"
-            "Solver cards / user profile switching is not available.\n"
-            "Config table: templates/feoutput/hm/general")
+        profiles = (
+            "Abaqus (Explicit)", "Abaqus (Standard)", "OptiStruct",
+            "Nastran", "LS-DYNA", "ANSYS", "Radioss",
+        )
+        cur = profiles.index(self._user_profile) if self._user_profile in profiles else 0
+        name, ok = QInputDialog.getItem(
+            self, "User Profile", "Solver profile:", profiles, cur, False)
+        if ok and name:
+            self._user_profile = name
+            self._refresh_title()
+            self.log(f"User profile: {name}")
 
     def _launch_hmopengl(self):
         exe = ALTAIR_ROOT / "hm" / "bin" / "win64" / "hmopengl.exe"

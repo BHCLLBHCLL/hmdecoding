@@ -139,23 +139,95 @@
 
 ---
 
-## M7 — Mesh Generation（待启动）
+## M7 — Mesh Generation（部分落地）
 
-- **NYI-M7-1** 2D automesh（domain 7, 0%）。
-- **NYI-M7-2** Laplacian smooth。
-- **NYI-M7-3** Delaunay tetra。
+### NYI-M7-1 2D automesh (paving / advancing front)
 
-> 重启条件待 M6 收尾后评估。
+- **触发场景**：点击 `2D / automesh` 面板；当前面板未在路由表 (NYI 灰显)。
+- **当前行为**：`_nyi()` 灰显。
+- **何时重启**：
+  (a) 几何 record 解码完成 (NYI-M4-2/3/4 收尾)；
+  (b) paving / advancing front 自研实现, 或 tetrameshdll.dll 导出接口 (许可风险备选);
+  (c) 单元数 / 质量分布对拍与 HM 同量级 (按 DEV_PLAN.md §5 M7.5)。
+- **已知证据**：
+  - `hmdecoder/mesher.py:laplacian_smooth_2d` M7.2 已落地 (boundary 不动 + 内部节点 Laplacian 平均);
+  - 5×5 规则 quad 单元测试: 边界 16/16 不动, 中心节点 (2,2) 位移 0。
+
+### NYI-M7-3 3D tetramesh (Delaunay + 质量优化)
+
+- **触发场景**：`3D / tetramesh` 面板；当前 NYI 灰显。
+- **当前行为**：`_nyi()` 灰显。
+- **何时重启**：
+  (a) Delaunay 自研基础版 + 质量优化 (边界保护 / sliver 消除);
+  (b) 或 tetrameshdll.dll 导出 (许可风险);
+  (c) 至少 1 个样本 (bottle / arm2D) 产物对拍通过。
+- **已知证据**：无；登记占位。
+
+### NYI-M7-4 hex / solid map (映射法拉伸)
+
+- **触发场景**：`3D / hex mesh` / `solid map` 面板。
+- **当前行为**：`_nyi()` 灰显。
+- **何时重启**：
+  (a) 至少 1 个 hex-friendly 几何样本 (棱柱 / 长方体) oracle 完成；
+  (b) 映射法自研实现。
+- **已知证据**：无。
 
 ---
 
-## M8 — Post-processing（待启动）
+## M8 — Post-processing（部分落地）
 
-- **NYI-M8-1** `.h3d` / `.res` 解码。
-- **NYI-M8-2** Contour / deformed / section cut。
-- **NYI-M8-3** Multi-viewport。
+### NYI-M8-1 结果解码 (.h3d / .res)
 
-> 重启条件待 M7 收尾后评估。
+- **触发场景**：打开 .h3d / .res 结果文件；HM 求解器导出文件二进制格式逆向。
+- **当前行为**：当前不识别 .h3d / .res；Post 页全部面板 NYI 灰显,
+  除 contour 已落地伪场演示 (`hm_post.pseudo_contour_field`)。
+- **何时重启**：
+  (a) .h3d 二进制格式逆向 (HDF5-based, 见 H5py 已加入依赖);
+  (b) 或 .res 文本格式 (LS-DYNA) 解析;
+  (c) 至少 1 个真实结果文件 round-trip (oracle vs decode) PASS。
+- **已知证据**：
+  - `hmdecoder/hm_post.py:pseudo_contour_field` M8.2 占位已落地 (节点距离派生伪场);
+  - `hm_gui.py:_show_pseudo_contour` 路由 `Post / contour` 面板;
+  - WS_3.2_3d_tetra_finish.hm 伪 contour distance_to_centroid: min=72.7 max=290 avg=176 n=6408。
+
+### NYI-M8-2 contour / deformed / section cut (真场量)
+
+- **触发场景**：`Post / contour` 真场量版本 / `deformation` / `section cut` / `isosurfaces` 面板。
+- **当前行为**：当前仅 contour 占位 (伪场), 其余 NYI 灰显。
+- **何时重启**：
+  (a) NYI-M8-1 解决;
+  (b) VTK 标量映射器接入 contour (vtkColorTransferFunction + LookupTable);
+  (c) deformed = 节点原坐标 + scale_factor * 位移场;
+  (d) section cut = vtkCutter + implicit plane。
+- **已知证据**：占位 `pseudo_contour_field` 4 模式 (distance_to_centroid / distance_to_origin / z_height / id_modulo)。
+
+### NYI-M8-3 XYPlots (时间历程曲线)
+
+- **触发场景**：`Post / XYPlots` 面板 (HM 2019 在 Post 第二列, 当前 HM_PANEL_PAGES 未注册)。
+- **当前行为**：完全未在 UI 暴露。
+- **何时重启**：
+  (a) NYI-M8-1 解决 (结果时序数据);
+  (b) XY 数据结构 + matplotlib / VTK 渲染层。
+- **已知证据**：无。
+
+### NYI-M8-4 多视口 / 窗体 / 球面裁剪 / 隐藏线
+
+- **触发场景**：`View` 菜单多视口子项 / 窗体面板。
+- **当前行为**：当前单视口 + Orientation Marker, 多视口未实现。
+- **何时重启**：
+  (a) vtkRenderer 多视口管理 (vtkRenderWindow.SetNumberOfers);
+  (b) 球面裁剪 (vtkSphere with implicit function);
+  (c) 隐藏线 (vtkHardwareSelector / PolygonOffset)。
+- **已知证据**：无。
+
+### NYI-M8-5 Morphing / Connectors
+
+- **触发场景**：`Tool / Morphing` / Analysis / Connectors 面板。
+- **当前行为**：当前 NYI 灰显。
+- **何时重启**：
+  (a) Morphing 域 decoder 闭环 (HM 内部 morphing constraint 段逆向);
+  (b) Connectors 已在 M3.3 收尾 (comps 313/313 含 connectors 178), 但 connector 几何 record 解码 NYI。
+- **已知证据**：connectors 名称 oracle 在 FA3 已抓 (178 条, 见 M3.3 门禁报告)。
 
 ---
 
@@ -166,4 +238,10 @@
 - 2026-09-06 M4.3 落地（Geom/length 长度汇总）；NYI-M4-1..5 维持登记。
 - 2026-09-06 M5 部分落地：hm_writer.py v0 (节点段 52B + 元素段 A 型锚) + m5_roundtrip.py 三同门禁。
   NYI-M5-1/2 从"待启动"转为"部分落地"：节点段 round-trip 全等，collector/几何/B型元素 NYI 维持。
+- 2026-09-06 M6.1 部分落地：hm_card.py 4 张卡片骨架 (PSHELL/PSOLID/MAT1/CQUAD4) + Analysis/card edit 面板接线。
+  NYI-M6-1/2/3 维持：真实卡数据/Analysis page 接线/Solver Browser 仍 NYI。
+- 2026-09-06 M7.2 部分落地：hm_mesher.py Laplacian smooth (5×5 quad 边界不动验证通过) + 2D/smooth 面板接线。
+  NYI-M7-1/3/4 维持：automesh/tetramesh/hex map 仍未启动。
+- 2026-09-06 M8.2 部分落地：hm_post.py pseudo_contour_field 4 模式 (distance_to_centroid/origin/z_height/id_modulo) + Post/contour 面板接线。
+  NYI-M8-1/2/3/4/5 维持：.h3d/.res 解码/真场量/XYPlots/多视口/Morphing 仍 NYI。
 - 后续每次重启 NYI 项目，需在变更记录追加 commit hash / oracle 增量 / 覆盖率。
