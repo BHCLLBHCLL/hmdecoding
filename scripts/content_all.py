@@ -7,15 +7,21 @@ elems_dir='output/ground_truth/elems'
 def map_outfile(path):
     b=os.path.basename(path)
     p=os.path.normpath(path).replace('\\','/')
-    # 默认 basename
+    # 同名碰撞 (hm/frame_assembly_1 vs interfaces/lsdyna/): 先试父目录前缀, 修 oracle 错配
+    parent='hm'
+    if '/interfaces/lsdyna/' in p: parent='lsdyna'
+    if '/interfaces/abaqus/' in p: parent='abaqus'
+    if '/interfaces/samcef/' in p: parent='samcef'
+    f2=os.path.join(elems_dir,(parent+'_')+b+'.elems.txt')
+    if os.path.exists(f2):
+        return f2
     f1=os.path.join(elems_dir,b+'.elems.txt')
     if os.path.exists(f1):
         return f1
-    # 碰撞前缀 (lsdyna/hm)
-    for tag in ('lsdyna_','hm_'):
-        f2=os.path.join(elems_dir,tag+b+'.elems.txt')
-        if os.path.exists(f2):
-            return f2
+    for tag in ('hm_','lsdyna_','abaqus_','samcef_'):
+        f3=os.path.join(elems_dir,tag+b+'.elems.txt')
+        if os.path.exists(f3):
+            return f3
     return None
 def content_compare(path, elems_file):
     m=decode(path)

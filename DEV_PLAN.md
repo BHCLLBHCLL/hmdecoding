@@ -24,7 +24,7 @@
    - 链式节点删除残留字节可恢复：56B 链 @+44 字段跳号 → 纠正为 prev_raw（SEAT_MODEL/seatbelt 10125 元素节点错 → 0，此前误判为运行时状态未持久化）
    - molding1 相邻节点段重叠去重（344 元素 → 0）
    - cfg60 固定 2 节点特判（3_step_proc_complete）
-   - 元素内容级：strict 91/91、非 strict 79/91（剩 cfg55 MPC 11 文件约 55 元素 + seat_start cfg60 1 元素）
+   - 元素内容级：strict 91/91、非 strict 82/91（剩 9 文件全部为 cfg55 MPC oracle 导出剪枝: 纯 dn 无 dc/od/oo, binary 按记录 n 取真值）
 2. 新逆向资产发现（详见 §3）：hmmenu.set 二进制菜单、*.mac 文本面板定义、hm/scripts/ 3018 个 Tcl 面板实现、核心 DLL 清单（hmobj/hwio/hwtemplex/tetrameshdll 等）、嵌入式 Tcl/Python、逐面板 HTML 规格。
 3. GUI 设计由按钮堆砌升级为「catalog 状态机 + schema 驱动面板引擎 + oracle 差分测试」（参考 pphdecoding 的 nav_panels/option_settings/e2e 结构）。
 
@@ -63,7 +63,7 @@ hmdecoder.HMModel 当前实体: nodes / elements / display_points / geo_points /
 | 数据能力 | 深度 | 现状与缺口 |
 |---|---|---|
 | 读 .hm 节点 | 92% | 52/92/56B-chain/68/96B 五布局；坐标 content 级 167 万节点对照仅剩 icw_ex1/2 链尾 33 坐标错；count 门禁 node-ok 119/123（4 文件 ±1 为 oracle 源差异，非解码 bug）；链式删除残留字节恢复 |
-| 读 .hm 元素 | 93% | elem-ok 123/123；strict content 91/91（eid/config/节点全对）；非 strict 79/91。剩: cfg55 MPC slave 列表删除引用（11 文件约 55 元素，truck 17/dummy 11/seat_deformer 11 等）+ seat_start family-1 cfg60（1 元素） |
+| 读 .hm 元素 | 93% | elem-ok 123/123；strict content 91/91（eid/config/节点全对）；非 strict 82/91。剩 9 文件全为 cfg55 MPC oracle 导出剪枝（纯 dn: truck 17/dummy 11/seat_deformer 11 等, binary 按记录 n 取真值, oracle 集不含超读 slave）+ seat_start family-1 cfg60（1 dn） |
 | 显示点 / 几何点 | 60% | 能显示，几乎不能编辑 |
 | 组件 / 材料 / 属性 | 20%（db 11.x 局部） | db 11.x 已解码（M3.2）: comp/mat/prop/group 名称+精确 id（含删除跳号）,
   记录 [u32 19][u32 0][u32 name_len] + 名称, id=u32(off-16); truck 大 id 第三种格式已破（段头 char='{', 名称允许 TAB 填充）,
@@ -164,7 +164,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 
 - scripts/gui_pick_final.py 冒烟保持 ALL PASS
 - 面板级 oracle 差分: hmbatch 驱动官方面板（Tcl）→ 记录模型变化 → 断言我们的面板等价
-- 解码门禁: count 123/123、content strict 91/91、非 strict 79/91（目标 91/91）、节点坐标 167 万
+- 解码门禁: count 123/123、content strict 91/91、非 strict 82/91（剩 9 文件为 cfg55 MPC oracle 集不全）、节点坐标 167 万
 
 ---
 
@@ -261,7 +261,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 | 12 域完整度均分 | 27.8% | 48% | 62% | 88% |
 | count 门禁（123 文件） | node 119/123 · elem 123/123 | 不变 | 写后 PASS | 写后 PASS |
 | 元素内容级 strict | 91/91 | 91/91 | 91/91 | 91/91 |
-| 元素内容级非 strict | 79/91 | 91/91（M3.6, oracle 漏尾部 slave 不计 binary 缺陷; 实际可改进到 91/91） | 91/91 | 91/91 |
+| 元素内容级非 strict | 79/91 | 82/91（M3.6: cfg55 修复 +3; 剩 9 文件全为 oracle 导出剪枝, strict-elems 91/91） | 91/91 | 91/91 |
 | 节点坐标 content | 剩 icw 尾 33 | 全对（M3.6） | 全对 | 全对 |
 | catalog 面板状态 | 待建 | 200+ 全建 | 全建+深度分 | 全建+深度分 |
 | 面板级 oracle | 未建 | 全量接线（M3 起） | 全量 | 全量 |
