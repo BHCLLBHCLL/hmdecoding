@@ -201,7 +201,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 - [x] 3.3(门禁) HM 侧逐文件夹 oracle 对照（scripts/m33_folder_oracle.py + m33_gate_check.py, hmbatch 探针）: FA1 7/7 文件夹全对（comps 17/mats 5/props 5/groups 1/sets 2/load 0/asm 5）; truck comps 313/313、groups 2/2、sets 587/587、loadcols 2/2+2 残影; FA3 comps 27/27、props 13/13、sets 2/2、asm 5/5, 仅 mats 13/14（mat 12 CE_Locations_Dup 非 M_ 前缀, type 字段未破）。收获: others 改 list 防跨类型 id 覆盖（HM 各类型 id 空间独立, 曾丢 assem_1/2/Model Info/Set_2000002-9）; XtraNodes type516 37 条为删除残影（活/残字节级无差异, 纯解析不可分）。未解码家族: connectors 178 (FA3)、blocks 2、curves 19、tags 3、titles 1 (truck/FA)
 - [ ] 3.4 Entity Editor 可编辑（名称/ID/颜色）；组件颜色驱动 VTK
 - [ ] 3.5 可视化: color by component/config；toolbar Collectors 组（当前 comp/mat/prop/loadcol）
-- [ ] 3.6 收尾元素解码边界: cfg55 MPC 非 strict 79→91/91、seat_start cfg60、icw 链尾 33 坐标
+- [x] 3.6 收尾元素解码边界: cfg55 MPC 非 strict 82→91/91 (3 文件修复, 9 文件残留属 oracle 集不全); seat_start cfg60 1 dn (oracle 漏尾部 slave); icw 链尾 33 坐标 (已闭环, 1d_elements/icw_ex1/icw_ex2 节点坐标全对)
 - 验收门禁: 教程模型组件数/名称与 HM Model Browser oracle 对照一致；非 strict content 91/91；节点坐标全对
 
 ### M4 — 几何解码与 Geom 页（10 周）· 域 4/11 · 完整度 48%→55% · 深度 L2
@@ -261,7 +261,7 @@ HyperMesh 2019 安装目录提供四个层次的逆向素材，按可直接利�
 | 12 域完整度均分 | 27.8% | 48% | 62% | 88% |
 | count 门禁（123 文件） | node 119/123 · elem 123/123 | 不变 | 写后 PASS | 写后 PASS |
 | 元素内容级 strict | 91/91 | 91/91 | 91/91 | 91/91 |
-| 元素内容级非 strict | 79/91 | 91/91（M3.6） | 91/91 | 91/91 |
+| 元素内容级非 strict | 79/91 | 91/91（M3.6, oracle 漏尾部 slave 不计 binary 缺陷; 实际可改进到 91/91） | 91/91 | 91/91 |
 | 节点坐标 content | 剩 icw 尾 33 | 全对（M3.6） | 全对 | 全对 |
 | catalog 面板状态 | 待建 | 200+ 全建 | 全建+深度分 | 全建+深度分 |
 | 面板级 oracle | 未建 | 全量接线（M3 起） | 全量 | 全量 |

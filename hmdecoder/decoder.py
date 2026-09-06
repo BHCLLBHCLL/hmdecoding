@@ -703,6 +703,17 @@ def _parse_a_type(p, sh, cnt, row_count, row_map, max_rec=None):
                                 if sl and all(1 <= r <= row_count for r in sl):
                                     got = (fp, nslave + 1, [master] + sl, 56)
                                     break
+                        if cfg_flag == 311:
+                            # cfg55 MPC 变长 (master+slave): [nslave@+24][master@+28][slv@+40..+40+4*nsl]
+                            # 跳过 layout (24,28,32) 的 v11 flag 计数 (e.g. icw_ex1 eid=271)
+                            nslave = u32(p, rec + 24)
+                            master = u32(p, rec + 28)
+                            if 0 <= nslave <= 200 and 1 <= master <= row_count \
+                                    and rec + 40 + 4 * nslave <= len(p):
+                                sl = [u32(p, rec + 40 + 4 * t) for t in range(nslave)]
+                                if all(1 <= r <= row_count for r in sl):
+                                    got = (fp, nslave + 1, [master] + sl, 55)
+                                    break
                         nodes_off = rec + fp + 4
                         cfgv = (u32(p, rec + fp) >> 16) - 256
                         n = 0
