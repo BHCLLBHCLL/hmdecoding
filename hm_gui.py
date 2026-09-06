@@ -23,6 +23,7 @@ help/hm/topics/chapter_heads/workspace_hm_classic_r.htm):
 """
 import json
 import os
+import re
 import sys
 import time
 import traceback
@@ -571,6 +572,38 @@ def _i64(array_like):
 
 def _u8(array_like):
     return numpy_to_vtk(np.asarray(array_like, dtype=np.uint8), deep=True)
+
+
+def _parse_id_list(text):
+    """解析 "1,3,5-12,7" / "100 - 103" 形式的 id 列表为 set[int].
+
+    支持逗号/空白分隔, '-' 表示闭区间. 非法 token 静默忽略.
+    用于节点/单元/几何点 id 选择对话框 (HyperMesh 风格: panel input).
+    """
+    out = set()
+    # 先把两侧带空格的 '-' 归一化为紧凑 'a-b', 避免 split 后出现孤立 '-' token.
+    norm = re.sub(r"\s*-\s*", "-", text.strip())
+    for tok in re.split(r"[\s,]+", norm):
+        if not tok:
+            continue
+        if tok.startswith("-") or tok.endswith("-"):
+            # 单边范围 (例如 "-5", "10-") 视为非法.
+            continue
+        if "-" in tok:
+            try:
+                a, b = tok.split("-", 1)
+                a, b = int(a), int(b)
+                if a > b:
+                    a, b = b, a
+                out.update(range(a, b + 1))
+            except ValueError:
+                continue
+        else:
+            try:
+                out.add(int(tok))
+            except ValueError:
+                continue
+    return out
 
 
 def make_cell_array(cells):
@@ -1182,6 +1215,7 @@ class HmMainWindow(QMainWindow):
         self._geo_actor = None
         self._elem_hl_actor = None
         self._node_hl_actor = None
+        self._geo_hl_actor = None
         self._orientation = None
         self._anno = None
 
@@ -1805,11 +1839,12 @@ class HmMainWindow(QMainWindow):
             self.renderer.RemoveActor(g.actor)
         self._groups.clear()
         for a in (self._node_actor, self._disp_actor, self._geo_actor,
-                  self._elem_hl_actor, self._node_hl_actor):
+                  self._elem_hl_actor, self._node_hl_actor,
+                  getattr(self, "_geo_hl_actor", None)):
             if a is not None:
                 self.renderer.RemoveActor(a)
         self._node_actor = self._disp_actor = self._geo_actor = None
-        self._elem_hl_actor = self._node_hl_actor = None
+        self._elem_hl_actor = self._node_hl_actor = self._geo_hl_actor = None
         self.sel_elems.clear()
         self.sel_nodes.clear()
 
@@ -2597,6 +2632,80 @@ class HmMainWindow(QMainWindow):
             self._set_elem_selection(idxs, mode)
             self.log(f"按 ID 选择单元: 命中 {len(idxs)} 个")
 
+    def select_geo_point_dialog(self):
+        """Geom / point edit 面板: 按 id 选几何点, 高亮 + 写 Entity Editor.
+
+        几何点 (M4.1 db 11.05 规整段) 与显示点不同: 是 BREP 拓扑中的 vertex,
+        HyperMesh 2019 官方面板 *createpoint / *createpoints 的对象.
+        高亮复用 _geo_actor 的可见性, 选中集以 overlay actor 渲染.
+        """
+        if not self._need_model():
+            return
+        n = len(self.model.geo_points)
+        if n == 0:
+            QMessageBox.information(self, APP_TITLE,
+                "本模型未解码几何点 (db 11.05 规整段为空或本格式未实现).\n"
+                "见 docs/NYI_INVENTORY.md §M4.1.")
+            return
+        from PyQt5.QtWidgets import QInputDialog
+        text, ok = QInputDialog.getText(self, "Geom / point edit",
+            f"输入几何点 id (1..{max(self.model.geo_points)}, 共 {n} 个),\n"
+            "支持范围/逗号分隔 (例: 1,3,5-12):",
+            text="1")
+        if not ok or not text.strip():
+            return
+        ids = _parse_id_list(text)
+        hit = sorted(i for i in ids if i in self.model.geo_points)
+        miss = sorted(i for i in ids if i not in self.model.geo_points)
+        if not hit:
+            QMessageBox.warning(self, APP_TITLE,
+                f"命中 0 (遗漏 {len(miss)}); 输入范围或 id 越界.")
+            self.statusBar().showMessage(f"Geom point edit: 命中 0")
+            return
+        # Entity Editor 摘要: 按选中 id 升序列坐标
+        lines = [f"Geom points selected: {len(hit)}"]
+        for i in hit[:200]:
+            gp = self.model.geo_points[i]
+            lines.append(f"  id={i:>6}  x={gp.x: .6f}  y={gp.y: .6f}  z={gp.z: .6f}")
+        if len(hit) > 200:
+            lines.append(f"  ... 共 {len(hit)} 个, 仅显示前 200")
+        self.info.setPlainText("\n".join(lines))
+        # 高亮: 在几何点 actor 上叠加, 或新建一个 overlay actor
+        self._highlight_geo_points(hit)
+        self.log(f"Geom point edit: 命中 {len(hit)} 个, 遗漏 {len(miss)}")
+        self.statusBar().showMessage(f"Geom point edit: 命中 {len(hit)}")
+
+    def _highlight_geo_points(self, ids):
+        if getattr(self, "_geo_hl_actor", None) is not None:
+            self.renderer.RemoveActor(self._geo_hl_actor)
+            self._geo_hl_actor = None
+        if self._vpts is None or not ids or not self.model.geo_points:
+            return
+        # geo_points 用独立 actor (蓝色 7pt), 它直接持有 poly_data; 不能在同一
+        # polydata 上叠加选集. 用同坐标点重建一个选中集 actor.
+        pts = vtk.vtkPoints()
+        for i in ids:
+            gp = self.model.geo_points[i]
+            pts.InsertNextPoint(gp.x, gp.y, gp.z)
+        pd = vtk.vtkPolyData()
+        pd.SetPoints(pts)
+        pd.SetVerts(make_cell_array([[i] for i in range(len(ids))]))
+        m = vtk.vtkPolyDataMapper()
+        m.SetInputData(pd)
+        m.ScalarVisibilityOff()
+        a = vtk.vtkActor()
+        a.SetMapper(m)
+        a.GetProperty().SetColor(1.0, 0.85, 0.10)  # 高对比黄
+        a.GetProperty().SetPointSize(11)
+        try:
+            a.GetProperty().SetRenderPointsAsSpheres(True)
+        except Exception:
+            pass
+        a.PickableOff()
+        self.renderer.AddActor(a)
+        self._geo_hl_actor = a
+        self._render()
+
     def _rebuild_highlights(self):
         for a in (self._elem_hl_actor, self._node_hl_actor):
             if a is not None:
@@ -2959,7 +3068,10 @@ class HmMainWindow(QMainWindow):
             "node edit": self.move_node_dialog,
             "temp nodes": self._toggle_temp_nodes,
             "distance": self._measure_distance,
-            "points": self._toggle_disp,
+            # HyperMesh 2019 Geom/points 面板专管 *createpoint / *createpoints 几何点;
+            # 与 display points (展示用 marker) 概念不同.
+            "points": self._toggle_geo,
+            "point edit": self.select_geo_point_dialog,
             "translate": self.move_node_dialog,
             "rotate": lambda: self._transform_nodes("rotate"),
             "reflect": lambda: self._transform_nodes("reflect"),
