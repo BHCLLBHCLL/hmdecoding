@@ -1463,6 +1463,9 @@ def _parse_cfg55_mpc(p, sh, cnt, row_count, row_map, max_rec=None):
                                 break
                 else:
                     # fixed node sequence: try @+24 then @+32, until 0/out-of-range
+                    # cfg=55 是 master+slave 变长格式, 不应走 fixed 路径 (e.g. icw_ex1 eid=271)
+                    if any(c[0] == 55 for c in cands):
+                        continue
                     for no in (24,32):
                         nn = 0
                         while nn < 20 and rec + no + 4*nn + 4 <= len(p):

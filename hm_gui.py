@@ -2737,15 +2737,13 @@ class HmMainWindow(QMainWindow):
         for i, e in enumerate(self.model.elements):
             by_group.setdefault(self._group_key(e), []).append((i, e))
         total_skipped = 0
-        for gi, key in enumerate(sorted(by_group, key=lambda k: (k[0], k[1]))):
+        size_order = sorted(by_group, key=lambda k: -len(by_group[k]))
+        color_of = {k: PALETTE[i % len(PALETTE)] for i, k in enumerate(size_order)}
+        for key in sorted(by_group, key=lambda k: (k[0], k[1])):
             grid, skipped = build_group_grid(self._vpts, self._nid2idx, by_group[key])
             total_skipped += skipped
             _old, visible = self._group_style.get(key, (None, True))
-            if key[0] == "comp":
-                base = (PALETTE[key[1] % len(PALETTE)] if key[1]
-                        else (0.60, 0.60, 0.60))
-            else:
-                base = PALETTE[gi % len(PALETTE)]
+            base = color_of.get(key, PALETTE[0])
             mode = getattr(self, "_color_mode", "By Comp")
             if mode == "Single":
                 color = PALETTE[0]
