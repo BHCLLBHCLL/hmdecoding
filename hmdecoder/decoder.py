@@ -1786,6 +1786,65 @@ def parse_display_points(p):
             k += 1
     return points
 
+# ---------------------------------------------------------------------------
+# 几何点段 (M4.1): 段头签名 + 48B 定长记录
+# ---------------------------------------------------------------------------
+GEO_SEG_MAGIC = 33056   # 0x8120, 段头标记
+GEO_SEG_CHECK = 256     # 段头 h+12 常量, 用于排除误命中
+
+
+def parse_geo_points_v3(p, step=48, min_seg=1):
+    """几何点段解码 (M4.1): 段头签名定位 + 定长记录顺序读出.
+
+    段头布局 (h = 段头标记 u32==33056 的位置):
+        h-8 : count (该段点数)
+        h   : 33056 (0x8120) 标记
+        h+12: 256 常量校验
+        h+20: 第一条记录
+    记录 (step=48): (x, y, z) 三个 float64 @+0/+8/+16 + 24B 附加字段.
+
+    校验: 段内 >=90% 记录的坐标需在合理量级内 (|v| < 1e7), 否则判为误命中跳过.
+
+    覆盖范围: db 11.05 族中以规整数组存储的点段 (如 interfaces/lsdyna/
+    frame_assembly 家族). 部分模型 (Full_Motion 等) 的点随编辑历史碎片化,
+    步长 52/56/64 混合且无规整段头, 本函数不覆盖.
+
+    返回: [(base, count, [(x, y, z), ...]), ...]
+    """
+    segs = []
+    start = 0
+    n = len(p)
+    magic = struct.pack("<I", GEO_SEG_MAGIC)
+    while True:
+        h = p.find(magic, start)
+        if h < 0:
+            break
+        start = h + 1
+        if h < 8 or h + 20 > n:
+            continue
+        if u32(p, h + 12) != GEO_SEG_CHECK:
+            continue
+        cnt = u32(p, h - 8)
+        if not (0 < cnt < 200000):
+            continue
+        base = h + 20
+        if base + cnt * step > n:
+            continue
+        recs = []
+        ok = 0
+        for k in range(cnt):
+            o = base + k * step
+            x, y, z = d64(p, o), d64(p, o + 8), d64(p, o + 16)
+            if abs(x) > 1e7 or abs(y) > 1e7 or abs(z) > 1e7:
+                break
+            ok += 1
+            recs.append((x, y, z))
+        if ok < max(min_seg, cnt * 0.9):
+            continue
+        segs.append((base, cnt, recs))
+    return segs
+
+
 def parse_geo_points_variant_b(p, node_ids=None):
     OFFSETS = (-249, -145, -93, -41, 15)
     n = len(p)
@@ -1963,6 +2022,16 @@ def decode(path, node_filter=None, elem_filter=None):
         comp_names = _parse_comps(p)
         for i, nm in enumerate(comp_names):
             model.comps[i + 1] = nm
+    # --- 几何点段 (M4.1): 段头签名 + 48B 定长记录 -> HMModel.geo_points ---
+    # 段内按出现顺序赋 id (与 HM oracle: frame_assembly 段 id 440+ 对齐);
+    # 覆盖 db 11.05 规整点段 (如 lsdyna 家族); Full_Motion 等碎片化点不覆盖.
+    geo_pts = {}
+    pid_counter = 1
+    for _base, _cnt, recs in parse_geo_points_v3(p):
+        for x, y, z in recs:
+            geo_pts[pid_counter] = GeoPoint(pid_counter, x, y, z)
+            pid_counter += 1
+    model.geo_points = geo_pts
     ns = find_node_section(p)
     ns_list = []
     nodes = {}
