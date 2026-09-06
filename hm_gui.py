@@ -3089,6 +3089,9 @@ class HmMainWindow(QMainWindow):
             "isolate": self._mask_isolate,
             "edit element": self.add_element_dialog,
             "elem types": self._show_elem_types,
+            # M6 Card image 骨架 (NYI-M6-1: 真实卡数据需 hmbatch oracle)
+            "card edit": self._show_card_templates_dialog,
+            "control cards": self._show_card_templates_dialog,
         }
         fn = implemented.get(key)
         if fn is not None:
@@ -3190,6 +3193,58 @@ class HmMainWindow(QMainWindow):
             lines.append(f"  {cfg}  {name}  [{cat}]  n={nn or 'var'}  count={cnt}")
         self.info.setPlainText("\n".join(lines))
         self.log("elem types listed in Entity Editor")
+
+    def _show_card_templates_dialog(self):
+        """Analysis / card edit 或 control cards 面板.
+
+        M6.1 骨架: 列出已知卡片模板 (PSHELL/PSOLID/MAT1/CQUAD4),
+        选中后渲染字段表 + BDF 8-char 对齐文本. 不解码真实卡数据 (NYI-M6-1).
+        """
+        try:
+            from hmdecoder.hm_card import list_templates, get_template, card_summary_html
+        except ImportError:
+            QMessageBox.warning(self, APP_TITLE, "hm_card 模块未就绪")
+            return
+        tpls = list_templates()
+        from PyQt5.QtWidgets import QInputDialog
+        pick, ok = QInputDialog.getItem(self, "Card templates (M6.1 骨架)",
+            "选择卡片模板:", tpls, 0, False)
+        if not ok or not pick:
+            return
+        tpl = get_template(pick)
+        # Entity Editor 渲染字段表 + BDF 文本
+        html_lines = [f"<b>{tpl['long']}</b>"]
+        html_lines.append("<table border=1 cellpadding=4 "
+                          "style='border-collapse:collapse;font-family:monospace'>")
+        html_lines.append("<tr><th>Field</th><th>Type</th><th>Description</th></tr>")
+        for fname, ftype, desc in tpl["fields"]:
+            html_lines.append(f"<tr><td><b>{fname}</b></td><td>{ftype}</td>"
+                              f"<td>{desc}</td></tr>")
+        html_lines.append("</table>")
+        # BDF 8-char 字段对齐文本示例
+        html_lines.append("<pre style='background:#f0f0f0;padding:6px'>"
+                          f"{self._sample_bdf_text(pick)}</pre>")
+        html_lines.append("<i style='color:#a00'>[NYI-M6-1] 真实卡数据解码需 "
+                          "hwtemplex.dll + hmbatch oracle; 当前 skeleton 仅给字段骨架</i>")
+        self.info.setHtml("<br>".join(html_lines))
+        self.log(f"Card template: {pick}")
+        self.statusBar().showMessage(f"Card: {pick} (template)")
+
+    def _sample_bdf_text(self, name):
+        """生成示例 BDF 文本, 用于卡片面板可视化."""
+        try:
+            from hmdecoder.hm_card import format_card_text
+        except ImportError:
+            return ""
+        examples = {
+            "PSHELL": {"PID": 1, "MID": 100, "T": 1.5},
+            "PSOLID": {"PID": 2, "MID": 100, "IN": 0},
+            "MAT1":   {"MID": 100, "E": 2.1e11, "G": 8.0e10,
+                       "NU": 0.3, "RHO": 7850.0},
+            "CQUAD4": {"EID": 1001, "PID": 1, "G1": 10, "G2": 11,
+                       "G3": 12, "G4": 13},
+        }
+        return format_card_text(name, examples.get(name, {}))
 
     def _mask_isolate(self):
         if self.model is None or not self.sel_elems:
