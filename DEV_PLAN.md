@@ -69,8 +69,8 @@ hmdecoder.HMModel 当前实体: nodes / elements / display_points / geo_points /
   记录 [u32 19][u32 0][u32 name_len] + 名称, id=u32(off-16); truck 大 id 第三种格式已破（段头 char='{', 名称允许 TAB 填充）,
   非标准命名 mat/prop（CE_Locations_Dup）仍漏归类（前缀启发式），Sets 记录已扫入 others 未分列 |
 | loads / systems / vectors / groups / sets / titles | 0% | 未解析 —— Analysis 页上限约 0 |
-| 几何 BREP（线/面/体） | 5% | 仅点；无线/面/体。原生 .hm 几何为紧凑二进制(无类型名, 坐标带变换);
-  已定路线: hmbatch *writefile .igs 导出 HM 几何序列化(含类型目录 CurveNURBS/AS_Surface 等)→解析 (M4 路线决策) |
+| 几何 BREP（线/面/体） | 5% | 仅点；无线/面/体。路线: **STEP + Parasolid X_T 导入解析**
+  (rail_extrusion.stp/beam.x_t 均为文本公开格式, 见 M4 路线决策); .hm 原生几何段解码降级低优先级 |
 | 求解卡片（card image） | 0% | 未解析（hwtemplex.dll + templates 在 HM 侧） |
 | 写 .hm | 0% | 只读逆向；写回 = 反向编码器 |
 | .hmj 工程 | 70% | 节点单元可往返 |
@@ -222,23 +222,33 @@ surfs 实体解码。已确认非 GUI 渲染问题, 是 P0-3 几何解码缺口�
   直调 pskernel.dll(Parasolid V37) 的 PK_BODY_ask_faces/edges/vertices、PK_VERTEX_ask_point、
   PK_TOPOL_facet_2; 或宿主导出 X_T 后解析/diff。
 
-**HM 侧实测（关键发现）**: hmbatch `*writefile 任意扩展名.igs/.stp/.x_t` 无视扩展名,
-统一输出 **HM 几何序列化**（12B 前缀+gzip 同 .hm 容器, 三扩展名产物同尺寸 138KB），
-内含完整**几何实体类型目录**: 线族 CurveSegment/CurvePolyline/CurveNURBS/CurveOnSurface/
-CurveComposed, 面族 SurfacePlane/SurfaceInfinitePlane/SurfaceCone/SurfaceNURBS, 拓扑
-AS_Surface/AS_SurfaceVertex/AS_SurfaceEdge/AS_Face/AS_FaceEdge/AS_Body/AS_Part, 属性
-AS_AttributeLayer/SurfaceThickness/MidsurfaceEdit 等。
-对比原生 .hm 几何: 紧凑二进制无类型名（搜 CurveNURBS/AS_Surface 0 命中）, 且坐标带变换
-（oracle x/y/z 与存储 double 不相等: y 精确相等、x/z 偏移, 疑似局部坐标系）, 逆向成本高。
+**HM 侧实测（关键发现）**: hmbatch `*writefile 任意扩展名` 统一输出 HM 几何序列化
+（12B 前缀+gzip 同 .hm 容器, 含类型目录 CurveNURBS/SurfaceNURBS/AS_Face/AS_Body/AS_Part 等）;
+原生 .hm 几何为紧凑二进制无类型名且坐标带变换, 逆向成本高。
 
-**决策: 采用导出→解析路线**（cabdecoding 同款）: decoder 新增 decode_geom_export()
-—— shell 到 hmbatch `*writefile .igs` 导出 → 解析类型化实体图（类型目录 + 实体数据）→
-model.points/lines/surfs → GUI 渲染。备选: ctypes 直调 hwgkern.dll（无公开 API, 更难）。
+**路线调整（2026-09）: 几何文件主要走 STEP 与 Parasolid X_T 导入, 不依赖上述 HM 导出序列化。**
+案例库实证: tutorials/hm/rail_extrusion.stp = 标准 ISO-10303-21 文本;
+tutorials/hwsolvers/optistruct/{beam,fluid}.x_t + mv_hv_hg/.../slotted_link.x_t = **文本
+Parasolid Transmit 格式**（`**ABCDEFGHIJKLMNOPQRSTUVWXYZ...` 头 + `**PART1;` 实体行）——
+两者均为**可直接解析的文本格式**（公开规范）。
 
-- [ ] 4.1a 解析 .igs 导出格式: 类型目录记录 + 实体数据（点坐标/线类型与端点/面参数/拓扑引用）
-- [x] 4.1b 案例诊断: WS_2.1_Geo 纯几何文件 0 节点/0 单元, oracle 148 点/243 线/79 面, 定位
+**决策: 采用 STEP/X_T 导入→解析路线**: decoder 新增 `parse_step()` 与 `parse_x_t()`,
+直接解析用户导入的 .stp/.step/.x_t 几何文件（非 .hm 原生几何、非 HM 导出序列化）:
+- STEP (ISO-10303-21): CARTESIAN_POINT/DIRECTION/LINE/CIRCLE/B_SPLINE_CURVE_WITH_KNOTS/
+  B_SPLINE_SURFACE/ADVANCED_FACE/EDGE_LOOP 等实体 → points/lines/surfs;
+- X_T (Parasolid Transmit): 文本实体行 → 拓扑实体（对应 cabdecoding pskernel_user_guide 的
+  X_T 流格式, PK_PART_receive 语义）;
+- hm_gui 直接打开 .stp/.x_t（当前仅 .hm/.hmj）并渲染线框/着色面。
+- .hm 原生几何段解码降级为低优先级（几何工作流以 CAD 导入为主）。
+
+- [ ] 4.1a parse_step(): ISO-10303-21 解析器（点/线/圆/NURBS 曲线/曲面 + 面拓扑）→
+      model.points/lines/surfs, oracle 对照（rail_extrusion.stp 等）
+- [ ] 4.1b parse_x_t(): Parasolid Transmit 文本解析（拓扑实体 + NURBS 数据）→
+      model.points/lines/surfs/solids, oracle 对照（beam.x_t/fluid.x_t/slotted_link.x_t）
+- [x] 4.1c 案例诊断: WS_2.1_Geo 纯几何文件 0 节点/0 单元, oracle 148 点/243 线/79 面, 定位
       decoder 提取 0 的根因（parse_display_points 布局失效 + 无 lines/surfs 解码）
-- [ ] 4.1c 解码几何实体: points/lines/surfaces/solids（段结构 + oracle 计数/拓扑对照, 以导出格式为锚）
+- [ ] 4.1d GUI 打开 .stp/.x_t + 线框/着色面渲染接线
+- [ ] 4.1e .hm 原生几何段解码（低优先级, 以导出序列化为锚, 后续补）
 - [ ] 4.2 几何可视化: 线框/着色面/边特征显示；与网格叠加显隐
 - [ ] 4.3 Geom 页 create 子集: nodes(on geometry)/points/lines（两节点/on surface）/circles/arcs
 - [ ] 4.4 Geom 页 edit 子集: line edit（combine/split/trim 基础）、point edit、edge edit
